@@ -1,19 +1,19 @@
 version: "3.9"
 
 services:
-  # client:
-  #   image: next-app
-  #   build: ./client
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./client/components:/app/components
-  #     - ./client/public:/app/public
-  #     - ./client/services:/app/services
-  #     - ./client/src:/app/src
-  #     - ./client/styles:/app/styles
-  #     depends_on:
-  #     - api
+  client:
+    image: next-app
+    build: ./client
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client/components:/app/components
+      - ./client/public:/app/public
+      - ./client/services:/app/services
+      - ./client/src:/app/src
+      - ./client/styles:/app/styles
+    depends_on:
+      - api
 
   api:
     container_name: api
