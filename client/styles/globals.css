@@ -1,0 +1,35 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+.ant-menu-item-selected {
+  background-color: #a5ced8 !important;
+  color: black !important;
+}
+
+main {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+/* fix margin */
+.ant-layout-sider-children {
+  margin-top: 17px !important;
+}
+
+.ant-layout-sider-trigger {
+  background-color: white !important;
+  border-top: 1px #b9b9b9 solid;
+  border-right: 1px #b9b9b9 solid;
+  color: black !important;
+}
+
+h1 {
+  color: black !important;
+}

@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  # client:
+  #   image: next-app
+  #   build: ./client
+  #   ports:
+  #     - 3000:3000
+  #   volumes:
+  #     - ./client/components:/app/components
+  #     - ./client/public:/app/public
+  #     - ./client/services:/app/services
+  #     - ./client/src:/app/src
+  #     - ./client/styles:/app/styles
+  #   networks:
+  #     - app-network
+
+  api:
+    image: nestjs-app
+    build: ./api
+    environment:
+      - PG_HOST=db
+    ports:
+      - 3001:3001
+    networks:
+      - app-network
+    links:
+      - db
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=meuestagio
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+    driver: local
+  bundle_path:
+
+networks:
+  app-network:
+    driver: bridge
