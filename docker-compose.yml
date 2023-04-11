@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 
 services:
   # client:
@@ -16,32 +16,32 @@ services:
   #     - app-network
 
   api:
+    container_name: api
     image: nestjs-app
     build: ./api
-    environment:
-      - PG_HOST=db
     ports:
       - 3001:3001
-    networks:
-      - app-network
-    links:
-      - db
+    environment:
+      - DB_TYPE=postgres
+      - PG_HOST=db
+      - PG_USER=postgres
+      - PG_PASSWORD=postgres
+      - PG_DB=postgres
+      - PG_PORT=5432
     depends_on:
       - db
 
   db:
-    image: postgres
     container_name: db
+    image: postgres:12
+    ports:
+      - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=qwerty
       - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
       - POSTGRES_DB=meuestagio
     volumes:
       - ./pgdata:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    networks:
-      - app-network
 
 volumes:
   pgdata:

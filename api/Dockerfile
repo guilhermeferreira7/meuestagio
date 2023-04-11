@@ -1,30 +1,18 @@
-FROM node:18-alpine As development
+FROM node:18-alpine
 
+# Create app directory
 WORKDIR /nestjs-app
 
+# Install app dependencies
 COPY package*.json ./
 
-RUN npm install --only=development
+RUN npm install
 
+# Bundle app source
 COPY . .
 
 RUN npm run build
 
-FROM node:18-alpine as production
+EXPOSE 3000
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
-WORKDIR /nestjs-app
-
-COPY package*.json ./
-
-RUN npm install --only=production
-
-COPY . .
-
-COPY --from=development /nestjs-app/dist ./dist
-
-EXPOSE 3001
-
-CMD ["node", "dist/main"]
+CMD [ "npm", "run" , "start:prod" ]
