@@ -12,8 +12,8 @@ services:
   #     - ./client/services:/app/services
   #     - ./client/src:/app/src
   #     - ./client/styles:/app/styles
-  #   networks:
-  #     - app-network
+  #     depends_on:
+  #     - api
 
   api:
     container_name: api
@@ -25,21 +25,22 @@ services:
       - DB_TYPE=postgres
       - PG_HOST=db
       - PG_USER=postgres
-      - PG_PASSWORD=postgres
-      - PG_DB=postgres
+      - PG_PASSWORD=qwerty
+      - PG_DB=meuestagio
       - PG_PORT=5432
     depends_on:
       - db
 
   db:
     container_name: db
-    image: postgres:12
+    image: postgres
     ports:
       - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=qwerty
       - POSTGRES_DB=meuestagio
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
@@ -47,7 +48,6 @@ volumes:
   pgdata:
     driver: local
   bundle_path:
-
-networks:
-  app-network:
-    driver: bridge
+# networks:
+#   app-network:
+#     driver: bridge

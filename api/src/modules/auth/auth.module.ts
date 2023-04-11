@@ -7,13 +7,14 @@ import { AuthStudentService } from './auth-student/auth-student.service';
 import { LocalStudentStrategy } from './strategies/student.strategy';
 import { AuthService } from './auth.service';
 import config from '../../../config/config';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: config().jwtSecret,
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '14d' },
     }),
   ],
@@ -24,5 +25,6 @@ import config from '../../../config/config';
     JwtStrategy,
   ],
   exports: [AuthStudentService, AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}

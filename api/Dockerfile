@@ -1,7 +1,7 @@
 FROM node:18-alpine
 
 # Create app directory
-WORKDIR /nestjs-app
+WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
@@ -15,4 +15,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD [ "npm", "run" , "start:prod" ]
+CMD [ "npm", "run" , "start:dev" ]

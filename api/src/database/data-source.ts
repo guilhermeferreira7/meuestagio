@@ -9,6 +9,7 @@ const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   database: 'meuestagio',
   username: 'postgres',
+  host: process.env.PG_HOST,
   password: 'qwerty',
   entities: [City, Institution],
   seeds: [MainSeeder],

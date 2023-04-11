@@ -6,6 +6,28 @@ import { CitiesModule } from './modules/cities/cities.module';
 import { InstitutionsModule } from './modules/institutions/institutions.module';
 import { CoursesModule } from './modules/courses/courses.module';
 
+const localModule = TypeOrmModule.forRoot({
+  type: 'postgres',
+  host: 'localhost',
+  port: parseInt(process.env.DB_PORT),
+  username: 'postgres',
+  password: 'qwerty',
+  database: process.env.DB_NAME,
+  synchronize: true,
+  autoLoadEntities: true,
+});
+
+const dockerModule = TypeOrmModule.forRoot({
+  type: process.env.DB_TYPE as any,
+  host: process.env.PG_HOST,
+  port: parseInt(process.env.PG_PORT),
+  username: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
+  database: process.env.PG_DB,
+  synchronize: true,
+  autoLoadEntities: true,
+});
+
 @Module({
   imports: [
     AuthModule,
@@ -22,16 +44,8 @@ import { CoursesModule } from './modules/courses/courses.module';
       username: process.env.PG_USER,
       password: process.env.PG_PASSWORD,
       database: process.env.PG_DB,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-      // type: 'postgres',
-      // host: process.env.PG_HOST,
-      // port: parseInt(process.env.DB_PORT),
-      // username: 'postgres',
-      // password: 'qwerty',
-      // database: process.env.DB_NAME,
-      // autoLoadEntities: true,
-      // synchronize: true,
+      autoLoadEntities: true,
     }),
   ],
 })
