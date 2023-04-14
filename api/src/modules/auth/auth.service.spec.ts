@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import config from '../../../config/config';
 import { Role } from '../../utils/roles';
 
 describe('AuthService', () => {
@@ -14,7 +13,7 @@ describe('AuthService', () => {
       imports: [
         PassportModule,
         JwtModule.register({
-          secret: config().jwtSecret,
+          secret: process.env.JWT_SECRET,
           signOptions: { expiresIn: '14d' },
         }),
       ],
