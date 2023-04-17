@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { CitiesModule } from './modules/cities/cities.module';
 import { InstitutionsModule } from './modules/institutions/institutions.module';
 import { CoursesModule } from './modules/courses/courses.module';
+import { ConfigModule } from '@nestjs/config';
 
 const localModule = TypeOrmModule.forRoot({
   type: 'postgres',
@@ -34,9 +34,7 @@ const dockerModule = TypeOrmModule.forRoot({
     CitiesModule,
     InstitutionsModule,
     CoursesModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: process.env.DB_TYPE as any,
       host: process.env.PG_HOST,
