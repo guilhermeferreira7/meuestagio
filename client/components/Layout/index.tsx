@@ -6,9 +6,13 @@ import {
   GlobalOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 
 import styles from "./styles.module.css";
+import { parseCookies } from "nookies";
+import { AuthContext } from "../../src/contexts/AuthContext";
+import StudentMenu from "./menu/student-menu";
+import DefaultMenu from "./menu/default-menu";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -19,26 +23,16 @@ const { Sider, Header, Content, Footer } = Layout;
 
 export default function PageLayout({ children }: PageLayoutProps) {
   const { token } = useToken();
+  const { user } = useContext(AuthContext);
 
   const [collapsed, setCollapsed] = useState(false);
 
-  const menuItems = [
-    {
-      label: <Link href="/">Inicio</Link>,
-      key: "home",
-      icon: <HomeOutlined />,
-    },
-    {
-      label: <Link href="/login">Login</Link>,
-      key: "login",
-      icon: <LoginOutlined />,
-    },
-    {
-      label: <Link href="/create-account">Criar conta</Link>,
-      key: "createAccount",
-      icon: <UserAddOutlined />,
-    },
-  ];
+  let menuItems = [];
+  if (user?.role === "student") {
+    menuItems = StudentMenu();
+  } else {
+    menuItems = DefaultMenu();
+  }
 
   const Logo = () => {
     return (
