@@ -1,11 +1,9 @@
+import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { parseCookies } from "nookies";
 import React from "react";
-import { DayPicker } from "react-day-picker";
 
 export default function Home() {
-  const [selected, setSelected] = React.useState<Date>();
-
-  let footer = <p>Please pick a day.</p>;
   return (
     <>
       <Head>
@@ -15,7 +13,24 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>Home Page</h1>
-      <DayPicker mode="single" selected={selected} onSelect={setSelected} />
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
+  const { ["next.token"]: token } = parseCookies(ctx);
+  const { ["next.user"]: user } = parseCookies(ctx) as any;
+
+  // if (token) {
+  //   return {
+  //     redirect: {
+  //       destination: `/${user.role}/dashboard`,
+  //       permanent: false,
+  //     },
+  //   };
+  // }
+
+  return {
+    props: {},
+  };
+};
