@@ -2,7 +2,6 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { parseCookies } from "nookies";
 import React from "react";
-import { getAPIClient } from "../../services/api/clientApi";
 
 export default function Home() {
   return (
