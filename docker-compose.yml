@@ -1,33 +1,45 @@
-version: "3.9"
+version: "3.8"
 
 services:
-  # client:
-  #   image: next-app
-  #   build: ./client
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./client/components:/app/components
-  #     - ./client/public:/app/public
-  #     - ./client/services:/app/services
-  #     - ./client/src:/app/src
-  #     - ./client/styles:/app/styles
-  #     depends_on:
-  #     - api
+  client:
+    container_name: client
+    image: next-app
+    build: ./client
+    ports:
+      - 3000:3000
+    environment:
+      - API_BASE_URL=http://api:3001/
+    volumes:
+      - ./client/node_modules:/app/node_modules
+      - ./client/components:/app/components
+      - ./client/public:/app/public
+      - ./client/services:/app/services
+      - ./client/src:/app/src
+      - ./client/styles:/app/styles
 
+  depends_on:
+    - api
   api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      target: production
     container_name: api
     image: nestjs-app
-    build: ./api
     ports:
       - 3001:3001
     environment:
+      - APP_PORT=3001
       - DB_TYPE=postgres
       - PG_HOST=db
       - PG_USER=postgres
       - PG_PASSWORD=qwerty
       - PG_DB=meuestagio
       - PG_PORT=5432
+    volumes:
+      - ./api:/usr/src/app
+      - ./api/node_modules:/usr/src/app/node_modules
+    command: npm run start:dev
     depends_on:
       - db
 
@@ -43,11 +55,7 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - ./pgdata:/var/lib/postgresql/data
-
 volumes:
   pgdata:
     driver: local
   bundle_path:
-# networks:
-#   app-network:
-#     driver: bridge

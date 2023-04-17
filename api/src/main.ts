@@ -1,6 +1,5 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import config from '../config/config';
 import { AppModule } from './app.module';
 import { dataSource } from './database/data-source';
 declare const module: any;
@@ -11,7 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
 
-  await app.listen(config().port);
+  await app.listen(process.env.APP_PORT);
 
   if (!dataSource.isInitialized) {
     await dataSource.initialize();

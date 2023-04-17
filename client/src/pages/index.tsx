@@ -1,6 +1,11 @@
 import Head from "next/head";
+import React from "react";
+import { DayPicker } from "react-day-picker";
 
 export default function Home() {
+  const [selected, setSelected] = React.useState<Date>();
+
+  let footer = <p>Please pick a day.</p>;
   return (
     <>
       <Head>
@@ -10,6 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>Home Page</h1>
+      <DayPicker mode="single" selected={selected} onSelect={setSelected} />
     </>
   );
 }

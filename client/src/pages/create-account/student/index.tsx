@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Button, Card, Form, Input, Select, notification } from "antd";
 import { GetStaticProps } from "next";
 
-import ReCAPTCHA from "react-google-recaptcha";
-
 import { API_BASE_URL } from "../../../../services/constants";
 
 import styles from "./styles.module.css";
@@ -173,6 +171,11 @@ export default function CreateAccount({ institutions }: PageProps) {
 export const getServerSideProps: GetStaticProps = async () => {
   try {
     const institutions = (await axiosApi.get("/institutions")).data;
+    const cities = (await axiosApi.get("/cities")).data;
+    console.log("institutions", institutions);
+
+    console.log("cities", cities);
+
     return {
       props: {
         institutions: JSON.parse(JSON.stringify(institutions)),

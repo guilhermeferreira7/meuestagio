@@ -6,7 +6,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthStudentService } from './auth-student/auth-student.service';
 import { LocalStudentStrategy } from './strategies/student.strategy';
 import { AuthService } from './auth.service';
-import config from '../../../config/config';
 import { AuthController } from './auth.controller';
 
 @Module({
