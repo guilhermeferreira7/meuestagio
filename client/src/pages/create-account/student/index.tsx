@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Button, Card, Form, Input, Select, notification } from "antd";
 import { GetStaticProps } from "next";
+import { useRouter } from "next/router";
 
 import { API_BASE_URL } from "../../../../services/constants";
-
 import styles from "./styles.module.css";
-
 import { saveStudent } from "../../../../services/users/student-service";
-import axiosApi from "../../../../services/axiosApi";
-import axios from "axios";
-import { useRouter } from "next/router";
+import { api } from "../../../../services/api/api";
+import { getAPIClient } from "../../../../services/api/clientApi";
 
 interface CreateUser {
   name: string;
@@ -76,7 +74,7 @@ export default function CreateAccount({ institutions }: PageProps) {
 
   const changeInstitution = async (value: any) => {
     try {
-      const res = await axios.get(`institutions/${value}/courses`, {
+      const res = await api.get(`institutions/${value}/courses`, {
         baseURL: API_BASE_URL,
       });
       setCourses(res.data);
@@ -168,13 +166,11 @@ export default function CreateAccount({ institutions }: PageProps) {
   );
 }
 
-export const getServerSideProps: GetStaticProps = async () => {
-  try {
-    const institutions = (await axiosApi.get("/institutions")).data;
-    const cities = (await axiosApi.get("/cities")).data;
-    console.log("institutions", institutions);
+export const getServerSideProps: GetStaticProps = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
 
-    console.log("cities", cities);
+  try {
+    const institutions = (await apiClient.get("/institutions")).data;
 
     return {
       props: {

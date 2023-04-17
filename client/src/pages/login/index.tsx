@@ -1,5 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Button, Card, Form, Input, Radio, notification } from "antd";
+
+import Link from "next/link";
 
 import styles from "./styles.module.css";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -33,7 +35,9 @@ export default function Login() {
     <div className={styles.pageWrapper}>
       <div className={styles.header}>
         <h1>
-          Seja bem vindo! Faça login ou cadastre-se para acessar a plataforma!
+          Seja bem vindo! Faça login ou
+          <Link href="/create-account"> cadastre-se</Link> para acessar a
+          plataforma!
         </h1>
       </div>
 

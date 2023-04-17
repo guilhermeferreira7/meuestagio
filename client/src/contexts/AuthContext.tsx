@@ -32,10 +32,6 @@ export function AuthProvider({ children }: Props) {
   const router = useRouter();
   const isAuthenticated = !!user;
 
-  useEffect(() => {
-    return () => {};
-  }, []);
-
   async function signIn(
     email: string,
     password: string,
@@ -46,12 +42,15 @@ export function AuthProvider({ children }: Props) {
     const { user, access_token } = (
       await axios.post(path, { email, password }, { baseURL: API_BASE_URL })
     ).data as { user: any; access_token: any };
+    setUser({ ...user, role: userType });
 
     setCookie(undefined, "next.token", access_token, {
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+    setCookie(undefined, "next.user", user, {
+      maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
-    setUser({ ...user, role: userType });
     router.push(`/${userType}/dashboard`);
     return user;
   }

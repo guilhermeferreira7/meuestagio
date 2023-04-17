@@ -9,7 +9,6 @@ import Link from "next/link";
 import React, { ReactNode, useContext, useState } from "react";
 
 import styles from "./styles.module.css";
-import { parseCookies } from "nookies";
 import { AuthContext } from "../../src/contexts/AuthContext";
 import StudentMenu from "./menu/student-menu";
 import DefaultMenu from "./menu/default-menu";
