@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Param,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -18,13 +17,15 @@ export class StudentsController {
   constructor(private readonly studentService: StudentsService) {}
 
   @Post()
-  create(@Body() createStudentDto: CreateStudentDto): Promise<Student> {
-    return this.studentService.createStudent(createStudentDto);
+  async create(@Body() createStudentDto: CreateStudentDto): Promise<Student> {
+    return await this.studentService.createStudent(createStudentDto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
-  getProfile(@Request() req): Promise<Student> {
-    return this.studentService.findByEmail(req.user.email);
+  async getProfile(@Request() req): Promise<any> {
+    const student = await this.studentService.findByEmail(req.user.email);
+    const { password, ...result } = student;
+    return result;
   }
 }
