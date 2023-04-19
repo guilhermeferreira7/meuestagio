@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { API_BASE_URL } from "../../services/constants";
-import { destroyCookie, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useRouter } from "next/router";
 
 interface Props {
@@ -32,6 +32,16 @@ export function AuthProvider({ children }: Props) {
   const router = useRouter();
   const isAuthenticated = !!user;
 
+  useEffect(() => {
+    const { ["next.token"]: token } = parseCookies();
+    const { ["next.user"]: user } = parseCookies();
+    const userObj = user ? JSON.parse(user) : null;
+
+    if (token) {
+      setUser(userObj);
+    }
+  }, []);
+
   async function signIn(
     email: string,
     password: string,
@@ -46,18 +56,22 @@ export function AuthProvider({ children }: Props) {
 
     setCookie(undefined, "next.token", access_token, {
       maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
     });
-    setCookie(undefined, "next.user", user, {
+    setCookie(undefined, "next.user", JSON.stringify(user), {
       maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
     });
 
     router.push(`/${userType}/dashboard`);
     return user;
   }
 
-  async function signOut() {
-    destroyCookie(undefined, "next.token");
+  function signOut() {
+    destroyCookie(null, "next.token", { path: "/" });
+    destroyCookie(null, "next.user", { path: "/" });
     setUser(null);
+    router.push("/");
   }
 
   return (
