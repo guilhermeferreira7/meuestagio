@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { AuthContext } from "../../../src/contexts/AuthContext";
 
 export default function StudentMenu() {
-  const router = useRouter();
   const { signOut } = useContext(AuthContext);
   const handleLogout = () => {
     signOut();

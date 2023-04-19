@@ -1,12 +1,7 @@
 import { Layout, Menu, Space, theme } from "antd";
-import {
-  LoginOutlined,
-  HomeOutlined,
-  UserAddOutlined,
-  GlobalOutlined,
-} from "@ant-design/icons";
+import { GlobalOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import React, { ReactNode, useContext, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 
 import styles from "./styles.module.css";
 import { AuthContext } from "../../src/contexts/AuthContext";
@@ -21,10 +16,10 @@ const { useToken } = theme;
 const { Sider, Header, Content, Footer } = Layout;
 
 export default function PageLayout({ children }: PageLayoutProps) {
-  const { token } = useToken();
-  const { user } = useContext(AuthContext);
-
+  // this is the token from the theme
+  const { token: designToken } = useToken();
   const [collapsed, setCollapsed] = useState(false);
+  const { user } = useContext(AuthContext);
 
   let menuItems = [];
   if (user?.role === "student") {
@@ -37,9 +32,9 @@ export default function PageLayout({ children }: PageLayoutProps) {
     return (
       <Header
         className={styles.header}
-        style={{ backgroundColor: token.colorBgContainer }}
+        style={{ backgroundColor: designToken.colorBgContainer }}
       >
-        <Link style={{ color: token.colorText }} href="/">
+        <Link style={{ color: designToken.colorText }} href="/">
           MeuEstagio
         </Link>
       </Header>
@@ -48,7 +43,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
   const LogoTipo = () => {
     return (
       <div style={{ textAlign: "center" }}>
-        <Link style={{ color: token.colorText }} href="/">
+        <Link style={{ color: designToken.colorText }} href="/">
           <GlobalOutlined />
         </Link>
       </div>
@@ -59,7 +54,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
     <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
       <Layout style={{ minHeight: "100vh" }}>
         <Sider
-          style={{ backgroundColor: token.colorBgBase }}
+          style={{ backgroundColor: designToken.colorBgBase }}
           className={styles.sider}
           breakpoint="md"
           collapsible
@@ -70,18 +65,18 @@ export default function PageLayout({ children }: PageLayoutProps) {
           <Menu
             mode="vertical"
             items={menuItems}
-            style={{ backgroundColor: token.colorBgContainer }}
+            style={{ backgroundColor: designToken.colorBgContainer }}
           />
         </Sider>
         <Layout>
           <Content
-            style={{ backgroundColor: token.colorBgContainer }}
+            style={{ backgroundColor: designToken.colorBgContainer }}
             className={styles.content}
           >
             {children}
           </Content>
           <Footer
-            style={{ backgroundColor: token.colorBgContainer }}
+            style={{ backgroundColor: designToken.colorBgContainer }}
             className={styles.footer}
           >
             <p>MeuEstagio - Trabalho de TCC</p>
