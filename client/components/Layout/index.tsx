@@ -5,8 +5,8 @@ import React, { ReactNode, useContext, useEffect, useState } from "react";
 
 import styles from "./styles.module.css";
 import { AuthContext } from "../../src/contexts/AuthContext";
-import StudentMenu from "./menu/student-menu";
-import DefaultMenu from "./menu/default-menu";
+import StudentMenu from "./menus/student-menu";
+import DefaultMenu from "./menus/default-menu";
 
 interface PageLayoutProps {
   children: ReactNode;

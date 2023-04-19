@@ -1,8 +1,10 @@
 import axios from "axios";
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { API_BASE_URL } from "../../services/constants";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useRouter } from "next/router";
+
+import { API_BASE_URL } from "../../services/constants";
+import { api } from "../../services/api/api";
 
 interface Props {
   children?: ReactNode;
@@ -49,9 +51,8 @@ export function AuthProvider({ children }: Props) {
   ): Promise<any> {
     const path = `/auth/login/${userType}`;
 
-    const { user, access_token } = (
-      await axios.post(path, { email, password }, { baseURL: API_BASE_URL })
-    ).data as { user: any; access_token: any };
+    const { user, access_token } = (await api.post(path, { email, password }))
+      .data as { user: any; access_token: any };
     setUser({ ...user, role: userType });
 
     setCookie(undefined, "next.token", access_token, {
