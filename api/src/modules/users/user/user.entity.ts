@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { City } from '../../cities/models/city.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export abstract class User {
@@ -12,15 +13,16 @@ export abstract class User {
   @Column({ unique: true })
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
 
   //cadastra endereço curriculo contendo a cidade
   //opcional ja esta na instituição
   //tabela address
-  @ManyToOne(() => City)
-  city: City;
+  // @ManyToOne(() => City)
+  // city: City;
 
-  @Column()
-  cityId: number;
+  // @Column()
+  // cityId: number;
 }
