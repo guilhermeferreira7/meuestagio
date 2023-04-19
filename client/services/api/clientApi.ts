@@ -1,6 +1,6 @@
 import axios from "axios";
 import { parseCookies } from "nookies";
-import { API_BASE_URL } from "../constants";
+import { API_BASE_URL } from "../../constants/constants";
 
 export function getAPIClient(ctx?: any) {
   const { ["next.token"]: token } = parseCookies(ctx);

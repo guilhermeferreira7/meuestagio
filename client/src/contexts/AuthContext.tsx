@@ -1,9 +1,7 @@
-import axios from "axios";
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useRouter } from "next/router";
 
-import { API_BASE_URL } from "../../services/constants";
 import { api } from "../../services/api/api";
 
 interface Props {
