@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 import { API_BASE_URL } from "../../../../services/constants";
 import styles from "./styles.module.css";
-import { saveStudent } from "../../../../services/users/student-service";
+import { saveStudent } from "../../../../services/student/student-service";
 import { api } from "../../../../services/api/api";
 import { getAPIClient } from "../../../../services/api/clientApi";
 
