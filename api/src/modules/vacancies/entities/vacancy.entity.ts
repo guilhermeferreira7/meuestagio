@@ -1,13 +1,14 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Company } from '../../users/companies/company.entity';
 
 @Entity()
 export class Vacancy {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // FOR TESTING PURPOSES ONLY
+  // UNIQUE FOR TESTING PURPOSES ONLY
   @Column({ unique: true })
-  name: string;
+  title: string;
 
   @Column()
   description: string;
@@ -18,6 +19,6 @@ export class Vacancy {
   @Column()
   companyId: number;
 
-  // @ManyToOne(() => Company)
-  // company: string;
+  @ManyToOne(() => Company)
+  company: Company;
 }

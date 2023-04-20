@@ -16,6 +16,16 @@ export class VacanciesService {
   }
 
   async findAll() {
-    return await this.repository.find();
+    const vacancies = await this.repository.find({ relations: ['company'] });
+    const result = vacancies.map((vacancy) => {
+      return {
+        ...vacancy,
+        company: {
+          name: vacancy.company.name,
+        },
+      };
+    });
+
+    return result;
   }
 }
