@@ -11,6 +11,10 @@ body {
   color: black !important;
 }
 
+.ant-menu-item span {
+  margin: 0 10px;
+}
+
 main {
   display: flex;
   flex: 1;

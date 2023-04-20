@@ -4,7 +4,6 @@ import { API_BASE_URL } from "../../constants/constants";
 
 export function getAPIClient(ctx?: any) {
   const { ["next.token"]: token } = parseCookies(ctx);
-  console.log("token ", token);
 
   const api = axios.create({
     baseURL: API_BASE_URL,

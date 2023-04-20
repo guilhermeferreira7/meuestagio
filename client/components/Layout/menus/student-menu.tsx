@@ -1,6 +1,11 @@
 import React, { useContext } from "react";
 import Link from "next/link";
-import { HomeOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  HomeOutlined,
+  LogoutOutlined,
+  UserOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { AuthContext } from "../../../src/contexts/AuthContext";
 
 export default function StudentMenu() {
@@ -19,6 +24,11 @@ export default function StudentMenu() {
       label: <Link href="/student/profile">Perfil</Link>,
       key: "profile",
       icon: <UserOutlined />,
+    },
+    {
+      label: <Link href="/student/vacancies">Buscar vagas</Link>,
+      key: "vacancies",
+      icon: <SearchOutlined />,
     },
     {
       label: (

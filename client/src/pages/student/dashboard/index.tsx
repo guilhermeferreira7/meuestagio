@@ -2,8 +2,16 @@ import { GetServerSideProps } from "next";
 import React from "react";
 import { parseCookies } from "nookies";
 
+import styles from "./styles.module.css";
+
 export default function StudentDashboard() {
-  return <h1>Student Home Page</h1>;
+  return (
+    <div className={styles.pageWrapper}>
+      <header className={styles.pageHeader}>
+        <h1>Dashboard</h1>
+      </header>
+    </div>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
