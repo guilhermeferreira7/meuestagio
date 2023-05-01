@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import React from "react";
-import { getAPIClient } from "../../../../services/api/clientApi";
+import { getAPIClient } from "@/services/api/clientApi";
 
 interface StudentProfileProps {
   studentInfo: any;
@@ -9,7 +9,7 @@ interface StudentProfileProps {
 
 export default function StudentProfile({ studentInfo }: StudentProfileProps) {
   return (
-    <div>
+    <div className="text-base-content">
       <h1>Meus dados</h1>
       <p>Nome: {studentInfo.name}</p>
       <p>Email: {studentInfo.email}</p>

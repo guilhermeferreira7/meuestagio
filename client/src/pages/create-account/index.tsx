@@ -1,12 +1,14 @@
 import { Button, Card, Form, Input, Radio, notification } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import styles from "./styles.module.css";
-import { saveStudent } from "../../../services/student/student-service";
+import { saveStudent } from "@/services/student/student-service";
 import { useRouter } from "next/router";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function CreateAccount() {
   const router = useRouter();
+  const { signIn } = useContext(AuthContext);
   const [formType, setFormType] = useState("student");
 
   const changeFields = (e: any) => {
@@ -23,10 +25,22 @@ export default function CreateAccount() {
     try {
       if (formType === "student") {
         await saveStudent(user);
+        signIn(values.email, values.password, "student");
+
         notification["success"]({
           message: "Conta criada com sucesso",
         });
-        router.push("/students/homepage");
+        notification["warning"]({
+          message: "Aviso!",
+          description: "Termine seu cadastro para utilizar o sistema",
+          duration: 0,
+          btn: (
+            <Button
+              title="Ok"
+              onClick={() => router.push("/student/profile")}
+            />
+          ),
+        });
       } else {
         notification["warning"]({
           message: "Aviso!",

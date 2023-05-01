@@ -2,7 +2,7 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useRouter } from "next/router";
 
-import { api } from "../../services/api/api";
+import { api } from "@/services/api/api";
 
 interface Props {
   children?: ReactNode;

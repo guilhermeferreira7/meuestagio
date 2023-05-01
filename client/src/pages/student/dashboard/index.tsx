@@ -1,10 +1,25 @@
 import { GetServerSideProps } from "next";
-import React from "react";
+import React, { useEffect } from "react";
 import { parseCookies } from "nookies";
 
 import styles from "./styles.module.css";
+import { Button, notification, theme } from "antd";
+import { useRouter } from "next/router";
 
 export default function StudentDashboard() {
+  const router = useRouter();
+  useEffect(() => {
+    notification["warning"]({
+      message: "Aviso!",
+      description: "Termine seu cadastro para utilizar o sistema",
+      btn: (
+        <Button onClick={() => router.push("/student/profile")}>
+          Terminar cadastro
+        </Button>
+      ),
+    });
+  }, []);
+
   return (
     <div className={styles.pageWrapper}>
       <header className={styles.pageHeader}>

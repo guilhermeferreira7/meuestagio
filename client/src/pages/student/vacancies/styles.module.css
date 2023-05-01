@@ -1,4 +1,4 @@
-.pageWrapper {
+/* .pageWrapper {
   display: flex;
   flex-direction: column;
 }
@@ -25,11 +25,9 @@
 .searchBar input:checked,
 .searchBar button {
   color: #1b7a92;
-  /* border-color: #1b7a92; */
 }
 
 .searchBar button span {
-  /* border-color: #1b7a92; */
   color: #1b7a92;
 }
 
@@ -62,4 +60,4 @@
 .vacancyTitle {
   font-weight: bold;
   font-size: 18px;
-}
+} */
