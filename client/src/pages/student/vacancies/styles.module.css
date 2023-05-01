@@ -1,0 +1,63 @@
+/* .pageWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.pageHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.searchArea {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 15px;
+}
+
+.searchBar input,
+.searchBar input:active,
+.searchBar input:hover,
+.searchBar input:checked,
+.searchBar button {
+  color: #1b7a92;
+}
+
+.searchBar button span {
+  color: #1b7a92;
+}
+
+.filterBox {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.filterSelect {
+  min-width: 200px;
+}
+
+.mainContent {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: space-around;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.vacancyCard {
+  margin: 0 15px 15px 0;
+  min-height: 300px;
+  box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.vacancyTitle {
+  font-weight: bold;
+  font-size: 18px;
+} */

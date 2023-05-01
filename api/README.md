@@ -25,6 +25,9 @@ $ npm run start
 # watch mode
 $ npm run start:dev
 
+# hot reload
+$ nest build --webpack --webpackPath webpack-hmr.config.js --watch
+
 # production mode
 $ npm run start:prod
 ```

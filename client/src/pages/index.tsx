@@ -21,14 +21,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
   const { ["next.token"]: token } = parseCookies(ctx);
   const { ["next.user"]: user } = parseCookies(ctx) as any;
 
-  // if (token) {
-  //   return {
-  //     redirect: {
-  //       destination: `/${user.role}/dashboard`,
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  const userObj = user ? JSON.parse(user) : null;
+
+  if (token && userObj) {
+    return {
+      redirect: {
+        destination: `/${userObj.role}/dashboard`,
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {},

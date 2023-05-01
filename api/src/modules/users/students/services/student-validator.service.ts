@@ -23,16 +23,16 @@ export class StudentValidator {
   ): Promise<CreateStudentDto | null> {
     const student: CreateStudentDto = createStudentDto;
 
-    const city = await this.validateCity(createStudentDto.cityId);
-    if (!city) return null;
+    // const city = await this.validateCity(createStudentDto.cityId);
+    // if (!city) return null;
 
-    const institution = await this.validateInstitution(
-      createStudentDto.institutionId,
-    );
-    if (!institution) return null;
+    // const institution = await this.validateInstitution(
+    //   createStudentDto.institutionId,
+    // );
+    // if (!institution) return null;
 
-    const course = await this.validateCourse(createStudentDto.courseId);
-    if (!course) return null;
+    // const course = await this.validateCourse(createStudentDto.courseId);
+    // if (!course) return null;
 
     return student;
   }

@@ -18,9 +18,9 @@ export abstract class User {
   //cadastra endereço curriculo contendo a cidade
   //opcional ja esta na instituição
   //tabela address
-  @ManyToOne(() => City)
-  city: City;
+  // @ManyToOne(() => City)
+  // city: City;
 
-  @Column()
-  cityId: number;
+  // @Column()
+  // cityId: number;
 }

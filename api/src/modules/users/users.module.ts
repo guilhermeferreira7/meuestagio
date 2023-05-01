@@ -8,9 +8,12 @@ import { City } from '../cities/models/city.entity';
 import { StudentsController } from './students/controllers/student.controller';
 import { StudentsService } from './students/services/student.service';
 import { StudentValidator } from './students/services/student-validator.service';
+import { Company } from './companies/company.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([City, Student, Institution, Course])],
+  imports: [
+    TypeOrmModule.forFeature([City, Student, Company, Institution, Course]),
+  ],
   providers: [StudentsService, StudentValidator],
   controllers: [StudentsController],
   exports: [StudentsService],

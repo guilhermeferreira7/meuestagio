@@ -9,24 +9,16 @@ export class Student extends User {
   @ManyToOne(() => Institution)
   institution: Institution;
 
-  @Column()
+  @Column({ nullable: true })
   institutionId: number;
-
-  @Column()
-  institutionName: string;
 
   @ManyToOne(() => Course)
   course: Course;
 
-  @Column()
+  @Column({ nullable: true })
   courseId: number;
 
-  @Column()
-  courseName: string;
-
   // phone
-
   // verificar telefone email e usuario pelo prof
-
   // periodo tabela curriculo
 }

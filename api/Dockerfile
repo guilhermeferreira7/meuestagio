@@ -16,14 +16,11 @@ COPY package*.json ./
 # Here we install all the deps
 RUN npm install
 
+# Install NestJS CLI
+RUN npm install -g @nestjs/cli
+
 # Bundle app source / copy all other files
 COPY . .
-
-# Install nest cli globally
-RUN npm i -g @nestjs/cli
-
-# Check if nest is installed
-RUN nest --version
 
 # Build the app to the /dist folder
 RUN npm run build
@@ -44,11 +41,7 @@ WORKDIR /usr/src/app
 # Copy all from development stage
 COPY --from=development /usr/src/app/ .
 
-EXPOSE 3001
+EXPOSE 8080
 
 # Run app
 CMD [ "node", "dist/main" ]
-
-# Example Commands to build and run the dockerfile
-# docker build -t thomas-nest .
-# docker run thomas-nest
