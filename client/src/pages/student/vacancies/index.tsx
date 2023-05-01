@@ -1,67 +1,45 @@
 import { GetServerSideProps } from "next";
 import React from "react";
 import { parseCookies } from "nookies";
-import { Card, Col, Form, Input, Row, Select, theme } from "antd";
 
-import styles from "./styles.module.css";
-import { getVacancies } from "../../../../services/vacancies/vacancy-service";
+import { getVacancies } from "@/services/vacancies/vacancy-service";
+import CardVacancy from "./card-vacancy";
 
-const { useToken } = theme;
-const { Search } = Input;
+interface StudentPageProps {
+  vacancies: [];
+}
 
-export default function StudentVacancies({ vacancies }: any) {
-  const { token: designToken } = useToken();
-
-  const VacancyCard = ({ vacancy }: any) => {
-    return (
-      <Col md={24} lg={12}>
-        <Card
-          hoverable={true}
-          title={vacancy.company.name}
-          className={styles.vacancyCard}
-          headStyle={{ backgroundColor: designToken.colorPrimary }}
-        >
-          <div className={styles.vacancyTitle}>{vacancy.title}</div>
-          <div>Descrição: {vacancy.description}</div>
-          <div>Salário: {vacancy.salary}</div>
-        </Card>
-      </Col>
-    );
-  };
-
+export default function StudentVacancies({ vacancies }: StudentPageProps) {
   return (
-    <div className={styles.pageWrapper}>
-      <header className={styles.pageHeader}>
-        <h1>
-          Ainda preciso de uma ideia para escrever aqui. Ou coloco o header da
-          página aqui de novo?
-        </h1>
+    <div className="flex flex-col items-center">
+      <div className="flex flex-row justify-center gap-2 p-2">
+        <input
+          type="text"
+          placeholder="Pesquisar vagas"
+          className="bg-primary text-primary-content placeholder:textarea-primary input border-primary-focus"
+        />
+        <button className="bg-primary text-primary-content border-primary-focus btn">
+          Buscar
+        </button>
+      </div>
+      <div className="flex justify-center">
+        <select
+          defaultValue={1}
+          className="bg-primary text-primary-content border-primary-focus  select select-sm"
+        >
+          <option disabled>Filtrar por</option>
+          <option>Todas as vagas</option>
+          <option>Vagas do meu curso</option>
+        </select>
+      </div>
 
-        <Row className={styles.searchArea}>
-          <Col span={24}>
-            <Search
-              className={styles.searchBar}
-              placeholder="O que você está procurando?"
-            />
-          </Col>
-          <Col span={24} className={styles.filterBox}>
-            <Select
-              className={styles.filterSelect}
-              placeholder="Filtrar por"
-              options={[
-                { value: 1, label: "Todas as vagas" },
-                { value: 2, label: "Minha área" },
-              ]}
-            ></Select>
-          </Col>
-        </Row>
-      </header>
-
-      <Row className={styles.mainContent}>
-        {vacancies?.map((vacancy: any) => {
-          return <VacancyCard vacancy={vacancy} />;
-        })}
-      </Row>
+      <div className="flex flex-col gap-2 m-8">
+        {vacancies.map((vacancy: any) => (
+          <div key={vacancy.id}>
+            <CardVacancy vacancy={vacancy} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -78,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const vacancies = await getVacancies();
+  const vacancies: [] = await getVacancies();
 
   return {
     props: {
