@@ -1,10 +1,13 @@
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import React, { useEffect, useState } from "react";
+
 import { getAPIClient } from "@/services/api/clientApi";
 import { api } from "../../../services/api/api";
 import { getStudentProfile } from "../../../services/student/student-service";
-import { notification } from "antd";
+import { toast, ToastContainer } from "react-toastify";
+import { Loader } from "lucide-react";
+import { Alert } from "antd";
 
 type StudentInfo = {
   name: string;
@@ -19,27 +22,41 @@ type StudentInfo = {
 
 export default function StudentProfile(studentInfo: StudentInfo) {
   const [user, setUser] = useState<StudentInfo>(studentInfo);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    // api.get("/students/profile").then((response) => {
-    //   setUser(response.data);
-    // });
     getStudentProfile().then((response) => {
       setUser(response);
     });
   }, []);
 
+  const notifySuccess = () => {
+    toast.success(`Atualizado com sucesso!`, {
+      hideProgressBar: true,
+      draggable: true,
+    });
+  };
+
+  const notifyError = (message: string) => {
+    toast.error(`Erro: ${message}`, {
+      autoClose: 0,
+      hideProgressBar: true,
+      draggable: true,
+    });
+  };
+
   const handleUpdate = async () => {
-    const newUser = { ...user, courseId: 2 };
-    const updatedUser = await api.patch("/students", {
-      ...newUser,
-    });
-
-    console.log(updatedUser.data);
-
-    notification["success"]({
-      message: "Dados atualizados com sucesso!",
-      description: updatedUser.data.course,
-    });
+    setLoading(true);
+    const newUser = { courseId: 1 };
+    try {
+      const updatedUser = await api.patch("/students", {
+        ...newUser,
+      });
+      notifySuccess();
+    } catch (error: any) {
+      notifyError(error.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,9 +66,18 @@ export default function StudentProfile(studentInfo: StudentInfo) {
       <p>Email: {user.email}</p>
       <p>Instituição: {user.institution?.name}</p>
       <p>Curso: {user.course?.name}</p>
-      <button className="btn" onClick={handleUpdate}>
-        Atualizar
-      </button>
+
+      {loading ? (
+        <button className="btn btn-info btn-disabled">
+          Atualizando... <Loader className="animate-spin" size={24} />
+        </button>
+      ) : (
+        <button className="btn" onClick={handleUpdate}>
+          Atualizar
+        </button>
+      )}
+
+      <ToastContainer />
     </div>
   );
 }
