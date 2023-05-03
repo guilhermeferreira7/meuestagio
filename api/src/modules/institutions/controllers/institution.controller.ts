@@ -1,8 +1,11 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { Institution } from '../models/institution.entity';
 import { InstitutionsService } from '../services/institution.service';
 import { CoursesService } from '../../courses/services/courses.service';
+import { CreateCityDto } from '../../cities/dtos/create-city.dto';
+import { City } from '../../cities/models/city.entity';
+import { CreateInstitutionDto } from '../dtos/create-institution.dto';
 
 @Controller('institutions')
 export class InstitutionsController {
@@ -14,6 +17,15 @@ export class InstitutionsController {
   @Get()
   async getAll(): Promise<Institution[]> {
     return await this.institutionsService.findAll();
+  }
+
+  @Post()
+  async create(
+    @Body() createInstitutionDto: CreateInstitutionDto,
+  ): Promise<Institution> {
+    return await this.institutionsService.createInstitution(
+      createInstitutionDto,
+    );
   }
 
   @Get(':id/courses')
