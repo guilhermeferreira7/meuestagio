@@ -3,8 +3,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import { CreateStudentDto } from '../dtos/create-student.dto';
-import { Institution } from '../../../institutions/models/institution.entity';
-import { Course } from '../../../courses/models/course.entity';
+import { Institution } from '../../../institutions/entities/institution.entity';
+import { Course } from '../../../courses/entities/course.entity';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
 import { Student } from '../entities/student.entity';
 

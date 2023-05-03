@@ -2,13 +2,15 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Student } from './students/entities/student.entity';
-import { Course } from '../courses/models/course.entity';
-import { Institution } from '../institutions/models/institution.entity';
-import { City } from '../cities/models/city.entity';
-import { StudentsController } from './students/controllers/student.controller';
-import { StudentsService } from './students/services/student.service';
-import { StudentValidator } from './students/services/student-validator.service';
+import { Course } from '../courses/entities/course.entity';
+import { Institution } from '../institutions/entities/institution.entity';
+import { City } from '../cities/entities/city.entity';
 import { Company } from './companies/company.entity';
+
+import { StudentsService } from './students/services/students.service';
+import { StudentValidator } from './students/services/students-validator.service';
+
+import { StudentsController } from './students/controllers/students.controller';
 
 @Module({
   imports: [

@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Student } from '../../users/students/entities/student.entity';
-import { StudentsService } from '../../users/students/services/student.service';
+import { StudentsService } from '../../users/students/services/students.service';
 import { AuthStudentService } from './auth-student.service';
 
 describe('AuthStudentService', () => {

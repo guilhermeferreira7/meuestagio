@@ -3,9 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { City } from '../../cities/models/city.entity';
-import { Institution } from '../models/institution.entity';
-import { InstitutionsService } from './institution.service';
+import { City } from '../../cities/entities/city.entity';
+import { Institution } from '../entities/institution.entity';
+import { InstitutionsService } from './institutions.service';
 
 const institutionOne = {
   name: 'UTFPR',

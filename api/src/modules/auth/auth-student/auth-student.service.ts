@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { StudentsService } from '../../users/students/services/student.service';
+import { StudentsService } from '../../users/students/services/students.service';
 import bcryptService from '../../../utils/bcriptUtils';
 import { UserAuth } from '../types/user-auth';
 import { Role } from '../../../utils/roles';

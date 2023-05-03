@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { InstitutionsController } from './institution.controller';
-import { InstitutionsService } from '../services/institution.service';
+import { InstitutionsController } from './institutions.controller';
+import { InstitutionsService } from '../services/institutions.service';
 import { CoursesService } from '../../courses/services/courses.service';
 
 describe('InstitutionsController', () => {

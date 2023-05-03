@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 
-import { Institution } from '../../../institutions/models/institution.entity';
+import { Institution } from '../../../institutions/entities/institution.entity';
 import { User } from '../../user/user.entity';
-import { Course } from '../../../courses/models/course.entity';
+import { Course } from '../../../courses/entities/course.entity';
 
 @Entity()
 export class Student extends User {

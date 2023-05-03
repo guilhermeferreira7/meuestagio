@@ -11,7 +11,7 @@ import {
 
 import { CreateStudentDto } from '../dtos/create-student.dto';
 import { Student } from '../entities/student.entity';
-import { StudentsService } from '../services/student.service';
+import { StudentsService } from '../services/students.service';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
 import { ReqAuth } from '../../../auth/types/request';

@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { StudentValidator } from './student-validator.service';
-import { City } from '../../../cities/models/city.entity';
-import { Institution } from '../../../institutions/models/institution.entity';
-import { Course } from '../../../courses/models/course.entity';
+import { StudentValidator } from './students-validator.service';
+import { City } from '../../../cities/entities/city.entity';
+import { Institution } from '../../../institutions/entities/institution.entity';
+import { Course } from '../../../courses/entities/course.entity';
 import { Student } from '../entities/student.entity';
 
 const mockCitiesRepository = {};

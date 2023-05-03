@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { City } from '../../cities/models/city.entity';
+import { City } from '../../cities/entities/city.entity';
 
 @Entity()
 export abstract class User {

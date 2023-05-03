@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 
 import { CreateStudentDto } from '../dtos/create-student.dto';
 import { Student } from '../entities/student.entity';
-import { StudentValidator } from './student-validator.service';
+import { StudentValidator } from './students-validator.service';
 import bcryptService from '../../../../utils/bcriptUtils';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
 

@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Institution } from '../../institutions/models/institution.entity';
+import { Institution } from '../../institutions/entities/institution.entity';
 
 @Entity()
 export class Course {

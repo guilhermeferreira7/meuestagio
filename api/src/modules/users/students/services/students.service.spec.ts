@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 
 import bcryptService from '../../../../utils/bcriptUtils';
 import { Student } from '../entities/student.entity';
-import { StudentsService } from './student.service';
-import { StudentValidator } from './student-validator.service';
+import { StudentsService } from './students.service';
+import { StudentValidator } from './students-validator.service';
 import { CreateStudentDto } from '../dtos/create-student.dto';
 
 const oneStudent: CreateStudentDto = {

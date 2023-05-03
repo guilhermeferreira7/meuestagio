@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CreateStudentDto } from '../dtos/create-student.dto';
-import { StudentsService } from '../services/student.service';
-import { StudentsController } from './student.controller';
+import { StudentsService } from '../services/students.service';
+import { StudentsController } from './students.controller';
 
 const createStudentDto: CreateStudentDto = {
   name: 'student one',

@@ -1,10 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
-import { Institution } from '../models/institution.entity';
-import { InstitutionsService } from '../services/institution.service';
+import { Institution } from '../entities/institution.entity';
+import { InstitutionsService } from '../services/institutions.service';
 import { CoursesService } from '../../courses/services/courses.service';
-import { CreateCityDto } from '../../cities/dtos/create-city.dto';
-import { City } from '../../cities/models/city.entity';
 import { CreateInstitutionDto } from '../dtos/create-institution.dto';
 
 @Controller('institutions')

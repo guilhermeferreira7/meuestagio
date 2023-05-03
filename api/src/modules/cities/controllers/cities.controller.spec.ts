@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { CitiesService } from '../services/city.service';
-import { CitiesController } from './city.controller';
-import { InstitutionsService } from '../../institutions/services/institution.service';
+import { CitiesService } from '../services/cities.service';
+import { CitiesController } from './cities.controller';
+import { InstitutionsService } from '../../institutions/services/institutions.service';
 
 const city = {
   name: 'Guarapuava',
