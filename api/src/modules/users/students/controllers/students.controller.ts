@@ -46,8 +46,6 @@ export class StudentsController {
     @Request() req: ReqAuth,
     @Body() updateStudentDto: UpdateStudentDto,
   ): Promise<any> {
-    console.log('updateStudentDto ', updateStudentDto);
-
     const student = await this.studentService.findOne(req.user.sub);
     if (!student) {
       throw new UnauthorizedException();
@@ -57,6 +55,8 @@ export class StudentsController {
       student.id,
       updateStudentDto,
     );
+
+    console.log('updatedStudent ', updatedStudent);
 
     return updatedStudent;
   }

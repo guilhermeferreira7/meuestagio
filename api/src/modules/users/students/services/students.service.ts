@@ -57,11 +57,8 @@ export class StudentsService {
   async updateStudent(id: number, student: UpdateStudentDto) {
     const studentToUpdate = await this.findOne(id);
 
-    console.log('studentToUpdate', studentToUpdate);
-    console.log('student', student);
-
     if (!studentToUpdate) {
-      throw new BadRequestException('Estudante não encontrado!');
+      throw new BadRequestException();
     }
 
     const validStudent = await this.validator.validateUpdate(student);
