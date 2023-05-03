@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+
 import { AuthModule } from './modules/auth/auth.module';
 import { CitiesModule } from './modules/cities/cities.module';
 import { InstitutionsModule } from './modules/institutions/institutions.module';
 import { CoursesModule } from './modules/courses/courses.module';
-import { ConfigModule } from '@nestjs/config';
 import { VacanciesModule } from './modules/vacancies/vacancies.module';
 
 @Module({
   imports: [
-    AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: process.env.DB_TYPE as any,
@@ -21,6 +21,7 @@ import { VacanciesModule } from './modules/vacancies/vacancies.module';
       synchronize: true,
       autoLoadEntities: true,
     }),
+    AuthModule,
     CitiesModule,
     InstitutionsModule,
     CoursesModule,
