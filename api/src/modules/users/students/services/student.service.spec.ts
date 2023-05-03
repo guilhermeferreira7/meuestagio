@@ -4,7 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import bcryptService from '../../../../utils/bcriptUtils';
-import { Student } from '../models/student.entity';
+import { Student } from '../entities/student.entity';
 import { StudentsService } from './student.service';
 import { StudentValidator } from './student-validator.service';
 import { CreateStudentDto } from '../dtos/create-student.dto';
@@ -13,9 +13,7 @@ const oneStudent: CreateStudentDto = {
   name: 'student one',
   email: 'student@email.com',
   password: 'abc123',
-  cityId: 1,
   institutionId: 1,
-  courseId: 1,
 };
 
 const studentsArray: CreateStudentDto[] = [
@@ -23,17 +21,13 @@ const studentsArray: CreateStudentDto[] = [
     name: 'student one',
     email: 'student@email.com',
     password: 'abc123',
-    cityId: 1,
     institutionId: 1,
-    courseId: 1,
   },
   {
     name: 'student two',
     email: 'student2@email.com',
     password: 'abc123',
-    cityId: 1,
     institutionId: 1,
-    courseId: 1,
   },
 ];
 
@@ -41,6 +35,7 @@ const mockStudentsRepository = {
   create: jest.fn((dto) => dto),
   save: jest.fn((student) => Promise.resolve(student)),
   findOneBy: jest.fn(() => undefined),
+  findOne: jest.fn(),
   find: jest.fn(() => studentsArray),
 };
 
@@ -154,9 +149,12 @@ describe('StudentService', () => {
 
   describe('findOne()', () => {
     it('should return one student by id', async () => {
-      const spyFind = jest.spyOn(studentsRepository, 'findOneBy');
+      const spyFind = jest.spyOn(studentsRepository, 'findOne');
       expect(service.findOne(1));
-      expect(spyFind).toBeCalledWith({ id: 1 });
+      expect(spyFind).toBeCalledWith({
+        relations: ['course', 'institution'],
+        where: { id: 1 },
+      });
     });
   });
 });

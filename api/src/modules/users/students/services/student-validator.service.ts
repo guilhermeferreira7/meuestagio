@@ -1,75 +1,63 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import { CreateStudentDto } from '../dtos/create-student.dto';
 import { City } from '../../../cities/models/city.entity';
 import { Institution } from '../../../institutions/models/institution.entity';
 import { Course } from '../../../courses/models/course.entity';
+import { UpdateStudentDto } from '../dtos/update-student.dto';
+import { Student } from '../entities/student.entity';
 
 @Injectable()
 export class StudentValidator {
   constructor(
-    @InjectRepository(City)
-    private readonly citiesRepository: Repository<City>,
+    @InjectRepository(Student)
+    private readonly studentsRepository: Repository<Student>,
     @InjectRepository(Institution)
     private readonly institutionsRepository: Repository<Institution>,
     @InjectRepository(Course)
     private readonly coursesRepository: Repository<Course>,
   ) {}
 
-  async validateCreate(
-    createStudentDto: CreateStudentDto,
-  ): Promise<CreateStudentDto | null> {
-    const student: CreateStudentDto = createStudentDto;
-
-    // const city = await this.validateCity(createStudentDto.cityId);
-    // if (!city) return null;
-
-    // const institution = await this.validateInstitution(
-    //   createStudentDto.institutionId,
-    // );
-    // if (!institution) return null;
-
-    // const course = await this.validateCourse(createStudentDto.courseId);
-    // if (!course) return null;
-
-    return student;
+  async validateCreate(createStudentDto: CreateStudentDto): Promise<boolean> {
+    await this.validateInstitution(createStudentDto.institutionId);
+    return true;
   }
 
-  private async validateCity(cityId: number): Promise<City> {
-    const city = await this.citiesRepository.findOneBy({
-      id: cityId,
-    });
+  async validateUpdate(updateStudentDto: UpdateStudentDto): Promise<boolean> {
+    updateStudentDto.institutionId &&
+      (await this.validateInstitution(updateStudentDto.institutionId));
+    updateStudentDto.courseId &&
+      (await this.validateCourse(updateStudentDto.courseId));
+    updateStudentDto.email &&
+      (await this.validateEmail(updateStudentDto.email));
 
-    if (!city) {
-      return null;
-    }
-
-    return city;
+    return true;
   }
 
-  private async validateInstitution(
-    institutionId: number,
-  ): Promise<Institution> {
+  private async validateInstitution(institutionId: number) {
     const institution = await this.institutionsRepository.findOneBy({
       id: institutionId,
     });
 
     if (!institution) {
-      return null;
+      throw new BadRequestException('Instituição não encontrada!');
     }
-
-    return institution;
   }
 
   private async validateCourse(courseId: number) {
     const course = await this.coursesRepository.findOneBy({ id: courseId });
 
     if (!course) {
-      return null;
+      throw new BadRequestException('Curso não encontrado!');
     }
+  }
 
-    return course;
+  private async validateEmail(email: string) {
+    const emailUsed = await this.studentsRepository.findOneBy({ email });
+    if (emailUsed) {
+      throw new BadRequestException('Email já cadastrado!');
+    }
   }
 }
