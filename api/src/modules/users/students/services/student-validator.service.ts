@@ -3,7 +3,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import { CreateStudentDto } from '../dtos/create-student.dto';
-import { City } from '../../../cities/models/city.entity';
 import { Institution } from '../../../institutions/models/institution.entity';
 import { Course } from '../../../courses/models/course.entity';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
@@ -48,7 +47,6 @@ export class StudentValidator {
 
   private async validateCourse(courseId: number) {
     const course = await this.coursesRepository.findOneBy({ id: courseId });
-
     if (!course) {
       throw new BadRequestException('Curso não encontrado!');
     }
