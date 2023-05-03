@@ -15,12 +15,27 @@ export abstract class User {
   @Column()
   password: string;
 
-  //cadastra endereço curriculo contendo a cidade
-  //opcional ja esta na instituição
-  //tabela address
-  // @ManyToOne(() => City)
-  // city: City;
+  @Column({ nullable: true, unique: true })
+  phone: string;
 
-  // @Column()
-  // cityId: number;
+  @Column({ nullable: true })
+  emailVerified: boolean;
+
+  @Column({ nullable: true })
+  phoneVerified: boolean;
+
+  @Column({ nullable: true })
+  userVerified: boolean;
+
+  @Column({ nullable: true, unique: true })
+  cpf: string;
+
+  @Column({ nullable: true, unique: true })
+  cnpj: string;
+
+  @Column({ nullable: true })
+  addressId: number;
+
+  // @ManyToOne(() => Address)
+  // address: Address;
 }

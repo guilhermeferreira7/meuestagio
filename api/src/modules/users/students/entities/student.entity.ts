@@ -9,7 +9,7 @@ export class Student extends User {
   @ManyToOne(() => Institution)
   institution: Institution;
 
-  @Column({ nullable: true })
+  @Column()
   institutionId: number;
 
   @ManyToOne(() => Course)
@@ -17,6 +17,13 @@ export class Student extends User {
 
   @Column({ nullable: true })
   courseId: number;
+
+  // id do curriculo
+  @Column({ nullable: true })
+  resumeId: number;
+
+  @Column({ nullable: true })
+  period: string;
 
   // phone
   // verificar telefone email e usuario pelo prof
