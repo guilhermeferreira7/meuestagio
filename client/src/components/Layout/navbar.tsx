@@ -16,7 +16,7 @@ export default function LayoutNavbar({ menuItems }: any) {
           <div className="flex flex-1 items-end">
             <button
               className="btn border-0 bg-base-300 w-full"
-              data-toggle-theme="dark,aqua"
+              data-toggle-theme="dark,cupcake"
               data-act-class="ACTIVECLASS"
             >
               ativar/desativar modo escuro
