@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '../../utils/roles';
+import { UserAuth } from './types/user-auth';
 
 export type TPayload = {
-  email: string;
   sub: string;
+  email: string;
   role: Role;
 };
 
@@ -12,10 +13,9 @@ export type TPayload = {
 export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
 
-  async login(user: TPayload) {
-    const payload = user;
+  async login(user: UserAuth) {
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(user),
       user,
     };
   }
