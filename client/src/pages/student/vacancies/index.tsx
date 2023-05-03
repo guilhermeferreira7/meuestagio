@@ -16,7 +16,7 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
         <input
           type="text"
           placeholder="Pesquisar vagas"
-          className="bg-primary text-primary-content placeholder:textarea-primary input border-primary-focus"
+          className="bg-primary input text-primary-content placeholder:text-primary-content/50 border-primary-focus"
         />
         <button className="bg-primary text-primary-content border-primary-focus btn">
           Buscar
@@ -25,7 +25,7 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
       <div className="flex justify-center">
         <select
           defaultValue={1}
-          className="bg-primary text-primary-content border-primary-focus  select select-sm"
+          className="bg-primary text-primary-content border-primary-focus select select-sm"
         >
           <option disabled>Filtrar por</option>
           <option>Todas as vagas</option>

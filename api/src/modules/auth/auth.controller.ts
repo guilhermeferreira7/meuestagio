@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Role } from '../../utils/roles';
 import { AuthGuard } from '@nestjs/passport';
+import { ReqAuth } from './types/request';
 
 @Controller()
 export class AuthController {
@@ -9,7 +9,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('student'))
   @Post('auth/login/student')
-  async loginStudent(@Request() req) {
-    return await this.authService.login({ ...req.user, role: Role.STUDENT });
+  async loginStudent(@Request() req: ReqAuth) {
+    return await this.authService.login({ ...req.user });
   }
 }

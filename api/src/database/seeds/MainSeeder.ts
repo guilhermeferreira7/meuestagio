@@ -11,19 +11,25 @@ export default class MainSeeder implements Seeder {
     dataSource: DataSource,
     factoryManager: SeederFactoryManager,
   ): Promise<void> {
-    const vacanciesRepository = dataSource.getRepository(Vacancy);
     const companiesRepository = dataSource.getRepository(Company);
+    const vacanciesRepository = dataSource.getRepository(Vacancy);
 
-    const companiesSeed = await companiesRepository.upsert(companies, [
-      'email',
-    ]);
-
-    companiesSeed.generatedMaps.forEach((company) => {
-      console.log(company);
-    });
+    const companiesSeed = await companiesRepository.upsert(
+      companies.map((company) => {
+        console.log('Gerando empresa: ', company);
+        return { ...company };
+      }),
+      ['email'],
+    );
+    console.log(
+      'Sucesso! Empresas geradas: ',
+      companiesSeed.generatedMaps.length,
+    );
 
     const vacanciesSeed = await vacanciesRepository.upsert(
       vacancies.map((vacancy) => {
+        console.log('Gerando vaga: ', vacancy);
+
         return {
           ...vacancy,
           companyId:
@@ -34,9 +40,6 @@ export default class MainSeeder implements Seeder {
       }),
       ['title'],
     );
-
-    vacanciesSeed.generatedMaps.forEach((vacancy) => {
-      console.log(vacancy);
-    });
+    console.log('Sucesso! Vagas geradas: ', vacanciesSeed.generatedMaps.length);
   }
 }

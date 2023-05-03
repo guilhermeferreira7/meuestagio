@@ -1,9 +1,9 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 
 import { CreateCityDto } from '../dtos/create-city.dto';
-import { City } from '../models/city.entity';
-import { CitiesService } from '../services/city.service';
-import { InstitutionsService } from '../../institutions/services/institution.service';
+import { City } from '../entities/city.entity';
+import { CitiesService } from '../services/cities.service';
+import { InstitutionsService } from '../../institutions/services/institutions.service';
 
 @Controller('cities')
 export class CitiesController {

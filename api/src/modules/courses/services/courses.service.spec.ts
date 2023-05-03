@@ -3,8 +3,8 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { CoursesService } from './courses.service';
-import { Course } from '../models/course.entity';
-import { Institution } from '../../institutions/models/institution.entity';
+import { Course } from '../entities/course.entity';
+import { Institution } from '../../institutions/entities/institution.entity';
 
 const oneCourse = {
   name: 'TSI',

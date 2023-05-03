@@ -2,9 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { City } from '../../cities/models/city.entity';
+import { City } from '../../cities/entities/city.entity';
 import { CreateInstitutionDto } from '../dtos/create-institution.dto';
-import { Institution } from '../models/institution.entity';
+import { Institution } from '../entities/institution.entity';
 
 @Injectable()
 export class InstitutionsService {

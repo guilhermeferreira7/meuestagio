@@ -2,6 +2,8 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
 
 import MainSeeder from './seeds/MainSeeder';
+import { Company } from '../modules/users/companies/company.entity';
+import { Vacancy } from '../modules/vacancies/entities/vacancy.entity';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -9,7 +11,7 @@ const options: DataSourceOptions & SeederOptions = {
   username: 'postgres',
   host: process.env.PG_HOST,
   password: 'qwerty',
-  entities: ['dist/**/*.entity.js'],
+  entities: [Company, Vacancy],
   // entities: ['src/**/*.entity.ts'],
   seeds: [MainSeeder],
   // migrations: ['dist/migrations/*.js'],

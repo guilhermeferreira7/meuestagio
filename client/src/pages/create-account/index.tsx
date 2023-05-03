@@ -1,15 +1,20 @@
-import { Button, Card, Form, Input, Radio, notification } from "antd";
+import { Button, Card, Form, Input, Radio } from "antd";
 import React, { useContext, useState } from "react";
+import { toast } from "react-toastify";
 
-import styles from "./styles.module.css";
 import { saveStudent } from "@/services/student/student-service";
-import { useRouter } from "next/router";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function CreateAccount() {
-  const router = useRouter();
   const { signIn } = useContext(AuthContext);
   const [formType, setFormType] = useState("student");
+
+  const notifySuccess = () => {
+    toast.success("Cadastrado com sucesso!", {
+      hideProgressBar: true,
+      draggable: true,
+    });
+  };
 
   const changeFields = (e: any) => {
     setFormType(e.target.value);
@@ -26,42 +31,22 @@ export default function CreateAccount() {
       if (formType === "student") {
         await saveStudent(user);
         signIn(values.email, values.password, "student");
-
-        notification["success"]({
-          message: "Conta criada com sucesso",
-        });
-        notification["warning"]({
-          message: "Aviso!",
-          description: "Termine seu cadastro para utilizar o sistema",
-          duration: 0,
-          btn: (
-            <Button
-              title="Ok"
-              onClick={() => router.push("/student/profile")}
-            />
-          ),
-        });
+        notifySuccess();
       } else {
-        notification["warning"]({
-          message: "Aviso!",
-          description: "Ainda não é possível criar uma conta de empresa",
-        });
+        console.log("company");
       }
     } catch (error: any) {
-      notification["error"]({
-        message: "Algo deu errado!",
-        description: `${error.response.data.message}`,
-      });
+      console.log(error.response?.data?.message);
     }
   };
 
   return (
-    <div className={styles.pageWrapper}>
-      <div className={styles.header}>
+    <div>
+      <div>
         <h1>Crie já sua conta para utilizar o sistema!</h1>
       </div>
 
-      <Card title="Cadastre-se" className={styles.formCard}>
+      <Card title="Cadastre-se">
         <Form
           layout="vertical"
           name="basic"
@@ -70,7 +55,6 @@ export default function CreateAccount() {
           autoComplete="on"
         >
           <Form.Item
-            className={styles.formItem}
             label="Criar conta como:"
             name="userType"
             rules={[
@@ -84,7 +68,6 @@ export default function CreateAccount() {
           </Form.Item>
 
           <Form.Item
-            className={styles.formItem}
             label={formType === "student" ? "Nome Completo" : "Nome da Empresa"}
             name="username"
             rules={[
@@ -100,7 +83,6 @@ export default function CreateAccount() {
             <Input />
           </Form.Item>
           <Form.Item
-            className={styles.formItem}
             label="E-Mail"
             name="email"
             rules={[
@@ -114,8 +96,35 @@ export default function CreateAccount() {
             <Input />
           </Form.Item>
 
+          {formType === "student" ? (
+            <Form.Item
+              label="Instiuição"
+              name="institution"
+              rules={[
+                {
+                  required: true,
+                  message: "Digite o nome da sua instituição",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          ) : (
+            <Form.Item
+              label="CNPJ"
+              name="cnpj"
+              rules={[
+                {
+                  required: true,
+                  message: "Digite o CNPJ da sua empresa",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          )}
+
           <Form.Item
-            className={styles.formItem}
             label="Senha"
             name="password"
             rules={[{ required: true, message: "Digite sua senha" }]}
@@ -144,7 +153,7 @@ export default function CreateAccount() {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item className={styles.buttonLogin}>
+          <Form.Item>
             <Button type="primary" htmlType="submit">
               Criar conta
             </Button>

@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { City } from '../models/city.entity';
-import { CitiesService } from './city.service';
+import { City } from '../entities/city.entity';
+import { CitiesService } from './cities.service';
 
 const cityOne = {
   name: 'Guarapuava',

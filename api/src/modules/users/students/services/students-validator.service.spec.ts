@@ -2,22 +2,26 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { StudentValidator } from './student-validator.service';
-import { City } from '../../../cities/models/city.entity';
-import { Institution } from '../../../institutions/models/institution.entity';
-import { Course } from '../../../courses/models/course.entity';
+import { StudentValidator } from './students-validator.service';
+import { City } from '../../../cities/entities/city.entity';
+import { Institution } from '../../../institutions/entities/institution.entity';
+import { Course } from '../../../courses/entities/course.entity';
+import { Student } from '../entities/student.entity';
 
 const mockCitiesRepository = {};
 const mockInstitutionsRepository = {};
 const mockCoursesRepository = {};
+const mockStudentsRepository = {};
 
 describe('StudentsValidator', () => {
   let studentsValidator: StudentValidator;
 
+  const studentsRepository = Repository<Student>;
   const citiesRepository = Repository<City>;
   const institutionsRepository = Repository<Institution>;
   const coursesRepository = Repository<Course>;
 
+  const STUDENTS_REPOSITORY_TOKEN = getRepositoryToken(Student);
   const CITIES_REPOSITORY_TOKEN = getRepositoryToken(City);
   const INSTITUTIONS_REPOSITORY_TOKEN = getRepositoryToken(Institution);
   const COURSES_REPOSITORY_TOKEN = getRepositoryToken(Course);
@@ -36,6 +40,8 @@ describe('StudentsValidator', () => {
             return mockInstitutionsRepository;
           case COURSES_REPOSITORY_TOKEN:
             return mockCoursesRepository;
+          case STUDENTS_REPOSITORY_TOKEN:
+            return mockStudentsRepository;
         }
       })
       .compile();

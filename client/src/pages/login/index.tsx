@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Button, Card, Form, Input, Radio, notification } from "antd";
+import React, { useContext } from "react";
+import { Button, Form, Input, Radio } from "antd";
 
 import Link from "next/link";
 
@@ -15,14 +15,7 @@ export default function Login() {
 
     try {
       const user = await signIn(email, password, userType);
-      notification["success"]({
-        message: `Seja bem vindo de volta ${user?.name}`,
-      });
     } catch (error: any) {
-      notification["error"]({
-        message: "Erro",
-        description: `${error?.response?.data?.message}`,
-      });
       console.log(error);
     }
   };

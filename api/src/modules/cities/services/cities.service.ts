@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateCityDto } from '../dtos/create-city.dto';
-import { City } from '../models/city.entity';
+import { City } from '../entities/city.entity';
 
 @Injectable()
 export class CitiesService {
