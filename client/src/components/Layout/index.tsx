@@ -31,9 +31,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col ">
         <LayoutHeader />
-        <main className="flex flex-1 justify-center">
-          <div className="flex-1 h-full pt-3">{children}</div>
-        </main>
+        <main className="flex h-full justify-center">{children}</main>
         <LayoutFooter />
       </div>
       <LayoutNavbar menuItems={menuItems} />
