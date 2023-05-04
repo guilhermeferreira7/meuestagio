@@ -23,6 +23,7 @@ type StudentInfo = {
 export default function StudentProfile(studentInfo: StudentInfo) {
   const [user, setUser] = useState<StudentInfo>(studentInfo);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     getStudentProfile().then((response) => {
       setUser(response);
@@ -44,20 +45,7 @@ export default function StudentProfile(studentInfo: StudentInfo) {
     });
   };
 
-  const handleUpdate = async () => {
-    setLoading(true);
-    const newUser = { courseId: 1 };
-    try {
-      const updatedUser = await api.patch("/students", {
-        ...newUser,
-      });
-      notifySuccess();
-    } catch (error: any) {
-      notifyError(error.response?.data?.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleUpdate = async () => {};
 
   return (
     <div className="text-base-content">

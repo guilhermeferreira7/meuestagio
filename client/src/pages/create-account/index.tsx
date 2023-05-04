@@ -58,6 +58,9 @@ export default function CreateAccount({ institutions }: any) {
   } = useForm<CreateAccountFormData>({
     resolver: zodResolver(createUserFormSchema),
   });
+
+  const { signIn } = useContext(AuthContext);
+
   const [userRole, setUserRole] = useState("student");
 
   const notifySuccess = () => {
@@ -88,6 +91,9 @@ export default function CreateAccount({ institutions }: any) {
       try {
         await saveStudent(data);
         notifySuccess();
+        setTimeout(() => {
+          signIn(data.email, data.password, data.userRole);
+        }, 2000);
       } catch (error: any) {
         notifyError(error.response?.data?.message);
       }

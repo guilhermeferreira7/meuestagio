@@ -31,6 +31,7 @@ export class StudentsController {
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
     const student = await this.studentService.findOne(req.user.sub);
+    console.log('student ', student);
 
     if (!student) {
       throw new UnauthorizedException();
@@ -59,5 +60,10 @@ export class StudentsController {
     console.log('updatedStudent ', updatedStudent);
 
     return updatedStudent;
+  }
+
+  @Get()
+  async getAll(): Promise<Student[]> {
+    return await this.studentService.findAll();
   }
 }
