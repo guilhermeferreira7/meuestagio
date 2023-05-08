@@ -1,6 +1,6 @@
 import axios from "axios";
 import { parseCookies } from "nookies";
-import { API_BASE_URL } from "../../constants/constants";
+import { API_BASE_URL } from "../../constants/api";
 
 export function getAPIClient(ctx?: any) {
   const { ["next.token"]: token } = parseCookies(ctx);
@@ -11,6 +11,8 @@ export function getAPIClient(ctx?: any) {
 
   if (token) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    api.defaults.headers.common["Authorization"] = undefined;
   }
 
   return api;

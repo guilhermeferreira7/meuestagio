@@ -5,19 +5,21 @@ import { Student } from './students/entities/student.entity';
 import { Course } from '../courses/entities/course.entity';
 import { Institution } from '../institutions/entities/institution.entity';
 import { City } from '../cities/entities/city.entity';
-import { Company } from './companies/company.entity';
+import { Company } from './companies/entities/company.entity';
 
 import { StudentsService } from './students/services/students.service';
 import { StudentValidator } from './students/services/students-validator.service';
 
 import { StudentsController } from './students/controllers/students.controller';
+import { CompaniesService } from './companies/services/companies.service';
+import { CompaniesController } from './companies/controllers/companies.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([City, Student, Company, Institution, Course]),
   ],
-  providers: [StudentsService, StudentValidator],
-  controllers: [StudentsController],
-  exports: [StudentsService],
+  providers: [StudentsService, CompaniesService, StudentValidator],
+  controllers: [StudentsController, CompaniesController],
+  exports: [StudentsService, CompaniesService],
 })
 export class UsersModule {}

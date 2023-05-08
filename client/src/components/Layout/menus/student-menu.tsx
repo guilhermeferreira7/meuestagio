@@ -12,10 +12,6 @@ export default function StudentMenu() {
       <UserOutlined />
       Perfil
     </Link>,
-    <Link className="w-full" href="/student/vacancies">
-      <SearchOutlined />
-      Buscar vagas
-    </Link>,
   ];
   return menuItems;
 }

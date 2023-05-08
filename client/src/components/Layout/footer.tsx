@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function LayoutFooter() {
+export default function Footer() {
   return (
-    <footer className="bg-base-300 flex flex-2 p-4 justify-center">
+    <div className="flex flex-1 justify-center">
       <p>MeuEstagio - Trabalho de TCC</p>
-    </footer>
+    </div>
   );
 }

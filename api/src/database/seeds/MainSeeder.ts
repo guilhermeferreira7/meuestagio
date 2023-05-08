@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Seeder, SeederFactoryManager } from 'typeorm-extension';
 import { Vacancy } from '../../modules/vacancies/entities/vacancy.entity';
-import { Company } from '../../modules/users/companies/company.entity';
+import { Company } from '../../modules/users/companies/entities/company.entity';
 
 import { vacancies } from './data/vacancies';
 import { companies } from './data/companies';

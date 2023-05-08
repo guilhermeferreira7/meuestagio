@@ -10,6 +10,8 @@ import { AuthStudentService } from './auth-student/auth-student.service';
 import { LocalStudentStrategy } from './strategies/student.strategy';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { AuthCompanyService } from './auth-company/auth-company.service';
+import { LocalCompanyStrategy } from './strategies/company.strategy';
 
 @Global()
 @Module({
@@ -24,10 +26,12 @@ import { AuthController } from './auth.controller';
   providers: [
     AuthService,
     AuthStudentService,
+    AuthCompanyService,
     LocalStudentStrategy,
+    LocalCompanyStrategy,
     JwtStrategy,
   ],
-  exports: [AuthStudentService, AuthService],
+  exports: [AuthStudentService, AuthService, AuthCompanyService],
   controllers: [AuthController],
 })
 export class AuthModule {}

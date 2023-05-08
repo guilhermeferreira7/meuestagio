@@ -1,9 +1,9 @@
-import Link from "next/link";
+import { LogIn, LogOut, Menu } from "lucide-react";
 import React, { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { LogOut } from "lucide-react";
+import Link from "next/link";
 
-export default function LayoutHeader() {
+export default function Header({ menuItems }: any) {
   const { isAuthenticated, signOut } = useContext(AuthContext);
 
   const handleLogout = () => {
@@ -11,43 +11,51 @@ export default function LayoutHeader() {
   };
 
   return (
-    <header className="bg-base-300 flex flex-row flex-3 p-4 justify-center">
-      <button className="bg-base-300 drawer lg:hidden h-full w-10">
-        <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block w-6 h-6 stroke-current"
+    <div className="navbar flex flex-row w-full">
+      <div className="flex w-1/2 lg:w-1/2 justify-start lg:justify-center">
+        <div className="dropdown">
+          <label tabIndex={0} className="text-primary lg:hidden">
+            <Menu />
+          </label>
+          <ul
+            tabIndex={0}
+            className="flex flex-row justify-end menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            ></path>
-          </svg>
-        </label>
-      </button>
-      <Link
-        className="flex flex-1 justify-center items-center text-primary text-2xl font-bold"
-        href="/"
-      >
-        MeuEstagio
-      </Link>
-      {isAuthenticated ? (
-        <Link
-          className="flex flex-row gap-2 pr-2 justify-center items-center text-warning"
-          href=""
-          onClick={handleLogout}
-        >
-          <LogOut /> Sair
+            {menuItems.map((item: any, key: any) => (
+              <li className="w-full" key={key}>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Link href="/" className="pl-2 text-2xl text-primary font-bold">
+          MeuEstagio
         </Link>
-      ) : (
-        <Link className="flex justify-center items-center btn" href="/login">
-          Entrar
-        </Link>
-      )}
-    </header>
+      </div>
+      <div className="hidden lg:w-1/2 lg:flex lg:justify-end">
+        <ul className="menu menu-horizontal px-1">
+          {menuItems.map((item: any, key: any) => (
+            <li key={key}>{item}</li>
+          ))}
+        </ul>
+      </div>
+      <div className="w-1/2 lg:w-1/4 justify-end">
+        {isAuthenticated ? (
+          <a
+            className="bg-base-100 border-0 btn hover:bg-error-content text-error flex flex-row gap-2"
+            onClick={handleLogout}
+          >
+            Sair <LogOut />
+          </a>
+        ) : (
+          <Link
+            className="bg-base-100 border-0 btn hover:bg-info-content text-info flex flex-row gap-2"
+            href="/login"
+          >
+            Login <LogIn />
+          </Link>
+        )}
+      </div>
+    </div>
   );
 }

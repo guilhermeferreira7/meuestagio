@@ -42,7 +42,7 @@ export class InstitutionsService {
   }
 
   async findAll(): Promise<Institution[]> {
-    return await this.institutionsReposity.find();
+    return await this.institutionsReposity.find({ relations: ['city'] });
   }
 
   private async validate(institution: CreateInstitutionDto): Promise<boolean> {

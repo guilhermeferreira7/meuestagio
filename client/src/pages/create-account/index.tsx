@@ -1,165 +1,165 @@
-import { Button, Card, Form, Input, Radio } from "antd";
 import React, { useContext, useState } from "react";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import { FormProvider, useForm } from "react-hook-form";
+import { set, z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { saveStudent } from "@/services/student/student-service";
+import { saveStudent } from "@/services/users/student/student-service";
 import { AuthContext } from "../../contexts/AuthContext";
+import { GetServerSideProps } from "next";
+import { getAPIClient } from "../../services/api/clientApi";
+import {
+  notifyError,
+  notifySuccess,
+  notifyWarning,
+} from "../../components/toasts/toast";
+import { createUserFormSchema } from "../../utils/validators/create-account-schema";
 
-export default function CreateAccount() {
+import { Form } from "../../components/Form";
+import { Role } from "../../utils/types/user-auth";
+import { saveCompany } from "../../services/users/companies/company-service";
+
+type CreateAccountFormData = z.infer<typeof createUserFormSchema>;
+
+export default function CreateAccount({ institutions }: any) {
+  const createAccountForm = useForm<CreateAccountFormData>({
+    resolver: zodResolver(createUserFormSchema),
+  });
+  const { handleSubmit } = createAccountForm;
+
   const { signIn } = useContext(AuthContext);
-  const [formType, setFormType] = useState("student");
 
-  const notifySuccess = () => {
-    toast.success("Cadastrado com sucesso!", {
-      hideProgressBar: true,
-      draggable: true,
-    });
-  };
+  const [userRole, setUserRole] = useState<Role>(Role.Student);
 
-  const changeFields = (e: any) => {
-    setFormType(e.target.value);
-  };
-
-  const handleSignUp = async (values: any) => {
-    const user = {
-      name: values.username,
-      email: values.email,
-      password: values.password,
-    };
-
-    try {
-      if (formType === "student") {
-        await saveStudent(user);
-        signIn(values.email, values.password, "student");
-        notifySuccess();
-      } else {
-        console.log("company");
+  async function createAccount(data: CreateAccountFormData) {
+    if (data.userRole === Role.Student) {
+      try {
+        notifySuccess("Aluno cadastrado com sucesso!");
+        await saveStudent(data);
+        setTimeout(() => {
+          signIn(data.email, data.password, data.userRole);
+        }, 2000);
+      } catch (error: any) {
+        notifyError(error.response?.data?.message);
       }
-    } catch (error: any) {
-      console.log(error.response?.data?.message);
+    } else if (data.userRole === Role.Company) {
+      try {
+        notifySuccess("Empresa cadastrada com sucesso!");
+        await saveCompany(data);
+        setTimeout(() => {
+          signIn(data.email, data.password, data.userRole);
+        }, 2000);
+      } catch (error: any) {
+        notifyError(error.response?.data?.message);
+      }
+    } else {
+      notifyWarning();
     }
-  };
+  }
 
   return (
-    <div>
-      <div>
-        <h1>Crie já sua conta para utilizar o sistema!</h1>
+    <div className="flex flex-col flex-1 items-center w-full ">
+      <div className="text-center my-3">
+        <h1 className="font-bold text-lg text-primary">
+          Crie já sua conta para utilizar o sistema!
+        </h1>
       </div>
 
-      <Card title="Cadastre-se">
-        <Form
-          layout="vertical"
-          name="basic"
-          initialValues={{ remember: true, userType: "student" }}
-          onFinish={handleSignUp}
-          autoComplete="on"
+      <FormProvider {...createAccountForm}>
+        <form
+          className="flex flex-col gap-2 w-5/6 lg:w-1/3 mb-4"
+          onSubmit={handleSubmit(createAccount)}
         >
-          <Form.Item
-            label="Criar conta como:"
-            name="userType"
-            rules={[
-              { required: true, message: "Selecione uma opção para cadastro" },
-            ]}
-          >
-            <Radio.Group onChange={changeFields}>
-              <Radio.Button value="student">Aluno</Radio.Button>
-              <Radio.Button value="company">Empresa</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
+          <Form.Field>
+            <div className="btn-group flex flex-row justify-center">
+              <Form.InputRadio
+                value="student"
+                name="userRole"
+                title="Aluno"
+                defaultChecked
+                onChange={() => setUserRole(Role.Student)}
+              />
+              <Form.InputRadio
+                value="company"
+                name="userRole"
+                title="Empresa"
+                onChange={() => setUserRole(Role.Company)}
+              />
+            </div>
+          </Form.Field>
 
-          <Form.Item
-            label={formType === "student" ? "Nome Completo" : "Nome da Empresa"}
-            name="username"
-            rules={[
-              {
-                required: true,
-                message:
-                  formType === "student"
-                    ? "Digite seu nome completo"
-                    : "Digite o nome da empresa",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="E-Mail"
-            name="email"
-            rules={[
-              {
-                required: true,
-                type: "email",
-                message: "E-mail inválido!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+          <Form.Field>
+            <Form.Label htmlFor="name">
+              {userRole === Role.Student
+                ? "Digite seu nome completo"
+                : "Digite o nome de sua empresa"}
+            </Form.Label>
+            <Form.InputText name="name" />
+            <Form.ErrorMessage field="name" />
+          </Form.Field>
 
-          {formType === "student" ? (
-            <Form.Item
-              label="Instiuição"
-              name="institution"
-              rules={[
-                {
-                  required: true,
-                  message: "Digite o nome da sua instituição",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+          <Form.Field>
+            <Form.Label htmlFor="email">Digite seu email</Form.Label>
+            <Form.InputText name="email" />
+            <Form.ErrorMessage field="email" />
+          </Form.Field>
+
+          {userRole === "student" ? (
+            <Form.Field>
+              <Form.Label htmlFor="institutionId">Insituição</Form.Label>
+              <Form.InputSelect name="institutionId">
+                <option disabled value="">
+                  Escolha uma instituição
+                </option>
+                {institutions.map((institution: any) => {
+                  return (
+                    <option key={institution.id} value={institution.id}>
+                      {institution.name}
+                    </option>
+                  );
+                })}
+              </Form.InputSelect>
+              <Form.ErrorMessage field="institutionId" />
+            </Form.Field>
           ) : (
-            <Form.Item
-              label="CNPJ"
-              name="cnpj"
-              rules={[
-                {
-                  required: true,
-                  message: "Digite o CNPJ da sua empresa",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+            <Form.Field>
+              <Form.Label htmlFor="cnpj">Digite o CNPJ da empresa</Form.Label>
+              <Form.InputText name="cnpj" />
+              <Form.ErrorMessage field="cnpj" />
+            </Form.Field>
           )}
 
-          <Form.Item
-            label="Senha"
-            name="password"
-            rules={[{ required: true, message: "Digite sua senha" }]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <Form.Item
-            label="Confirme sua senha"
-            name="password-repeat"
-            dependencies={["password"]}
-            rules={[
-              {
-                required: true,
-                message: "Por favor confirme sua senha!",
-              },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error("As senhas não são iguais!"));
-                },
-              }),
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
+          <Form.Field>
+            <Form.Label htmlFor="password">Digite sua senha</Form.Label>
+            <Form.InputText name="password" type="password" />
+            <Form.ErrorMessage field="password" />
+          </Form.Field>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Criar conta
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+          <Form.Field>
+            <Form.Label htmlFor="confirmPassword">
+              Confirme sua senha
+            </Form.Label>
+            <Form.InputText name="confirmPassword" type="password" />
+            <Form.ErrorMessage field="confirmPassword" />
+          </Form.Field>
+
+          <button className="btn btn-primary w-2/3 self-center">
+            Criar conta
+          </button>
+        </form>
+      </FormProvider>
+
+      <ToastContainer />
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
+
+  const institutions = await apiClient.get("/institutions");
+
+  return {
+    props: { institutions: institutions.data },
+  };
+};

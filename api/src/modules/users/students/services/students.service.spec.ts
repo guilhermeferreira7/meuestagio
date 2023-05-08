@@ -39,7 +39,7 @@ const mockStudentsRepository = {
   find: jest.fn(() => studentsArray),
 };
 
-describe('StudentService', () => {
+describe('StudentsService', () => {
   let service: StudentsService;
   let studentValidator: StudentValidator;
   let studentsRepository: Repository<Student>;

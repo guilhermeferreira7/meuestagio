@@ -22,8 +22,6 @@ export class StudentsController {
 
   @Post()
   async create(@Body() createStudentDto: CreateStudentDto): Promise<Student> {
-    console.log('createStudentDto ', createStudentDto);
-
     return await this.studentService.createStudent(createStudentDto);
   }
 
@@ -56,8 +54,11 @@ export class StudentsController {
       updateStudentDto,
     );
 
-    console.log('updatedStudent ', updatedStudent);
-
     return updatedStudent;
+  }
+
+  @Get()
+  async getAll(): Promise<Student[]> {
+    return await this.studentService.findAll();
   }
 }
