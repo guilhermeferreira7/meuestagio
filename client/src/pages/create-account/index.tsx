@@ -1,99 +1,49 @@
 import React, { useContext, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { saveStudent } from "@/services/student/student-service";
+import { saveStudent } from "@/services/users/student/student-service";
 import { AuthContext } from "../../contexts/AuthContext";
 import { GetServerSideProps } from "next";
 import { getAPIClient } from "../../services/api/clientApi";
+import {
+  notifyError,
+  notifySuccess,
+  notifyWarning,
+} from "../../components/toasts/toast";
+import { createUserFormSchema } from "../../utils/validators/create-account-schema";
+
+import { Form } from "../../components/Form";
+import { Role } from "../../utils/types/user-auth";
 
 type CreateAccountFormData = z.infer<typeof createUserFormSchema>;
 
-const createUserFormSchema = z
-  .object({
-    userRole: z.enum(["student", "company"]),
-    name: z.string().min(3, "O nome precisa de pelo menos 3 caracteres"),
-    email: z.string().nonempty("O email é obrigatório").email(),
-    institutionId: z.string().optional(),
-    cnpj: z.string().optional(),
-    password: z.string().min(6, "A senha precisa de pelo menos 6 caracteres"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas precisam ser iguais",
-    path: ["confirmPassword"],
-  })
-  .refine(
-    (data) => {
-      if (data.userRole === "company") {
-        return data.cnpj?.length === 14;
-      }
-      return true;
-    },
-    {
-      message: "O CNPJ precisa ter 14 caracteres",
-      path: ["cnpj"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.userRole === "student") {
-        return data.institutionId !== "";
-      }
-      return true;
-    },
-    {
-      message: "A instituição é obrigatória",
-      path: ["institutionId"],
-    }
-  );
-
 export default function CreateAccount({ institutions }: any) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreateAccountFormData>({
+  const createAccountForm = useForm<CreateAccountFormData>({
     resolver: zodResolver(createUserFormSchema),
   });
+  const { handleSubmit } = createAccountForm;
 
   const { signIn } = useContext(AuthContext);
 
-  const [userRole, setUserRole] = useState("student");
-
-  const notifySuccess = () => {
-    console.log("notifySuccess");
-
-    toast.success("Cadastrado com sucesso!", {
-      hideProgressBar: true,
-      draggable: true,
-    });
-  };
-
-  const notifyWarning = () => {
-    toast.warning("Em breve você poderá criar uma conta de empresa!", {
-      hideProgressBar: true,
-      draggable: true,
-    });
-  };
-
-  const notifyError = (message: any) => {
-    toast.error(`Erro ${message}`, {
-      hideProgressBar: true,
-      draggable: true,
-    });
-  };
+  const [userRole, setUserRole] = useState<Role>(Role.Student);
 
   async function createAccount(data: CreateAccountFormData) {
-    if (data.userRole === "student") {
+    if (data.userRole === Role.Student) {
       try {
+        notifySuccess("Cadastrado com sucesso!");
         await saveStudent(data);
-        notifySuccess();
         setTimeout(() => {
           signIn(data.email, data.password, data.userRole);
         }, 2000);
+      } catch (error: any) {
+        notifyError(error.response?.data?.message);
+      }
+    } else if (data.userRole === Role.Company) {
+      try {
+        notifyWarning("Ainda não é possível cadastrar empresas");
       } catch (error: any) {
         notifyError(error.response?.data?.message);
       }
@@ -103,104 +53,96 @@ export default function CreateAccount({ institutions }: any) {
   }
 
   return (
-    <div className="flex flex-col w-full items-center">
+    <div className="flex flex-col flex-1 items-center w-full ">
       <div className="text-center my-3">
-        <h1 className="font-bold text-lg">
+        <h1 className="font-bold text-lg text-primary">
           Crie já sua conta para utilizar o sistema!
         </h1>
       </div>
 
-      <form
-        className="flex flex-col w-full max-w-sm gap-3"
-        onSubmit={handleSubmit(createAccount)}
-      >
-        <div className="flex flex-col items-center">
-          <label htmlFor="type">Tipo de conta</label>
-          <select
-            id="userRole"
-            {...register("userRole")}
-            onChange={(e) => {
-              setUserRole(e.target.value);
-            }}
-          >
-            <option value="student">Estudante</option>
-            <option value="company">Empresa</option>
-          </select>
-        </div>
+      <FormProvider {...createAccountForm}>
+        <form
+          className="flex flex-col gap-2 w-5/6 lg:w-1/3 mb-4"
+          onSubmit={handleSubmit(createAccount)}
+        >
+          <Form.Field>
+            <div className="btn-group flex flex-row justify-center">
+              <Form.InputRadio
+                value="student"
+                name="userRole"
+                title="Aluno"
+                defaultChecked
+                onChange={() => setUserRole(Role.Student)}
+              />
+              <Form.InputRadio
+                value="company"
+                name="userRole"
+                title="Empresa"
+                onChange={() => setUserRole(Role.Company)}
+              />
+            </div>
+          </Form.Field>
 
-        <div className="flex flex-col">
-          <label htmlFor="name">Digite seu nome completo</label>
-          <input type="text" className="rounded" {...register("name")} />
-          {errors.name && (
-            <span className="text-error">{errors.name.message}</span>
+          <Form.Field>
+            <Form.Label htmlFor="name">
+              {userRole === Role.Student
+                ? "Digite seu nome completo"
+                : "Digite o nome de sua empresa"}
+            </Form.Label>
+            <Form.InputText name="name" />
+            <Form.ErrorMessage field="name" />
+          </Form.Field>
+
+          <Form.Field>
+            <Form.Label htmlFor="email">Digite seu email</Form.Label>
+            <Form.InputText name="email" />
+            <Form.ErrorMessage field="email" />
+          </Form.Field>
+
+          {userRole === "student" ? (
+            <Form.Field>
+              <Form.Label htmlFor="institutionId">Insituição</Form.Label>
+              <Form.InputSelect name="institutionId">
+                <option disabled value="">
+                  Escolha uma instituição
+                </option>
+                {institutions.map((institution: any) => {
+                  return (
+                    <option key={institution.id} value={institution.id}>
+                      {institution.name}
+                    </option>
+                  );
+                })}
+              </Form.InputSelect>
+              <Form.ErrorMessage field="institutionId" />
+            </Form.Field>
+          ) : (
+            <Form.Field>
+              <Form.Label htmlFor="cnpj">Digite o CNPJ da empresa</Form.Label>
+              <Form.InputText name="cnpj" />
+              <Form.ErrorMessage field="cnpj" />
+            </Form.Field>
           )}
-        </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="email">Digite seu e-mail preferido</label>
-          <input type="text" className="rounded" {...register("email")} />
-          {errors.email && (
-            <span className="text-error">{errors.email.message}</span>
-          )}
-        </div>
+          <Form.Field>
+            <Form.Label htmlFor="password">Digite sua senha</Form.Label>
+            <Form.InputText name="password" type="password" />
+            <Form.ErrorMessage field="password" />
+          </Form.Field>
 
-        {userRole === "student" ? (
-          <div className="flex flex-col">
-            <label htmlFor="institution">Qual instituição você estuda?</label>
-            <select id="institutionId" {...register("institutionId")}>
-              <option disabled selected value="">
-                Escolha uma instituição
-              </option>
-              {institutions.map((institution: any) => {
-                return (
-                  <option key={institution.id} value={institution.id}>
-                    {institution.name}
-                  </option>
-                );
-              })}
-            </select>
-            {errors.institutionId && (
-              <span className="text-error">{errors.institutionId.message}</span>
-            )}
-          </div>
-        ) : (
-          <div className="flex flex-col">
-            <label htmlFor="cnpj">Qual o CNPJ da sua empresa?</label>
-            <input type="text" className="rounded" {...register("cnpj")} />
-            {errors.cnpj && (
-              <span className="text-error">{errors.cnpj.message}</span>
-            )}
-          </div>
-        )}
+          <Form.Field>
+            <Form.Label htmlFor="confirmPassword">
+              Confirme sua senha
+            </Form.Label>
+            <Form.InputText name="confirmPassword" type="password" />
+            <Form.ErrorMessage field="confirmPassword" />
+          </Form.Field>
 
-        <div className="flex flex-col">
-          <label htmlFor="password">Digite sua senha</label>
-          <input
-            type="password"
-            className="rounded"
-            {...register("password")}
-          />
-          {errors.password && (
-            <span className="text-error">{errors.password.message}</span>
-          )}
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="confirmPassword">Confirme sua senha</label>
-          <input
-            type="password"
-            className="rounded"
-            {...register("confirmPassword")}
-          />
-          {errors.confirmPassword && (
-            <span className="text-error">{errors.confirmPassword.message}</span>
-          )}
-        </div>
-
-        <button className="btn" type="submit">
-          Criar conta
-        </button>
-      </form>
+          <button className="btn btn-primary w-2/3 self-center">
+            Criar conta
+          </button>
+        </form>
+      </FormProvider>
 
       <ToastContainer />
     </div>
@@ -209,6 +151,7 @@ export default function CreateAccount({ institutions }: any) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apiClient = getAPIClient(ctx);
+
   const institutions = await apiClient.get("/institutions");
 
   return {
