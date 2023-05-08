@@ -30,4 +30,10 @@ export class CompaniesService {
   async findByEmail(email: string): Promise<Company> {
     return await this.companiesRepository.findOneBy({ email });
   }
+
+  async findOne(id: number): Promise<Company> {
+    return await this.companiesRepository.findOne({
+      where: { id },
+    });
+  }
 }
