@@ -1,3 +1,4 @@
+import { cnpj } from "cpf-cnpj-validator";
 import { z } from "zod";
 
 export const createUserFormSchema = z
@@ -17,12 +18,16 @@ export const createUserFormSchema = z
   .refine(
     (data) => {
       if (data.userRole === "company") {
-        return data.cnpj?.length === 14;
+        if (!data.cnpj) {
+          return false;
+        } else {
+          return cnpj.isValid(data.cnpj);
+        }
       }
       return true;
     },
     {
-      message: "O CNPJ precisa ter 14 caracteres",
+      message: "O CNPJ é inválido",
       path: ["cnpj"],
     }
   )
