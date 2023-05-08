@@ -1,76 +1,25 @@
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { getAPIClient } from "@/services/api/clientApi";
-import { api } from "../../../services/api/api";
-import { getStudentProfile } from "../../../services/student/student-service";
-import { toast, ToastContainer } from "react-toastify";
-import { Loader } from "lucide-react";
-import { Alert } from "antd";
 
-type StudentInfo = {
-  name: string;
-  email: string;
-  institution: {
-    name: string;
-  };
-  course: {
-    name: string;
-  };
-};
-
-export default function StudentProfile(studentInfo: StudentInfo) {
-  const [user, setUser] = useState<StudentInfo>(studentInfo);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    getStudentProfile().then((response) => {
-      setUser(response);
-    });
-  }, []);
-
-  const notifySuccess = () => {
-    toast.success(`Atualizado com sucesso!`, {
-      hideProgressBar: true,
-      draggable: true,
-    });
-  };
-
-  const notifyError = (message: string) => {
-    toast.error(`Erro: ${message}`, {
-      autoClose: 0,
-      hideProgressBar: true,
-      draggable: true,
-    });
-  };
-
-  const handleUpdate = async () => {};
+export default function StudentProfile({ student }: any) {
+  const user = student;
 
   return (
-    <div className="text-base-content">
+    <div className="text-black">
       <h1>Meus dados</h1>
-      <p>Nome: {user.name}</p>
-      <p>Email: {user.email}</p>
-      <p>Instituição: {user.institution?.name}</p>
-      <p>Curso: {user.course?.name}</p>
-
-      {loading ? (
-        <button className="btn btn-info btn-disabled">
-          Atualizando... <Loader className="animate-spin" size={24} />
-        </button>
-      ) : (
-        <button className="btn" onClick={handleUpdate}>
-          Atualizar
-        </button>
-      )}
-
-      <ToastContainer />
+      <p>Nome: {user?.name}</p>
+      <p>Email: {user?.email}</p>
+      <p>Instituição: {user?.institution?.name}</p>
+      <p>Curso: {user?.course?.name}</p>
     </div>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
   const { ["next.token"]: token } = parseCookies(ctx);
   if (!token) {
     return {
@@ -81,18 +30,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const api = getAPIClient(ctx);
-  let data = {};
+  let student = {};
+
   try {
-    data = (await api.get("/students/profile")).data;
-    console.log(data);
-  } catch (error) {
-    console.log(error);
+    student = (await apiClient("/students/profile")).data;
+  } catch (error: any) {
+    console.log(error.response?.message?.data);
   }
 
   return {
     props: {
-      studentInfo: data,
+      student,
     },
   };
 };
