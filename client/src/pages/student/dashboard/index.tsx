@@ -4,6 +4,7 @@ import { parseCookies } from "nookies";
 
 import { getVacancies } from "@/services/vacancies/vacancy-service";
 import CardVacancy from "./card-vacancy";
+import jwtDecode from "jwt-decode";
 
 interface StudentPageProps {
   vacancies: [];
@@ -37,7 +38,9 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { ["next.token"]: token } = parseCookies(ctx);
 
-  if (!token) {
+  const tokenDecoded = (jwtDecode(token) as any).role;
+
+  if (!token || tokenDecoded !== "student") {
     return {
       redirect: {
         destination: "/",

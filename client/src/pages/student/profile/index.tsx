@@ -3,10 +3,9 @@ import { parseCookies } from "nookies";
 import React from "react";
 
 import { getAPIClient } from "@/services/api/clientApi";
+import jwtDecode from "jwt-decode";
 
-export default function StudentProfile({ student }: any) {
-  const user = student;
-
+export default function StudentProfile({ user }: any) {
   return (
     <div className="text-black">
       <h1>Meus dados</h1>
@@ -21,7 +20,10 @@ export default function StudentProfile({ student }: any) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apiClient = getAPIClient(ctx);
   const { ["next.token"]: token } = parseCookies(ctx);
-  if (!token) {
+
+  const tokenDecoded = (jwtDecode(token) as any).role;
+
+  if (!token || tokenDecoded !== "student") {
     return {
       redirect: {
         destination: "/",
@@ -40,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
-      student,
+      user: student,
     },
   };
 };
