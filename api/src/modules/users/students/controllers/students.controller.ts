@@ -22,8 +22,6 @@ export class StudentsController {
 
   @Post()
   async create(@Body() createStudentDto: CreateStudentDto): Promise<Student> {
-    console.log('createStudentDto ', createStudentDto);
-
     return await this.studentService.createStudent(createStudentDto);
   }
 
@@ -31,7 +29,6 @@ export class StudentsController {
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
     const student = await this.studentService.findOne(req.user.sub);
-    console.log('student ', student);
 
     if (!student) {
       throw new UnauthorizedException();
@@ -56,8 +53,6 @@ export class StudentsController {
       student.id,
       updateStudentDto,
     );
-
-    console.log('updatedStudent ', updatedStudent);
 
     return updatedStudent;
   }

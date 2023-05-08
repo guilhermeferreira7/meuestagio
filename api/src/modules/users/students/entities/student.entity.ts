@@ -24,8 +24,4 @@ export class Student extends User {
 
   @Column({ nullable: true })
   period: string;
-
-  // phone
-  // verificar telefone email e usuario pelo prof
-  // periodo tabela curriculo
 }

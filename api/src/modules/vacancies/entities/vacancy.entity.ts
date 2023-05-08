@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Company } from '../../users/companies/company.entity';
+import { Company } from '../../users/companies/entities/company.entity';
 
 @Entity()
 export class Vacancy {

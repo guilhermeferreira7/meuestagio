@@ -30,9 +30,6 @@ export abstract class User {
   @Column({ nullable: true, unique: true })
   cpf: string;
 
-  @Column({ nullable: true, unique: true })
-  cnpj: string;
-
   @Column({ nullable: true })
   addressId: number;
 
