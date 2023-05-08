@@ -9,7 +9,4 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   password: string;
-
-  // @IsNotEmpty()
-  // cityId: number;
 }

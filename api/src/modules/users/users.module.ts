@@ -11,13 +11,15 @@ import { StudentsService } from './students/services/students.service';
 import { StudentValidator } from './students/services/students-validator.service';
 
 import { StudentsController } from './students/controllers/students.controller';
+import { CompaniesService } from './companies/services/companies.service';
+import { CompaniesController } from './companies/controllers/companies.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([City, Student, Company, Institution, Course]),
   ],
-  providers: [StudentsService, StudentValidator],
-  controllers: [StudentsController],
-  exports: [StudentsService],
+  providers: [StudentsService, CompaniesService, StudentValidator],
+  controllers: [StudentsController, CompaniesController],
+  exports: [StudentsService, CompaniesService],
 })
 export class UsersModule {}
