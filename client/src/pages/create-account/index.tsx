@@ -17,6 +17,7 @@ import { createUserFormSchema } from "../../utils/validators/create-account-sche
 
 import { Form } from "../../components/Form";
 import { Role } from "../../utils/types/user-auth";
+import { saveCompany } from "../../services/users/companies/company-service";
 
 type CreateAccountFormData = z.infer<typeof createUserFormSchema>;
 
@@ -33,7 +34,7 @@ export default function CreateAccount({ institutions }: any) {
   async function createAccount(data: CreateAccountFormData) {
     if (data.userRole === Role.Student) {
       try {
-        notifySuccess("Cadastrado com sucesso!");
+        notifySuccess("Aluno cadastrado com sucesso!");
         await saveStudent(data);
         setTimeout(() => {
           signIn(data.email, data.password, data.userRole);
@@ -43,7 +44,11 @@ export default function CreateAccount({ institutions }: any) {
       }
     } else if (data.userRole === Role.Company) {
       try {
-        notifyWarning("Ainda não é possível cadastrar empresas");
+        notifySuccess("Empresa cadastrada com sucesso!");
+        await saveCompany(data);
+        setTimeout(() => {
+          signIn(data.email, data.password, data.userRole);
+        }, 2000);
       } catch (error: any) {
         notifyError(error.response?.data?.message);
       }
