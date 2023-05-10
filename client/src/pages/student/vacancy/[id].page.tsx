@@ -1,8 +1,7 @@
-import jwtDecode from "jwt-decode";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { parseCookies } from "nookies";
 import React from "react";
+import { getAPIClient } from "../../../services/api/clientApi";
 
 export default function Vacancy() {
   const router = useRouter();
@@ -11,17 +10,18 @@ export default function Vacancy() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ["next.token"]: token } = parseCookies(ctx);
-
-  const tokenDecoded = (jwtDecode(token) as any).role;
-
-  if (!token || tokenDecoded !== "student") {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
+  const apiClient = getAPIClient(ctx);
+  try {
+    await apiClient.get("/students/profile");
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    }
   }
 
   return {

@@ -3,7 +3,8 @@ import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useRouter } from "next/router";
 
 import { api } from "@/services/api/api";
-import { UserAuth } from "../utils/types/user-auth";
+import { UserAuth } from "../utils/types/auth/user-auth";
+import { LoginResponse } from "../utils/types/auth/login";
 
 interface Props {
   children?: ReactNode;
@@ -40,17 +41,14 @@ export function AuthProvider({ children }: Props) {
   ): Promise<void> {
     const path = `/auth/login/${role}`;
 
-    const response = await api.post<{ user: UserAuth; access_token: string }>(
-      path,
-      { email, password }
-    );
+    const response = await api.post<LoginResponse>(path, { email, password });
     setUser(response.data.user);
 
     setCookie(undefined, "next.token", response.data.access_token, {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });
-    setCookie(undefined, "next.user", JSON.stringify(user), {
+    setCookie(undefined, "next.user", JSON.stringify(response.data.user), {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });

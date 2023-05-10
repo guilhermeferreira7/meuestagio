@@ -16,7 +16,7 @@ import {
 import { createUserFormSchema } from "../../utils/validators/create-account-schema";
 
 import { Form } from "../../components/Form";
-import { Role } from "../../utils/types/user-auth";
+import { Role } from "../../utils/types/auth/user-auth";
 import { saveCompany } from "../../services/users/companies/company-service";
 
 type CreateAccountFormData = z.infer<typeof createUserFormSchema>;

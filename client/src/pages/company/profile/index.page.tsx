@@ -1,27 +1,32 @@
 import React from "react";
-import jwtDecode from "jwt-decode";
 import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
 import { getAPIClient } from "../../../services/api/clientApi";
+import { Company } from "../../../utils/types/users/company";
 
-export default function CompanyProfile({ user }: any) {
+export default function CompanyProfile({ company }: { company: Company }) {
   return (
     <div>
       <h1>Meus dados</h1>
-      <p>Nome: {user?.name}</p>
-      <p>Email: {user?.email}</p>
-      <p>Cnpj: {user?.cnpj}</p>
+      <p>Nome: {company.name}</p>
+      <p>Email: {company.email}</p>
+      <p>Cnpj: {company.cnpj}</p>
     </div>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apiClient = getAPIClient(ctx);
-  const { ["next.token"]: token } = parseCookies(ctx);
 
-  const tokenDecoded = (jwtDecode(token) as any).role;
+  try {
+    const response = await apiClient.get<Company>("/companies/profile");
+    const company = response.data;
 
-  if (!token || tokenDecoded !== "company") {
+    return {
+      props: {
+        company,
+      },
+    };
+  } catch (error: any) {
     return {
       redirect: {
         destination: "/",
@@ -29,18 +34,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
-
-  let company = {};
-
-  try {
-    company = (await apiClient("/companies/profile")).data;
-  } catch (error: any) {
-    console.log(error.response?.message?.data);
-  }
-
-  return {
-    props: {
-      user: company,
-    },
-  };
 };

@@ -6,7 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Role } from "../../utils/types/user-auth";
+import { Role } from "../../utils/types/auth/user-auth";
 import { AuthContext } from "../../contexts/AuthContext";
 import { loginSchema } from "../../utils/validators/login-schema";
 import { Form } from "../../components/Form";

@@ -1,10 +1,9 @@
 import { GetServerSideProps } from "next";
 import React from "react";
-import { parseCookies } from "nookies";
 
-import { getVacancies } from "@/services/vacancies/vacancy-service";
 import CardVacancy from "./_card-vacancy";
-import jwtDecode from "jwt-decode";
+import { getAPIClient } from "../../../services/api/clientApi";
+import { Student } from "../../../utils/types/users/student";
 
 interface StudentPageProps {
   vacancies: [];
@@ -25,7 +24,7 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
       </div>
 
       <div className="flex flex-col gap-2 mx-8 w-full mb-4">
-        {vacancies.map((vacancy: any) => (
+        {vacancies?.map((vacancy: any) => (
           <div key={vacancy.id}>
             <CardVacancy vacancy={vacancy} />
           </div>
@@ -36,44 +35,30 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ["next.token"]: token } = parseCookies(ctx);
+  const apiClient = getAPIClient(ctx);
+  try {
+    await apiClient.get<Student>("/students/profile");
 
-  const tokenDecoded = (jwtDecode(token) as any).role;
-
-  if (!token || tokenDecoded !== "student") {
+    const getVacancies = await apiClient.get("/vacancies");
+    const vacancies = getVacancies.data;
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
+      props: {
+        vacancies,
       },
     };
+  } catch (error: any) {
+    console.log(error.response?.status);
+
+    if (error.response?.status === 401) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    }
+    return {
+      props: {},
+    };
   }
-
-  const vacancies = [
-    {
-      id: 1,
-      title: "Desenvolvedor Fullstack",
-      description:
-        "Vaga para desenvolvedor fullstack com experiência em React e NodeJS",
-      company: {
-        name: "Empresa 1",
-      },
-      salary: 1500,
-    },
-    {
-      id: 2,
-      title: "Desenvolvedor Frontend",
-      description: "Vaga para desenvolvedor frontend com experiência em React",
-      company: {
-        name: "Empresa 2",
-      },
-      salary: 2000,
-    },
-  ];
-
-  return {
-    props: {
-      vacancies,
-    },
-  };
 };
