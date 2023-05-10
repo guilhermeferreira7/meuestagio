@@ -37,14 +37,16 @@ export function AuthProvider({ children }: Props) {
     email: string,
     password: string,
     role: string
-  ): Promise<any> {
+  ): Promise<void> {
     const path = `/auth/login/${role}`;
 
-    const { user, access_token } = (await api.post(path, { email, password }))
-      .data as { user: any; access_token: any };
-    setUser({ ...user, role });
+    const response = await api.post<{ user: UserAuth; access_token: string }>(
+      path,
+      { email, password }
+    );
+    setUser(response.data.user);
 
-    setCookie(undefined, "next.token", access_token, {
+    setCookie(undefined, "next.token", response.data.access_token, {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });

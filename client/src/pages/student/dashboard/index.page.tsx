@@ -3,7 +3,7 @@ import React from "react";
 import { parseCookies } from "nookies";
 
 import { getVacancies } from "@/services/vacancies/vacancy-service";
-import CardVacancy from "./card-vacancy";
+import CardVacancy from "./_card-vacancy";
 import jwtDecode from "jwt-decode";
 
 interface StudentPageProps {
