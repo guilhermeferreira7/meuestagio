@@ -24,7 +24,7 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 mx-8">
+      <div className="flex flex-col gap-2 mx-8 w-full mb-4">
         {vacancies.map((vacancy: any) => (
           <div key={vacancy.id}>
             <CardVacancy vacancy={vacancy} />
@@ -49,7 +49,27 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const vacancies: [] = await getVacancies();
+  const vacancies = [
+    {
+      id: 1,
+      title: "Desenvolvedor Fullstack",
+      description:
+        "Vaga para desenvolvedor fullstack com experiência em React e NodeJS",
+      company: {
+        name: "Empresa 1",
+      },
+      salary: 1500,
+    },
+    {
+      id: 2,
+      title: "Desenvolvedor Frontend",
+      description: "Vaga para desenvolvedor frontend com experiência em React",
+      company: {
+        name: "Empresa 2",
+      },
+      salary: 2000,
+    },
+  ];
 
   return {
     props: {

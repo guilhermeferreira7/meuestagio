@@ -23,7 +23,7 @@ export class Vacancy {
   @ManyToOne(() => City)
   city: City;
 
-  @Column()
+  @Column({ default: false })
   remote: boolean;
 
   @Column()
@@ -35,7 +35,7 @@ export class Vacancy {
   @Column()
   requirements: string;
 
-  @Column()
+  @Column({ nullable: true })
   desirableRequirements: string;
 
   @Column()

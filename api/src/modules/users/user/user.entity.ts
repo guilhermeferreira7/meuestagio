@@ -30,6 +30,12 @@ export abstract class User {
   @Column({ nullable: true, unique: true })
   cpf: string;
 
+  @ManyToOne(() => City)
+  city: City;
+
+  @Column({ nullable: true })
+  cityId: number;
+
   @Column({ nullable: true })
   addressId: number;
 
