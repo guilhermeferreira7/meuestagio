@@ -64,6 +64,19 @@ describe('CompaniesService', () => {
       }
     });
 
+    it('should throw error if cnpj already used', async () => {
+      const company = await service.create(oneCompany);
+      jest
+        .spyOn(repository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(company));
+
+      try {
+        await service.create({ ...oneCompany, email: 'empresa2@gmail.com' });
+      } catch (error) {
+        expect(error.message).toBe('Cnpj já cadastrado!');
+      }
+    });
+
     it('should hash password correctly', async () => {
       jest.spyOn(bcryptService, 'hash').mockResolvedValue(HASHED_PASS);
       await service.create(oneCompany);

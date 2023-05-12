@@ -19,6 +19,11 @@ export class CompaniesService {
       throw new ConflictException('Email já cadastrado!');
     }
 
+    const cnpjUsed = await this.findByCnpj(company.cnpj);
+    if (cnpjUsed) {
+      throw new ConflictException('CNPJ já cadastrado!');
+    }
+
     const password = await bcryptService.hash(company.password);
     const newCompany = this.companiesRepository.create({
       ...company,
@@ -29,6 +34,10 @@ export class CompaniesService {
 
   async findByEmail(email: string): Promise<Company> {
     return await this.companiesRepository.findOneBy({ email });
+  }
+
+  async findByCnpj(cnpj: string): Promise<Company> {
+    return await this.companiesRepository.findOneBy({ cnpj });
   }
 
   async findOne(id: number): Promise<Company> {
