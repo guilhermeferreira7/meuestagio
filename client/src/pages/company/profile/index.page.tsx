@@ -2,6 +2,7 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Company } from "../../../utils/types/users/company";
+import { getUser } from "../../../services/api/userLogged";
 
 export default function CompanyProfile({ company }: { company: Company }) {
   return (
@@ -15,18 +16,8 @@ export default function CompanyProfile({ company }: { company: Company }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
-
-  try {
-    const response = await apiClient.get<Company>("/companies/profile");
-    const company = response.data;
-
-    return {
-      props: {
-        company,
-      },
-    };
-  } catch (error: any) {
+  const company = await getUser<Company>(ctx);
+  if (!company) {
     return {
       redirect: {
         destination: "/",
@@ -34,4 +25,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
+
+  return {
+    props: {
+      company,
+    },
+  };
 };

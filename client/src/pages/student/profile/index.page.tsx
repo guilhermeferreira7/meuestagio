@@ -1,11 +1,10 @@
 import { GetServerSideProps } from "next";
 import React from "react";
+import Image from "next/image";
 
 import img from "../../../../public/avatar.png";
-
-import { getAPIClient } from "@/services/api/clientApi";
 import { Student } from "../../../utils/types/users/student";
-import Image from "next/image";
+import { getUser } from "../../../services/api/userLogged";
 
 export default function StudentProfile({ student }: { student: Student }) {
   return (
@@ -45,20 +44,9 @@ export default function StudentProfile({ student }: { student: Student }) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
-
-  try {
-    const result = await apiClient.get<Student>("/students/profile");
-    const student = result.data;
-    return {
-      props: {
-        student,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-
+export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
+  const student = await getUser<Student>(ctx);
+  if (!student) {
     return {
       redirect: {
         destination: "/",
@@ -66,4 +54,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
+
+  return {
+    props: {
+      student,
+    },
+  };
 };

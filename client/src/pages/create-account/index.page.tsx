@@ -34,8 +34,8 @@ export default function CreateAccount({ institutions }: any) {
   async function createAccount(data: CreateAccountFormData) {
     if (data.userRole === Role.Student) {
       try {
-        notifySuccess("Aluno cadastrado com sucesso!");
         await saveStudent(data);
+        notifySuccess("Aluno cadastrado com sucesso!");
         setTimeout(() => {
           signIn(data.email, data.password, data.userRole);
         }, 2000);
@@ -44,8 +44,8 @@ export default function CreateAccount({ institutions }: any) {
       }
     } else if (data.userRole === Role.Company) {
       try {
-        notifySuccess("Empresa cadastrada com sucesso!");
         await saveCompany(data);
+        notifySuccess("Empresa cadastrada com sucesso!");
         setTimeout(() => {
           signIn(data.email, data.password, data.userRole);
         }, 2000);

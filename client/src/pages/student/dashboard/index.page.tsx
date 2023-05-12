@@ -4,6 +4,7 @@ import React from "react";
 import CardVacancy from "./_card-vacancy";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Student } from "../../../utils/types/users/student";
+import { getUser } from "../../../services/api/userLogged";
 
 interface StudentPageProps {
   vacancies: [];
@@ -35,10 +36,20 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const student = await getUser<Student>(ctx);
+  console.log(student);
+
+  if (!student) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   const apiClient = getAPIClient(ctx);
   try {
-    await apiClient.get<Student>("/students/profile");
-
     const getVacancies = await apiClient.get("/vacancies");
     const vacancies = getVacancies.data;
     return {
@@ -47,14 +58,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   } catch (error: any) {
-    if (error.response?.status === 401) {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-    }
     return {
       props: {},
     };
