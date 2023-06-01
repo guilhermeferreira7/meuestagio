@@ -21,6 +21,7 @@ export class StudentValidator {
 
   async validateCreate(createStudentDto: CreateStudentDto): Promise<boolean> {
     await this.validateInstitution(createStudentDto.institutionId);
+    await this.validateCourse(createStudentDto.courseId);
     return true;
   }
 

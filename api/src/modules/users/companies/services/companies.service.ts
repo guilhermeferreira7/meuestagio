@@ -42,6 +42,7 @@ export class CompaniesService {
 
   async findOne(id: number): Promise<Company> {
     return await this.companiesRepository.findOne({
+      relations: ['city'],
       where: { id },
     });
   }

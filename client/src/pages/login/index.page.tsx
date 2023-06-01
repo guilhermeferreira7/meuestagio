@@ -54,17 +54,20 @@ export default function Login() {
               <Form.InputRadio
                 value={Role.Student}
                 name="userRole"
+                id="student"
                 title="Aluno"
                 defaultChecked
               />
               <Form.InputRadio
                 value={Role.Company}
                 name="userRole"
+                id="company"
                 title="Empresa"
               />
               <Form.InputRadio
                 value={Role.Professor}
                 name="userRole"
+                id="professor"
                 title="Professor"
               />
               <Form.ErrorMessage field="userRole" />

@@ -37,8 +37,6 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const student = await getUser<Student>(ctx);
-  console.log(student);
-
   if (!student) {
     return {
       redirect: {
