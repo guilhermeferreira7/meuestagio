@@ -5,7 +5,7 @@ import MainSeeder from './seeds/MainSeeder';
 import { Company } from '../modules/users/companies/entities/company.entity';
 import { Vacancy } from '../modules/vacancies/entities/vacancy.entity';
 import { City } from '../modules/cities/entities/city.entity';
-import { Area } from '../modules/areas/area.entity';
+import { Area } from '../modules/areas/entities/area.entity';
 import { Institution } from '../modules/institutions/entities/institution.entity';
 
 const options: DataSourceOptions & SeederOptions = {
