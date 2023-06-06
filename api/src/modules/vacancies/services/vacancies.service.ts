@@ -11,8 +11,10 @@ export class VacanciesService {
     private readonly repository: Repository<Vacancy>,
   ) {}
 
-  create(createVacancyDto: CreateVacancyDto) {
-    return 'This action adds a new vacancy';
+  async create(createVacancyDto: CreateVacancyDto): Promise<Vacancy> {
+    const vacancy = this.repository.create(createVacancyDto);
+    await this.repository.save(vacancy);
+    return vacancy;
   }
 
   async findAll() {
@@ -27,5 +29,18 @@ export class VacanciesService {
     });
 
     return result;
+  }
+
+  async findOne(id: number) {
+    const vacancy = await this.repository.findOne({
+      where: { id: id },
+      relations: ['company', 'area'],
+    });
+    return {
+      ...vacancy,
+      company: {
+        name: vacancy.company.name,
+      },
+    };
   }
 }

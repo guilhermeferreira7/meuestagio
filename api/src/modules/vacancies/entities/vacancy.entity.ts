@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Company } from '../../users/companies/entities/company.entity';
-import { Area } from '../../areas/area.entity';
+import { Area } from '../../areas/entities/area.entity';
 import { City } from '../../cities/entities/city.entity';
 
 @Entity()
@@ -40,6 +40,9 @@ export class Vacancy {
 
   @Column()
   activities: string;
+
+  @Column()
+  keyWords: string;
 
   @Column()
   areaId: number;
