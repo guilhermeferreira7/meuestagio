@@ -234,9 +234,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
               </button>
             </div>
           ) : (
-            <button className="btn btn-primary w-2/3 self-center">
-              Criar conta
-            </button>
+            <button className="btn btn-primary w-2/3">Criar conta</button>
           )}
         </form>
       </FormProvider>
@@ -251,7 +249,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const institutions = await apiClient.get<Institution[]>("/institutions");
   const cities = await apiClient.get<City[]>("/cities");
-  console.log(cities.data);
 
   return {
     props: { institutions: institutions.data, cities: cities.data },
