@@ -13,6 +13,7 @@ import { Area } from "../../../utils/types/areas/area";
 import { api } from "../../../services/api/api";
 import { notifyError, notifySuccess } from "../../../components/toasts/toast";
 import { ToastContainer } from "react-toastify";
+import { useRouter } from "next/router";
 
 type CreateVacancyFormData = z.infer<typeof createVacancyFormSchema>;
 
@@ -22,14 +23,14 @@ interface PageProps {
 }
 
 export default function CreateVacancy({ areas, company }: PageProps) {
+  const router = useRouter();
+
   const createVacancyForm = useForm<CreateVacancyFormData>({
     resolver: zodResolver(createVacancyFormSchema),
   });
   const { handleSubmit } = createVacancyForm;
 
   const createVacancy = async (data: CreateVacancyFormData) => {
-    console.log("onSubmit", data);
-
     try {
       await api.post("/vacancies", {
         ...data,
@@ -37,6 +38,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
         companyId: company.id,
       });
       notifySuccess("Vaga criada com sucesso!");
+      router.push("/company/dashboard");
     } catch (error: any) {
       notifyError(`Erro ao criar vaga! ${error.response?.data?.message}`);
     }
@@ -159,9 +161,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   const apiClient = getAPIClient(ctx);
-
   const areas = await apiClient.get<Area[]>("/areas");
-  console.log(areas.data);
 
   return {
     props: { areas: areas.data, company: company },

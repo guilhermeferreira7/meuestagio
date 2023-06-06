@@ -7,8 +7,6 @@ export class AreasController {
 
   @Get()
   async findAll() {
-    console.log('AreasController.findAll');
-
     return await this.areasService.findAll();
   }
 }

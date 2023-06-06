@@ -16,8 +16,6 @@ export default function Vacancy() {
     api
       .get(`/vacancies/${id}`)
       .then((response) => {
-        console.log(response.data);
-
         setVacancy(response.data);
       })
       .catch((error) => {

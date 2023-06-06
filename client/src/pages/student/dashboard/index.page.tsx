@@ -5,9 +5,10 @@ import CardVacancy from "./_card-vacancy";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Student } from "../../../utils/types/users/student";
 import { getUser } from "../../../services/api/userLogged";
+import { Vacancy } from "../../../utils/types/vacancies/vacancy";
 
 interface StudentPageProps {
-  vacancies: [];
+  vacancies: Vacancy[];
 }
 
 export default function StudentVacancies({ vacancies }: StudentPageProps) {
@@ -24,8 +25,8 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 mx-8 w-full mb-4">
-        {vacancies?.map((vacancy: any) => (
+      <div className="flex flex-col gap-2 mx-8 w-4/5 mb-4">
+        {vacancies?.map((vacancy: Vacancy) => (
           <div key={vacancy.id}>
             <CardVacancy vacancy={vacancy} />
           </div>
