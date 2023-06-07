@@ -5,7 +5,7 @@ import { getAPIClient } from "../../../services/api/clientApi";
 import { api } from "../../../services/api/api";
 import { notifyError } from "../../../components/toasts/toast";
 import { ToastContainer } from "react-toastify";
-import { Vacancy } from "../../../utils/types/vacancies/vacancy";
+import { Vacancy } from "../../../utils/types/vacancy";
 
 export default function Vacancy() {
   const router = useRouter();

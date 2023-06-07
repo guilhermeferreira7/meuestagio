@@ -9,7 +9,7 @@ import { Company } from "../../../utils/types/users/company";
 import { createVacancyFormSchema } from "../../../utils/validators/create-vancancy-schema";
 import { Form } from "../../../components/Form";
 import { getAPIClient } from "../../../services/api/clientApi";
-import { Area } from "../../../utils/types/areas/area";
+import { Area } from "../../../utils/types/area";
 import { api } from "../../../services/api/api";
 import { notifyError, notifySuccess } from "../../../components/toasts/toast";
 import { ToastContainer } from "react-toastify";

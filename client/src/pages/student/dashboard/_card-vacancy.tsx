@@ -1,7 +1,7 @@
 import { Building2 } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
-import { Vacancy } from "../../../utils/types/vacancies/vacancy";
+import { Vacancy } from "../../../utils/types/vacancy";
 
 interface CardVacancyProps {
   vacancy: Vacancy;

@@ -5,7 +5,7 @@ import CardVacancy from "./_card-vacancy";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Student } from "../../../utils/types/users/student";
 import { getUser } from "../../../services/api/userLogged";
-import { Vacancy } from "../../../utils/types/vacancies/vacancy";
+import { Vacancy } from "../../../utils/types/vacancy";
 
 interface StudentPageProps {
   vacancies: Vacancy[];
