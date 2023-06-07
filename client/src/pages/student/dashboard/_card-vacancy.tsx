@@ -33,11 +33,13 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
               </li>
             ))}
           </ul>
-          <button className="btn btn-sm btn-info md:btn-md">
-            <Link href={`vacancy/${vacancy.id}`} target="_blank">
-              Ver mais detalhes
-            </Link>
-          </button>
+          <Link
+            className="btn btn-sm btn-info md:btn-md"
+            href={`vacancy/${vacancy.id}`}
+            target="_blank"
+          >
+            Ver mais detalhes
+          </Link>
         </div>
       </div>
     </div>

@@ -27,11 +27,15 @@ export default function StudentProfile({ student }: { student: Student }) {
             </div>
             <div className="flex flex-col md:flex-row items-center">
               <p>Email: </p>
-              <p>guilhermeribas.2019@alunos.utfpr.edu.br</p>
+              <p>{student.email}</p>
             </div>
-            <div className="flex flex-col md:flex-row items-center">
+            <div className="flex flex-col gap-1 md:flex-row items-center">
               <p>Telefone: </p>
-              <p>42 99999 8888</p>
+              <p>
+                {student.phone
+                  ? student.phone
+                  : "Adicione um número de telefone"}
+              </p>
             </div>
           </div>
         </div>
