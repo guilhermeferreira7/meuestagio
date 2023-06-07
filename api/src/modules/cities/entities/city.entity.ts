@@ -10,4 +10,7 @@ export class City {
 
   @Column()
   uf: string;
+
+  @Column({ unique: true })
+  fullName: string;
 }

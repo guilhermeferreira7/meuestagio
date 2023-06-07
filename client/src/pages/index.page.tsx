@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { parseCookies } from "nookies";
 import React from "react";
+import { getAPIClient } from "../services/api/clientApi";
 
 export default function Home() {
   return (
@@ -15,7 +16,7 @@ export default function Home() {
 
 export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
   const { ["next.token"]: token } = parseCookies(ctx);
-  const { ["next.user"]: user } = parseCookies(ctx) as any;
+  const { ["next.user"]: user } = parseCookies(ctx);
 
   const userObj = user ? JSON.parse(user) : null;
 

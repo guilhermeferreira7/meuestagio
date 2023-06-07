@@ -7,7 +7,9 @@ export const createUserFormSchema = z
     name: z.string().min(3, "O nome precisa de pelo menos 3 caracteres"),
     email: z.string().nonempty("O email é obrigatório").email("Email inválido"),
     institutionId: z.string().optional(),
+    courseId: z.string().optional(),
     cnpj: z.string().optional(),
+    cityId: z.string().optional(),
     password: z.string().min(6, "A senha precisa de pelo menos 6 caracteres"),
     confirmPassword: z.string(),
   })
@@ -33,13 +35,28 @@ export const createUserFormSchema = z
   )
   .refine(
     (data) => {
-      if (data.userRole === "student") {
-        return data.institutionId !== "";
+      if (data.userRole === "company") {
+        const hasCity = data.cityId !== "" ? true : false;
+        return hasCity;
       }
       return true;
     },
     {
-      message: "A instituição é obrigatória",
+      message: "A cidade é obrigatória",
+      path: ["cityId"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.userRole === "student") {
+        const hasInstitution = data.institutionId !== "" ? true : false;
+        const hasCourse = data.courseId !== "" ? true : false;
+        return hasInstitution && hasCourse;
+      }
+      return true;
+    },
+    {
+      message: "A instituição e o curso são obrigatórios",
       path: ["institutionId"],
     }
   );

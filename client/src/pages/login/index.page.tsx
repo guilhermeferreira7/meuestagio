@@ -6,7 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Role } from "../../utils/types/user-auth";
+import { Role } from "../../utils/types/auth/user-auth";
 import { AuthContext } from "../../contexts/AuthContext";
 import { loginSchema } from "../../utils/validators/login-schema";
 import { Form } from "../../components/Form";
@@ -54,17 +54,20 @@ export default function Login() {
               <Form.InputRadio
                 value={Role.Student}
                 name="userRole"
+                id="student"
                 title="Aluno"
                 defaultChecked
               />
               <Form.InputRadio
                 value={Role.Company}
                 name="userRole"
+                id="company"
                 title="Empresa"
               />
               <Form.InputRadio
                 value={Role.Professor}
                 name="userRole"
+                id="professor"
                 title="Professor"
               />
               <Form.ErrorMessage field="userRole" />

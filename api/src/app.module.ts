@@ -7,6 +7,7 @@ import { CitiesModule } from './modules/cities/cities.module';
 import { InstitutionsModule } from './modules/institutions/institutions.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { VacanciesModule } from './modules/vacancies/vacancies.module';
+import { AreasModule } from './modules/areas/areas.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { VacanciesModule } from './modules/vacancies/vacancies.module';
       autoLoadEntities: true,
     }),
     AuthModule,
+    AreasModule,
     CitiesModule,
     InstitutionsModule,
     CoursesModule,

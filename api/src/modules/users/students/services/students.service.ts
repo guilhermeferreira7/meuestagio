@@ -45,7 +45,7 @@ export class StudentsService {
 
   async findOne(id: number): Promise<Student> {
     return await this.repository.findOne({
-      relations: ['course', 'institution'],
+      relations: ['course', 'institution', 'city'],
       where: { id },
     });
   }

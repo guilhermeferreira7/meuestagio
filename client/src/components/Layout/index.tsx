@@ -3,9 +3,9 @@ import { AuthContext } from "@/contexts/AuthContext";
 import StudentMenu from "./menus/student-menu";
 import DefaultMenu from "./menus/default-menu";
 import Footer from "./footer";
-import { Role } from "../../utils/types/user-auth";
 import Header from "./header";
 import CompanyMenu from "./menus/company-menu";
+import { Role } from "../../utils/types/auth/user-auth";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -13,6 +13,7 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children }: PageLayoutProps) {
   const { user } = useContext(AuthContext);
+
   let menuItems = DefaultMenu();
 
   switch (user?.role) {
@@ -21,12 +22,6 @@ export default function PageLayout({ children }: PageLayoutProps) {
       break;
     case Role.Company:
       menuItems = CompanyMenu();
-      break;
-    case Role.Professor:
-      // menuItems = DefaultMenu();
-      break;
-    case Role.Admin:
-      // menuItems = DefaultMenu();
       break;
     default:
       menuItems = DefaultMenu();

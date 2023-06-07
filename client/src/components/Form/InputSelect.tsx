@@ -1,7 +1,7 @@
 import { InputHTMLAttributes } from "react";
 import { useFormContext } from "react-hook-form";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLSelectElement> {
   name: string;
 }
 
@@ -14,6 +14,7 @@ export function InputSelect(props: InputProps): JSX.Element {
       {...register(props.name)}
       className="rounded select select-primary"
       defaultValue=""
+      {...props}
     >
       {props.children}
     </select>

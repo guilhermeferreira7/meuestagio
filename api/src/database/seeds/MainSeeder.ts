@@ -1,45 +1,19 @@
 import { DataSource } from 'typeorm';
-import { Seeder, SeederFactoryManager } from 'typeorm-extension';
-import { Vacancy } from '../../modules/vacancies/entities/vacancy.entity';
-import { Company } from '../../modules/users/companies/entities/company.entity';
-
-import { vacancies } from './data/vacancies';
-import { companies } from './data/companies';
+import { Seeder, runSeeder } from 'typeorm-extension';
+import { CitiesSeeder } from './cities/CitiesSeeder';
+import { InstitutionsSeeder } from './institutions/InstitutionsSeeder';
 
 export default class MainSeeder implements Seeder {
-  async run(
-    dataSource: DataSource,
-    factoryManager: SeederFactoryManager,
-  ): Promise<void> {
-    const companiesRepository = dataSource.getRepository(Company);
-    const vacanciesRepository = dataSource.getRepository(Vacancy);
+  async run(dataSource: DataSource): Promise<void> {
+    const cities = (await runSeeder(dataSource, CitiesSeeder)) as any;
+    console.log(`${cities.length} cidades geradas `);
+    console.log('\t', cities);
 
-    const companiesSeed = await companiesRepository.upsert(
-      companies.map((company) => {
-        console.log('Gerando empresa: ', company);
-        return { ...company };
-      }),
-      ['email'],
-    );
-    console.log(
-      'Sucesso! Empresas geradas: ',
-      companiesSeed.generatedMaps.length,
-    );
-
-    const vacanciesSeed = await vacanciesRepository.upsert(
-      vacancies.map((vacancy) => {
-        console.log('Gerando vaga: ', vacancy);
-
-        return {
-          ...vacancy,
-          companyId:
-            companiesSeed.generatedMaps[
-              Math.floor(Math.random() * companies.length)
-            ].id,
-        };
-      }),
-      ['title'],
-    );
-    console.log('Sucesso! Vagas geradas: ', vacanciesSeed.generatedMaps.length);
+    const institutions = (await runSeeder(
+      dataSource,
+      InstitutionsSeeder,
+    )) as any;
+    console.log(`${institutions.length} instituições geradas `);
+    console.log('\t', institutions);
   }
 }

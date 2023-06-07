@@ -4,6 +4,19 @@ import { Vacancy } from '../entities/vacancy.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
+const vacancy = {
+  title: 'Test vacancy',
+  description: 'Test description',
+  salary: 1000,
+  cityId: 1,
+  remote: false,
+  companyId: 1,
+  requirements: 'Test requirements',
+  desirableRequirements: 'Test desirable requirements',
+  activities: 'Test activities',
+  areaId: 1,
+};
+
 const mockVacanciesRepository = {
   create: jest.fn((dto) => dto),
   save: jest.fn((vacancy) => Promise.resolve(vacancy)),
@@ -31,9 +44,26 @@ describe('VacanciesService', () => {
       .compile();
 
     service = module.get<VacanciesService>(VacanciesService);
+    repository = module.get<Repository<Vacancy>>(REPOSITORY_TOKEN);
   });
 
-  it('should be defined', () => {
+  it('service should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('repository should be defined', () => {
+    expect(repository).toBeDefined();
+  });
+
+  describe('createVancancy()', () => {
+    it('should call repository.create', async () => {
+      await service.create(vacancy);
+      expect(repository.create).toBeCalledWith(vacancy);
+    });
+
+    it('should call repository.save', async () => {
+      await service.create(vacancy);
+      expect(repository.save).toBeCalled();
+    });
   });
 });

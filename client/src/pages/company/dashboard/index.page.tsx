@@ -1,18 +1,16 @@
-import jwtDecode from "jwt-decode";
 import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
 import React from "react";
+
+import { getUser } from "../../../services/api/userLogged";
+import { Company } from "../../../utils/types/users/company";
 
 export default function CompanyDashboard() {
   return <h1>Company Dashboard</h1>;
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ["next.token"]: token } = parseCookies(ctx);
-
-  const tokenDecoded = (jwtDecode(token) as any).role;
-
-  if (!token || tokenDecoded !== "company") {
+  const company = await getUser<Company>(ctx);
+  if (!company) {
     return {
       redirect: {
         destination: "/",

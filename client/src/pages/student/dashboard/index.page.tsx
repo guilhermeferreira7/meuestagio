@@ -1,13 +1,14 @@
 import { GetServerSideProps } from "next";
 import React from "react";
-import { parseCookies } from "nookies";
 
-import { getVacancies } from "@/services/vacancies/vacancy-service";
-import CardVacancy from "./card-vacancy";
-import jwtDecode from "jwt-decode";
+import CardVacancy from "./_card-vacancy";
+import { getAPIClient } from "../../../services/api/clientApi";
+import { Student } from "../../../utils/types/users/student";
+import { getUser } from "../../../services/api/userLogged";
+import { Vacancy } from "../../../utils/types/vacancies/vacancy";
 
 interface StudentPageProps {
-  vacancies: [];
+  vacancies: Vacancy[];
 }
 
 export default function StudentVacancies({ vacancies }: StudentPageProps) {
@@ -24,8 +25,8 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 mx-8">
-        {vacancies.map((vacancy: any) => (
+      <div className="flex flex-col gap-2 mx-8 w-4/5 mb-4">
+        {vacancies?.map((vacancy: Vacancy) => (
           <div key={vacancy.id}>
             <CardVacancy vacancy={vacancy} />
           </div>
@@ -36,11 +37,8 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { ["next.token"]: token } = parseCookies(ctx);
-
-  const tokenDecoded = (jwtDecode(token) as any).role;
-
-  if (!token || tokenDecoded !== "student") {
+  const student = await getUser<Student>(ctx);
+  if (!student) {
     return {
       redirect: {
         destination: "/",
@@ -49,11 +47,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const vacancies: [] = await getVacancies();
-
-  return {
-    props: {
-      vacancies,
-    },
-  };
+  const apiClient = getAPIClient(ctx);
+  try {
+    const getVacancies = await apiClient.get("/vacancies");
+    const vacancies = getVacancies.data;
+    return {
+      props: {
+        vacancies,
+      },
+    };
+  } catch (error: any) {
+    return {
+      props: {},
+    };
+  }
 };
