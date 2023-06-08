@@ -18,4 +18,10 @@ export class AuthController {
   async loginCompany(@Request() req: ReqAuth) {
     return await this.authService.login({ ...req.user });
   }
+
+  @UseGuards(AuthGuard('admin'))
+  @Post('auth/login/admin')
+  async loginAdmin(@Request() req: ReqAuth) {
+    return await this.authService.login({ ...req.user });
+  }
 }
