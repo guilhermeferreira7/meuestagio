@@ -52,7 +52,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
 
       <FormProvider {...createVacancyForm}>
         <form onSubmit={handleSubmit(createVacancy)} className="flex flex-col">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="grid grid-cols-1">
             <div className="mr-2">
               <Form.Field>
                 <Form.Label htmlFor="title">Nome da Vaga</Form.Label>
@@ -62,7 +62,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
             </div>
             <div className="mr-2">
               <Form.Field>
-                <Form.Label htmlFor="salary">Salário</Form.Label>
+                <Form.Label htmlFor="salary">Salário opcional</Form.Label>
                 <Form.InputText name="salary" type="number" />
                 <Form.ErrorMessage field="salary" />
               </Form.Field>
@@ -126,7 +126,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
                 <Form.ErrorMessage field="areaId" />
               </Form.Field>
             </div>
-            <div className="lg:col-span-2">
+            <div className="">
               <Form.Field className="flex items-center justify-center my-2 gap-1">
                 <Form.Label htmlFor="remote">Vaga remota?</Form.Label>
                 <Form.InputCheckbox name="remote" title="remote" />

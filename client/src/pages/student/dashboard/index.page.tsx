@@ -9,19 +9,68 @@ import { Vacancy } from "../../../utils/types/vacancy";
 
 interface StudentPageProps {
   vacancies: Vacancy[];
+  student: Student;
 }
 
-export default function StudentVacancies({ vacancies }: StudentPageProps) {
+export default function StudentVacancies({
+  vacancies,
+  student,
+}: StudentPageProps) {
   return (
     <div className="flex flex-col items-center">
-      <div className="flex flex-row justify-center my-4 max-w-xs">
-        <div className="flex flex-col items-center gap-2 w-96 mx-2">
-          <input
-            type="text"
-            placeholder="Pesquisar vagas"
-            className="w-full pl-2 input input-primary"
-          />
-          <button className="btn btn-primary w-5/6">Buscar</button>
+      <div>{student?.city?.name}</div>
+      <div className="collapse">
+        <input type="checkbox" />
+        <div className="collapse-title text-primary text-xl font-medium underline italic text-center">
+          Alterar cidade
+        </div>
+        <div className="collapse-content flex gap-1">
+          <select
+            name=""
+            id=""
+            className="select select-primary"
+            defaultValue={1}
+          >
+            <option disabled value="1">
+              Escolha um estado
+            </option>
+          </select>
+          <select
+            name=""
+            id=""
+            className="select select-primary"
+            defaultValue={1}
+          >
+            <option disabled value="1">
+              Escolha uma região
+            </option>
+          </select>
+          <select
+            name=""
+            id=""
+            className="select select-primary"
+            defaultValue={1}
+          >
+            <option disabled value="1">
+              Escolha uma cidade
+            </option>
+          </select>
+        </div>
+      </div>
+      <div className="flex flex-row justify-center my-4 ">
+        <div className="flex flex-col items-center gap-2 mx-2">
+          <div className="w-96 flex flex-col items-center gap-2">
+            <input
+              type="text"
+              placeholder="Pesquisar vagas"
+              className="w-full pl-2 input input-primary"
+            />
+            <div className="flex justify-center items-center gap-1">
+              <span>Vagas remotas?</span>
+              <input type="checkbox" className="checkbox checkbox-primary" />
+              <button className="btn btn-primary w-5/6">Buscar</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -37,7 +86,8 @@ export default function StudentVacancies({ vacancies }: StudentPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const student = await getUser<Student>(ctx);
+  const apiClient = getAPIClient(ctx);
+  const student = await apiClient.get<Student>("/students/profile");
   if (!student) {
     return {
       redirect: {
@@ -47,13 +97,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const apiClient = getAPIClient(ctx);
+  console.log(student.data);
+
   try {
     const getVacancies = await apiClient.get("/vacancies");
     const vacancies = getVacancies.data;
     return {
       props: {
         vacancies,
+        student: student.data,
       },
     };
   } catch (error: any) {

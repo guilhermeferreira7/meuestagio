@@ -17,9 +17,9 @@ import { createUserFormSchema } from "../../utils/validators/create-account-sche
 import { Form } from "../../components/Form";
 import { Role } from "../../utils/types/auth/user-auth";
 import { api } from "../../services/api/api";
-import { Course } from "../../utils/types/courses/course";
-import { Institution } from "../../utils/types/institutions/institution";
-import { City } from "../../utils/types/cities/city";
+import { Course } from "../../utils/types/course";
+import { Institution } from "../../utils/types/institution";
+import { City } from "../../utils/types/city";
 
 type CreateAccountFormData = z.infer<typeof createUserFormSchema>;
 
@@ -60,6 +60,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
   };
 
   const createAccountForm = useForm<CreateAccountFormData>({
+    mode: "onChange",
     resolver: zodResolver(createUserFormSchema),
   });
   const { handleSubmit } = createAccountForm;
@@ -106,6 +107,8 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
         </h1>
       </div>
 
+      <div>{createAccountForm.formState.isLoading}</div>
+
       <FormProvider {...createAccountForm}>
         <form
           className="flex flex-col gap-2 w-5/6 lg:w-1/3 mb-4"
@@ -131,6 +134,11 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
             </div>
           </Form.Field>
 
+          {userRole === Role.Student ? (
+            <h2>Quem é você?</h2>
+          ) : (
+            <h2>Qual é sua empresa?</h2>
+          )}
           <Form.Field>
             <Form.Label htmlFor="name">
               {userRole === Role.Student
@@ -141,14 +149,15 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
             <Form.ErrorMessage field="name" />
           </Form.Field>
 
-          <Form.Field>
-            <Form.Label htmlFor="email">Digite seu email</Form.Label>
-            <Form.InputText name="email" />
-            <Form.ErrorMessage field="email" />
-          </Form.Field>
-
           {userRole === "student" ? (
             <div>
+              <Form.Field>
+                <Form.Label htmlFor="cpf">Digite seu CPF</Form.Label>
+                <Form.InputText name="cpf" />
+                <Form.ErrorMessage field="cpf" />
+              </Form.Field>
+
+              <h2 className="mt-2">Qual é seu curso?</h2>
               <Form.Field>
                 <Form.Label htmlFor="institutionId">Instituição</Form.Label>
                 <Form.InputSelect name="institutionId" onChange={changeCourses}>
@@ -189,6 +198,11 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
           ) : (
             <div>
               <Form.Field>
+                <Form.Label htmlFor="cnpj">Digite o CNPJ da empresa</Form.Label>
+                <Form.InputText name="cnpj" />
+                <Form.ErrorMessage field="cnpj" />
+              </Form.Field>
+              <Form.Field>
                 <Form.Label htmlFor="cityId">Cidade</Form.Label>
                 <Form.InputSelect name="cityId" onChange={changeCity}>
                   <option disabled value="">
@@ -204,13 +218,15 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
                 </Form.InputSelect>
                 <Form.ErrorMessage field="cityId" />
               </Form.Field>
-              <Form.Field>
-                <Form.Label htmlFor="cnpj">Digite o CNPJ da empresa</Form.Label>
-                <Form.InputText name="cnpj" />
-                <Form.ErrorMessage field="cnpj" />
-              </Form.Field>
             </div>
           )}
+
+          <h2 className="mt-2">Seus dados de acesso:</h2>
+          <Form.Field>
+            <Form.Label htmlFor="email">Digite seu email</Form.Label>
+            <Form.InputText name="email" />
+            <Form.ErrorMessage field="email" />
+          </Form.Field>
 
           <Form.Field>
             <Form.Label htmlFor="password">Digite sua senha</Form.Label>
@@ -226,15 +242,14 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
             <Form.ErrorMessage field="confirmPassword" />
           </Form.Field>
 
-          {courseSelected === "" && userRole === Role.Student ? (
-            <div>
-              <span className="text-error">Escolha seu curso!</span>
-              <button className="btn btn-primary w-2/3 self-center" disabled>
-                Criar conta
-              </button>
-            </div>
+          {createAccountForm.formState.isValid ? (
+            <button className="btn btn-primary w-2/3 self-center">
+              Criar conta
+            </button>
           ) : (
-            <button className="btn btn-primary w-2/3">Criar conta</button>
+            <button className="btn btn-primary w-2/3 self-center" disabled>
+              Criar conta
+            </button>
           )}
         </form>
       </FormProvider>
