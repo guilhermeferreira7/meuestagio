@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import img from "../../../../public/avatar.png";
 import { Student } from "../../../utils/types/users/student";
-import { getUser } from "../../../services/api/userLogged";
+import { getAPIClient } from "../../../services/api/clientApi";
 
 export default function StudentProfile({ student }: { student: Student }) {
   return (
@@ -49,8 +49,15 @@ export default function StudentProfile({ student }: { student: Student }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  const student = await getUser<Student>(ctx);
-  if (!student) {
+  try {
+    const apiClient = getAPIClient(ctx);
+    const student = await apiClient.get<Student>("/students/profile");
+    return {
+      props: {
+        student: student.data,
+      },
+    };
+  } catch (error) {
     return {
       redirect: {
         destination: "/",
@@ -58,10 +65,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
       },
     };
   }
-
-  return {
-    props: {
-      student,
-    },
-  };
 };

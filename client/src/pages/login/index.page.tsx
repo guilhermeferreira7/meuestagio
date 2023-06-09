@@ -70,6 +70,12 @@ export default function Login() {
                 id="professor"
                 title="Professor"
               />
+              <Form.InputRadio
+                value={Role.Admin}
+                name="userRole"
+                id="admin"
+                title="Administrador"
+              />
               <Form.ErrorMessage field="userRole" />
             </div>
           </Form.Field>

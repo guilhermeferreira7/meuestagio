@@ -13,13 +13,14 @@ import { StudentValidator } from './students/services/students-validator.service
 import { StudentsController } from './students/controllers/students.controller';
 import { CompaniesService } from './companies/services/companies.service';
 import { CompaniesController } from './companies/controllers/companies.controller';
+import { AdminController } from './admin/controllers/admin.controller';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([City, Student, Company, Institution, Course]),
   ],
   providers: [StudentsService, CompaniesService, StudentValidator],
-  controllers: [StudentsController, CompaniesController],
+  controllers: [StudentsController, CompaniesController, AdminController],
   exports: [StudentsService, CompaniesService],
 })
 export class UsersModule {}
