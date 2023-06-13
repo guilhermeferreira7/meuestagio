@@ -88,6 +88,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const apiClient = getAPIClient(ctx);
     const student = await apiClient.get<Student>("/students/profile");
+    console.log(student.data);
+
     const getVacancies = await apiClient.get("/vacancies");
     const vacancies = getVacancies.data;
     return {
@@ -97,19 +99,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   } catch (error: any) {
-    if (error.response?.status === 401) {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-    } else {
-      console.log(error.response?.data);
-    }
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
   }
-
-  return {
-    props: {},
-  };
 };

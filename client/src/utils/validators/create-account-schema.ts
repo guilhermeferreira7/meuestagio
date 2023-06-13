@@ -49,14 +49,24 @@ export const createUserFormSchema = z
   .refine(
     (data) => {
       if (data.userRole === "student") {
-        const hasInstitution = data.institutionId !== "" ? true : false;
-        const hasCourse = data.courseId !== "" ? true : false;
-        return hasInstitution && hasCourse;
+        return data.institutionId !== "" ? true : false;
       }
       return true;
     },
     {
-      message: "A instituição e o curso são obrigatórios",
+      message: "A instituição é obrigatória",
       path: ["institutionId"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.userRole === "student") {
+        return data.courseId !== "" ? true : false;
+      }
+      return true;
+    },
+    {
+      message: "Selecione um curso",
+      path: ["courseId"],
     }
   );

@@ -36,6 +36,10 @@ export class CompaniesService {
     return await this.companiesRepository.findOneBy({ email });
   }
 
+  async findAll(): Promise<Company[]> {
+    return await this.companiesRepository.find();
+  }
+
   async findByCnpj(cnpj: string): Promise<Company> {
     return await this.companiesRepository.findOneBy({ cnpj });
   }

@@ -20,6 +20,8 @@ import { api } from "../../services/api/api";
 import { Course } from "../../utils/types/course";
 import { Institution } from "../../utils/types/institution";
 import { City } from "../../utils/types/city";
+import CreateStudentForm from "./_student-form";
+import CreateCompanyForm from "./_company-form";
 
 type CreateAccountFormData = z.infer<typeof createUserFormSchema>;
 
@@ -29,38 +31,8 @@ interface PageProps {
 }
 
 export default function CreateAccount({ institutions, cities }: PageProps) {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [cityId, setCityId] = useState<number | undefined>(0);
-  const [courseSelected, setCourseSelected] = useState<string>("");
-
-  const changeCourseSelected = (event: any) => {
-    const id = event.target.value;
-    setCourseSelected(id);
-  };
-
-  const changeCourses = async (event: any) => {
-    const id = event.target.value;
-    try {
-      const institution = institutions.find(
-        (institution) => institution.id === +id
-      );
-      setCityId(institution?.cityId);
-
-      const response = await api.get<Course[]>(`/institutions/${id}/courses`);
-      setCourseSelected("");
-      setCourses(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const changeCity = (event: any) => {
-    const id = event.target.value;
-    setCityId(+id);
-  };
-
   const createAccountForm = useForm<CreateAccountFormData>({
-    mode: "onChange",
+    mode: "onTouched",
     resolver: zodResolver(createUserFormSchema),
   });
   const { handleSubmit } = createAccountForm;
@@ -74,8 +46,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
       try {
         await api.post("/students", {
           ...data,
-          courseId: courseSelected,
-          cityId,
         });
         notifySuccess("Aluno cadastrado com sucesso!");
         setTimeout(() => {
@@ -83,6 +53,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
         }, 2000);
       } catch (error: any) {
         notifyError(error.response?.data?.message);
+        notifyWarning(data.courseId);
       }
     } else if (data.userRole === Role.Company) {
       try {
@@ -135,90 +106,12 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
           </Form.Field>
 
           {userRole === Role.Student ? (
-            <h2>Quem é você?</h2>
+            <CreateStudentForm
+              institutions={institutions}
+              form={createAccountForm}
+            />
           ) : (
-            <h2>Qual é sua empresa?</h2>
-          )}
-          <Form.Field>
-            <Form.Label htmlFor="name">
-              {userRole === Role.Student
-                ? "Digite seu nome completo"
-                : "Digite o nome de sua empresa"}
-            </Form.Label>
-            <Form.InputText name="name" />
-            <Form.ErrorMessage field="name" />
-          </Form.Field>
-
-          {userRole === "student" ? (
-            <div>
-              <Form.Field>
-                <Form.Label htmlFor="cpf">Digite seu CPF</Form.Label>
-                <Form.InputText name="cpf" />
-                <Form.ErrorMessage field="cpf" />
-              </Form.Field>
-
-              <h2 className="mt-2">Qual é seu curso?</h2>
-              <Form.Field>
-                <Form.Label htmlFor="institutionId">Instituição</Form.Label>
-                <Form.InputSelect name="institutionId" onChange={changeCourses}>
-                  <option disabled value="">
-                    Escolha uma instituição
-                  </option>
-                  {institutions.map((institution) => {
-                    return (
-                      <option key={institution.id} value={institution.id}>
-                        {institution.name}
-                      </option>
-                    );
-                  })}
-                </Form.InputSelect>
-                <Form.ErrorMessage field="institutionId" />
-              </Form.Field>
-              <Form.Field>
-                <Form.Label htmlFor="courseId">Curso</Form.Label>
-                <Form.InputSelect
-                  name="courseId"
-                  value={courseSelected}
-                  onChange={changeCourseSelected}
-                >
-                  <option disabled value="">
-                    Qual seu curso?
-                  </option>
-                  {courses.map((course: any) => {
-                    return (
-                      <option key={course.id} value={course.id}>
-                        {course.name}
-                      </option>
-                    );
-                  })}
-                </Form.InputSelect>
-                <Form.ErrorMessage field="institutionId" />
-              </Form.Field>
-            </div>
-          ) : (
-            <div>
-              <Form.Field>
-                <Form.Label htmlFor="cnpj">Digite o CNPJ da empresa</Form.Label>
-                <Form.InputText name="cnpj" />
-                <Form.ErrorMessage field="cnpj" />
-              </Form.Field>
-              <Form.Field>
-                <Form.Label htmlFor="cityId">Cidade</Form.Label>
-                <Form.InputSelect name="cityId" onChange={changeCity}>
-                  <option disabled value="">
-                    Qual cidade a empresa está localizada?
-                  </option>
-                  {cities.map((city) => {
-                    return (
-                      <option key={city.id} value={city.id}>
-                        {city.name}
-                      </option>
-                    );
-                  })}
-                </Form.InputSelect>
-                <Form.ErrorMessage field="cityId" />
-              </Form.Field>
-            </div>
+            <CreateCompanyForm cities={cities} />
           )}
 
           <h2 className="mt-2">Seus dados de acesso:</h2>
@@ -242,17 +135,15 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
             <Form.ErrorMessage field="confirmPassword" />
           </Form.Field>
 
-          {createAccountForm.formState.isValid ? (
-            <button className="btn btn-primary w-2/3 self-center">
-              Criar conta
-            </button>
-          ) : (
-            <button className="btn btn-primary w-2/3 self-center" disabled>
-              Criar conta
-            </button>
-          )}
+          <button className="btn btn-primary w-2/3 self-center">
+            Criar conta
+          </button>
         </form>
       </FormProvider>
+
+      <pre>
+        <code>{JSON.stringify(createAccountForm.getValues(), null, 2)}</code>
+      </pre>
 
       <ToastContainer />
     </div>

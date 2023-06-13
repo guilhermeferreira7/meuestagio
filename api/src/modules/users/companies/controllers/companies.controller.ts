@@ -22,6 +22,11 @@ export class CompaniesController {
     return await this.companiesService.create(createCompanyDto);
   }
 
+  @Get()
+  async findAll(): Promise<Company[]> {
+    return await this.companiesService.findAll();
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {

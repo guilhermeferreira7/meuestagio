@@ -28,7 +28,7 @@ export class StudentsController {
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
-    const student = await this.studentService.findOne(req.user.sub);
+    const student = await this.studentService.findByEmail(req.user.email);
 
     if (!student) {
       throw new UnauthorizedException();
