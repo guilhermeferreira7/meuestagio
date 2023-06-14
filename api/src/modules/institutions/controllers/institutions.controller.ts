@@ -5,9 +5,9 @@ import { Institution } from '../entities/institution.entity';
 import { InstitutionsService } from '../services/institutions.service';
 import { CoursesService } from '../../courses/services/courses.service';
 import { CreateInstitutionDto } from '../dtos/create-institution.dto';
-import { HasRoles } from '../../auth/roles.decorator';
-import { Role } from '../../../utils/roles';
-import { RolesGuard } from '../../auth/roles.guard';
+import { HasRoles } from '../../auth/roles/roles.decorator';
+import { Role } from '../../auth/roles/roles';
+import { RolesGuard } from '../../auth/roles/roles.guard';
 
 @Controller('institutions')
 export class InstitutionsController {

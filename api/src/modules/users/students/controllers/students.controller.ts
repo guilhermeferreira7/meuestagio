@@ -14,10 +14,10 @@ import { Student } from '../entities/student.entity';
 import { StudentsService } from '../services/students.service';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
-import { ReqAuth } from '../../../auth/types/request';
-import { Role } from '../../../../utils/roles';
-import { HasRoles } from '../../../auth/roles.decorator';
-import { RolesGuard } from '../../../auth/roles.guard';
+import { ReqAuth } from '../../../../types/auth/request';
+import { Role } from '../../../auth/roles/roles';
+import { HasRoles } from '../../../auth/roles/roles.decorator';
+import { RolesGuard } from '../../../auth/roles/roles.guard';
 
 @Controller('students')
 export class StudentsController {

@@ -11,10 +11,10 @@ import { CompaniesService } from '../services/companies.service';
 import { CreateCompanyDto } from '../dtos/create-company.dto';
 import { Company } from '../entities/company.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { ReqAuth } from '../../../auth/types/request';
-import { Role } from '../../../../utils/roles';
-import { HasRoles } from '../../../auth/roles.decorator';
-import { RolesGuard } from '../../../auth/roles.guard';
+import { ReqAuth } from '../../../../types/auth/request';
+import { Role } from '../../../auth/roles/roles';
+import { HasRoles } from '../../../auth/roles/roles.decorator';
+import { RolesGuard } from '../../../auth/roles/roles.guard';
 
 @Controller('companies')
 export class CompaniesController {

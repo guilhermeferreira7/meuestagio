@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from '../../utils/roles';
-import { UserAuth } from './types/user-auth';
+import { Role } from './roles/roles';
+import { UserAuth } from '../../types/auth/user-auth';
 
 export type TPayload = {
   sub: string;

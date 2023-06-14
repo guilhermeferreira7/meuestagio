@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
 import bcryptService from '../../../utils/bcriptUtils';
-import { UserAuth } from '../types/user-auth';
-import { Role } from '../../../utils/roles';
 import { CompaniesService } from '../../users/companies/services/companies.service';
 import { dataSource } from '../../../database/data-source';
 import { User } from '../../users/user/user.entity';
+import { UserAuth } from '../../../types/auth/user-auth';
+import { Role } from '../roles/roles';
 
 @Injectable()
 export class AuthAdminService {

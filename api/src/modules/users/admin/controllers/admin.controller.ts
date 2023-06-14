@@ -8,12 +8,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ReqAuth } from '../../../auth/types/request';
+import { ReqAuth } from '../../../../types/auth/request';
 import { User } from '../../user/user.entity';
 import { dataSource } from '../../../../database/data-source';
-import { HasRoles } from '../../../auth/roles.decorator';
-import { Role } from '../../../../utils/roles';
-import { RolesGuard } from '../../../auth/roles.guard';
+import { HasRoles } from '../../../auth/roles/roles.decorator';
+import { Role } from '../../../auth/roles/roles';
+import { RolesGuard } from '../../../auth/roles/roles.guard';
 
 @Controller('admin')
 export class AdminController {

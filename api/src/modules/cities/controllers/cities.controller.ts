@@ -12,10 +12,10 @@ import { CreateCityDto } from '../dtos/create-city.dto';
 import { City } from '../entities/city.entity';
 import { CitiesService } from '../services/cities.service';
 import { InstitutionsService } from '../../institutions/services/institutions.service';
-import { HasRoles } from '../../auth/roles.decorator';
-import { Role } from '../../../utils/roles';
-import { RolesGuard } from '../../auth/roles.guard';
+import { RolesGuard } from '../../auth/roles/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { HasRoles } from '../../auth/roles/roles.decorator';
+import { Role } from '../../auth/roles/roles';
 
 @Controller('cities')
 export class CitiesController {
