@@ -141,10 +141,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
         </form>
       </FormProvider>
 
-      <pre>
-        <code>{JSON.stringify(createAccountForm.getValues(), null, 2)}</code>
-      </pre>
-
       <ToastContainer />
     </div>
   );

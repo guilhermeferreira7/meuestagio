@@ -6,6 +6,7 @@ import Footer from "./footer";
 import Header from "./header";
 import CompanyMenu from "./menus/company-menu";
 import { Role } from "../../utils/types/auth/user-auth";
+import AdminMenu from "./menus/admin-menu";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -22,6 +23,9 @@ export default function PageLayout({ children }: PageLayoutProps) {
       break;
     case Role.Company:
       menuItems = CompanyMenu();
+      break;
+    case Role.Admin:
+      menuItems = AdminMenu();
       break;
     default:
       menuItems = DefaultMenu();

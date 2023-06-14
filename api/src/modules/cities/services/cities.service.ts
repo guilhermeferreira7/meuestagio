@@ -19,12 +19,21 @@ export class CitiesService {
       throw new ConflictException('City already exists!');
     }
 
-    const newCity = this.citiesRepository.create(createCityDto);
+    const newCity = this.citiesRepository.create({
+      ...createCityDto,
+      fullName: `${createCityDto.name} - ${createCityDto.state}`,
+    });
     return await this.citiesRepository.save(newCity);
   }
 
-  async findAll(): Promise<City[]> {
-    return await this.citiesRepository.find();
+  async findAll({ page, limit }): Promise<City[]> {
+    return await this.citiesRepository.find({
+      skip: page,
+      take: limit,
+      order: {
+        id: 'DESC',
+      },
+    });
   }
 
   async findOne(id: number): Promise<City> {

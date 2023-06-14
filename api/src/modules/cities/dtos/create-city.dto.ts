@@ -5,5 +5,5 @@ export class CreateCityDto {
   name: string;
 
   @IsNotEmpty()
-  uf: string;
+  state: string;
 }

@@ -9,7 +9,7 @@ export class City {
   name: string;
 
   @Column()
-  uf: string;
+  state: string;
 
   @Column({ unique: true })
   fullName: string;

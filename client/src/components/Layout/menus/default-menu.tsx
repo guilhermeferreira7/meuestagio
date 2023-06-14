@@ -1,19 +1,15 @@
 import React from "react";
 import Link from "next/link";
-import {
-  HomeOutlined,
-  LoginOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
+import { Home, UserPlus } from "lucide-react";
 
 export default function DefaultMenu() {
   const menuItems = [
     <Link className="w-full" href="/">
-      <HomeOutlined />
+      <Home />
       Inicio
     </Link>,
     <Link className="w-full" href="/create-account">
-      <UserAddOutlined />
+      <UserPlus />
       Criar conta
     </Link>,
   ];

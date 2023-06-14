@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Request } from '@nestjs/common';
 
 import { CreateCityDto } from '../dtos/create-city.dto';
 import { City } from '../entities/city.entity';
@@ -18,8 +18,13 @@ export class CitiesController {
   }
 
   @Get()
-  async getAll(): Promise<City[]> {
-    return await this.citiesService.findAll();
+  async getAll(@Request() request): Promise<City[]> {
+    console.log(request.query.page, request.query.limit);
+
+    return await this.citiesService.findAll({
+      page: request.query.page,
+      limit: request.query.limit,
+    });
   }
 
   @Get(':id/institutions')

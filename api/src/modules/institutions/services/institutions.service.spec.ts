@@ -32,7 +32,7 @@ const mockInstitutionsRepository = {
 
 const mockCityRepository = {
   findOneBy: jest.fn((id) =>
-    Promise.resolve({ id, name: 'Guarapuava', uf: 'PR' }),
+    Promise.resolve({ id, name: 'Guarapuava', state: 'PR' }),
   ),
 };
 
