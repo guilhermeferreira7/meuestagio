@@ -11,12 +11,16 @@ import { AuthGuard } from '@nestjs/passport';
 import { ReqAuth } from '../../../auth/types/request';
 import { User } from '../../user/user.entity';
 import { dataSource } from '../../../../database/data-source';
+import { HasRoles } from '../../../auth/roles.decorator';
+import { Role } from '../../../../utils/roles';
+import { RolesGuard } from '../../../auth/roles.guard';
 
 @Controller('admin')
 export class AdminController {
   constructor() {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @HasRoles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
     const usersRepository = dataSource.getRepository(User);

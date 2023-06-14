@@ -15,6 +15,9 @@ import { StudentsService } from '../services/students.service';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
 import { ReqAuth } from '../../../auth/types/request';
+import { Role } from '../../../../utils/roles';
+import { HasRoles } from '../../../auth/roles.decorator';
+import { RolesGuard } from '../../../auth/roles.guard';
 
 @Controller('students')
 export class StudentsController {
@@ -25,7 +28,8 @@ export class StudentsController {
     return await this.studentService.createStudent(createStudentDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
     const student = await this.studentService.findByEmail(req.user.email);
@@ -38,7 +42,8 @@ export class StudentsController {
     return result;
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch()
   async update(
     @Request() req: ReqAuth,

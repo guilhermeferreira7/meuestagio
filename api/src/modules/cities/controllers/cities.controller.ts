@@ -1,9 +1,21 @@
-import { Controller, Post, Body, Get, Param, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 
 import { CreateCityDto } from '../dtos/create-city.dto';
 import { City } from '../entities/city.entity';
 import { CitiesService } from '../services/cities.service';
 import { InstitutionsService } from '../../institutions/services/institutions.service';
+import { HasRoles } from '../../auth/roles.decorator';
+import { Role } from '../../../utils/roles';
+import { RolesGuard } from '../../auth/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('cities')
 export class CitiesController {
@@ -12,6 +24,8 @@ export class CitiesController {
     private readonly institutionsService: InstitutionsService,
   ) {}
 
+  @HasRoles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
   async createCity(@Body() createCityDto: CreateCityDto): Promise<City> {
     return await this.citiesService.createCity(createCityDto);
@@ -19,8 +33,6 @@ export class CitiesController {
 
   @Get()
   async getAll(@Request() request): Promise<City[]> {
-    console.log(request.query.page, request.query.limit);
-
     return await this.citiesService.findAll({
       page: request.query.page,
       limit: request.query.limit,

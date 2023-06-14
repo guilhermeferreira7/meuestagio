@@ -8,6 +8,8 @@ import { City } from '../modules/cities/entities/city.entity';
 import { Area } from '../modules/areas/entities/area.entity';
 import { Institution } from '../modules/institutions/entities/institution.entity';
 import { User } from '../modules/users/user/user.entity';
+import { Student } from '../modules/users/students/entities/student.entity';
+import { Course } from '../modules/courses/entities/course.entity';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -15,7 +17,7 @@ const options: DataSourceOptions & SeederOptions = {
   username: 'postgres',
   host: process.env.PG_HOST,
   password: 'qwerty',
-  entities: [Company, Vacancy, City, Area, Institution, User],
+  entities: [Company, Vacancy, City, Area, Institution, User, Student, Course],
   seeds: [MainSeeder],
   synchronize: true,
 };
