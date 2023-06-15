@@ -21,7 +21,6 @@ export class CitiesService {
 
     const newCity = this.citiesRepository.create({
       ...createCityDto,
-      fullName: `${createCityDto.name} - ${createCityDto.state}`,
     });
     return await this.citiesRepository.save(newCity);
   }

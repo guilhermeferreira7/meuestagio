@@ -26,22 +26,22 @@ export default function Home() {
 
   return (
     <div className="flex flex-col flex-1 items-center w-full my-5">
-      <div className="w-4/5 text-center">
-        <h1 className="text-3xl font-semibold">
+      <div className="text-center">
+        <h1 className="text-sm md:text-xl lg:text-3xl font-semibold p-1">
           <span className="font-bold text-primary">MeuEstagio</span>: a melhor
           plataforma para encontrar estágios ou contratar novos estagiários.
         </h1>
       </div>
 
-      <div className="w-4/5 text-center">
-        <h2 className="text-xl mt-2">
+      <div className="text-center">
+        <h2 className="text-sm md:text-lg lg:text-2xl">
           Mais de 200 empresas cadastradas e cerca de 700 vagas de estágio em
           aberto.
         </h2>
       </div>
 
-      <div className="w-4/5 text-center">
-        <h2 className="text-xl mt-2">
+      <div className="text-center">
+        <h2 className="text-sm md:text-lg lg:text-2xl">
           <Link className="text-info font-semibold" href="/login">
             Entre
           </Link>{" "}

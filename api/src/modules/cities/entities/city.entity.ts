@@ -11,6 +11,12 @@ export class City {
   @Column()
   state: string;
 
-  @Column({ unique: true })
-  fullName: string;
+  @Column()
+  IBGECityCode: number;
+
+  @Column()
+  IBGEStateCode: number;
+
+  @Column()
+  IBGERegionCode: number;
 }

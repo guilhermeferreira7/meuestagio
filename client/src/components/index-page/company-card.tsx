@@ -4,7 +4,7 @@ import React from "react";
 
 export default function CompanyCard() {
   return (
-    <div className="flex flex-col m-1 card  shadow-sm shadow-primary">
+    <div className="flex flex-col m-1 card shadow-sm shadow-primary">
       <div className="flex items-center">
         <div className="m-2">
           <Building className="text-amber-500" />
