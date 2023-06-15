@@ -9,7 +9,9 @@ interface CreateCompanyFormProps {
 export default function CreateCompanyForm({ cities }: CreateCompanyFormProps) {
   return (
     <div>
-      <h2>Qual é sua empresa?</h2>
+      <h2 className="text-xl font-semibold text-info italic">
+        Qual é sua empresa?
+      </h2>
       <Form.Field>
         <Form.Label htmlFor="name">Digite o nome de sua empresa</Form.Label>
         <Form.InputText name="name" />

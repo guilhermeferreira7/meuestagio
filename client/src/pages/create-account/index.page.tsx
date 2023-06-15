@@ -71,7 +71,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
   }
 
   return (
-    <div className="flex flex-col flex-1 items-center w-full ">
+    <div className="flex flex-col flex-1 items-center w-full">
       <div className="text-center my-3">
         <h1 className="font-bold text-lg text-primary">
           Crie já sua conta para utilizar o sistema!
@@ -114,7 +114,9 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
             <CreateCompanyForm cities={cities} />
           )}
 
-          <h2 className="mt-2">Seus dados de acesso:</h2>
+          <h2 className="mt-2 text-xl font-semibold text-info italic">
+            Seus dados de acesso:
+          </h2>
           <Form.Field>
             <Form.Label htmlFor="email">Digite seu email</Form.Label>
             <Form.InputText name="email" />

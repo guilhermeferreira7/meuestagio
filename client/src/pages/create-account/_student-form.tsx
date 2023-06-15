@@ -54,14 +54,16 @@ export default function CreateStudentForm({
 
   return (
     <div>
-      <h2>Quem é você?</h2>
+      <h2 className="text-xl font-semibold text-info italic">Quem é você?</h2>
       <Form.Field>
         <Form.Label htmlFor="name">Digite seu nome completo</Form.Label>
         <Form.InputText name="name" />
         <Form.ErrorMessage field="name" />
       </Form.Field>
 
-      <h2 className="mt-2">Qual é seu curso?</h2>
+      <h2 className="mt-2 text-xl font-semibold text-info italic">
+        Qual é seu curso?
+      </h2>
       <Form.Field>
         <Form.Label htmlFor="institutionId">Instituição</Form.Label>
         <Form.InputSelect name="institutionId" onChange={changeCourses}>
