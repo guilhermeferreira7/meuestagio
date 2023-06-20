@@ -9,9 +9,10 @@ import { CitiesService } from './services/cities.service';
 import { InstitutionsService } from '../institutions/services/institutions.service';
 
 import { CitiesController } from './controllers/cities.controller';
+import { Region } from './entities/region.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([City, Student, Institution])],
+  imports: [TypeOrmModule.forFeature([City, Student, Institution, Region])],
   providers: [CitiesService, InstitutionsService],
   controllers: [CitiesController],
   exports: [CitiesService],

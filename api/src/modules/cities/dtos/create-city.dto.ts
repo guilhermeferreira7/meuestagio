@@ -6,4 +6,10 @@ export class CreateCityDto {
 
   @IsNotEmpty()
   state: string;
+
+  @IsNotEmpty()
+  regionId: number;
+
+  @IsNotEmpty()
+  IBGECityCode: number;
 }

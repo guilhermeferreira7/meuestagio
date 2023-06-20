@@ -16,6 +16,8 @@ import { RolesGuard } from '../../auth/roles/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
+import { CreateRegionDto } from '../dtos/create-region.dto';
+import { Region } from '../entities/region.entity';
 
 @Controller('cities')
 export class CitiesController {
@@ -29,6 +31,15 @@ export class CitiesController {
   @Post()
   async createCity(@Body() createCityDto: CreateCityDto): Promise<City> {
     return await this.citiesService.createCity(createCityDto);
+  }
+
+  @HasRoles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('region')
+  async createRegion(
+    @Body() createRegionDto: CreateRegionDto,
+  ): Promise<Region> {
+    return await this.citiesService.createRegion(createRegionDto);
   }
 
   @Get()

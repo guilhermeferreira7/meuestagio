@@ -7,6 +7,8 @@ import { InstitutionsService } from '../../institutions/services/institutions.se
 const city = {
   name: 'Guarapuava',
   state: 'Paraná',
+  regionId: 1,
+  IBGECityCode: 4109401,
 };
 
 describe('CitiesController', () => {
