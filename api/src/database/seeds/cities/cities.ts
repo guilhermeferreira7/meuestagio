@@ -1,12 +1,12 @@
 export const cities = [
   {
     name: 'Guarapuava',
-    uf: 'PR',
+    state: 'Paraná',
     fullName: 'Guarapuava, Paraná',
   },
   {
     name: 'Ponta Grossa',
-    uf: 'PR',
+    state: 'Paraná',
     fullName: 'Ponta Grossa, Paraná',
   },
 ];

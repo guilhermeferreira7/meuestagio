@@ -1,10 +1,13 @@
-import React, { ReactNode, useContext, useEffect } from "react";
+import React, { ReactNode, useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
+
 import StudentMenu from "./menus/student-menu";
 import DefaultMenu from "./menus/default-menu";
-import Footer from "./footer";
-import Header from "./header";
 import CompanyMenu from "./menus/company-menu";
+import AdminMenu from "./menus/admin-menu";
+import Header from "./header";
+import PageMenu from "./page-menu";
+import Footer from "./footer";
 import { Role } from "../../utils/types/auth/user-auth";
 
 interface PageLayoutProps {
@@ -23,6 +26,9 @@ export default function PageLayout({ children }: PageLayoutProps) {
     case Role.Company:
       menuItems = CompanyMenu();
       break;
+    case Role.Admin:
+      menuItems = AdminMenu();
+      break;
     default:
       menuItems = DefaultMenu();
       break;
@@ -30,15 +36,32 @@ export default function PageLayout({ children }: PageLayoutProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="bg-base-100 flex flex-row justify-center drop-shadow-lg">
-        <Header menuItems={menuItems} />
-      </header>
-      <main className="text-base-content flex flex-1 justify-center overflow-auto">
-        {children}
-      </main>
-      <footer className="p-4 justify-center mt-auto border-t-2 border-opacity-10">
-        <Footer />
-      </footer>
+      <div className="drawer">
+        <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content flex flex-col">
+          <Header />
+          <div className="flex flex-1">
+            <div className="hidden lg:flex">
+              <PageMenu menuItems={menuItems} />
+            </div>
+            <main className="flex w-full mt-5">{children}</main>
+          </div>
+          <footer className="p-4 justify-center mt-auto border-t-2 border-opacity-10">
+            <Footer />
+          </footer>
+        </div>
+
+        <div className="drawer-side">
+          <label htmlFor="my-drawer" className="drawer-overlay"></label>
+          <ul className="menu p-4 w-80 h-full bg-base-100">
+            {menuItems?.map((item: any, key: any) => (
+              <li key={key} className="border-b-2">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

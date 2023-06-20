@@ -1,16 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import Link from "next/link";
-import { HomeOutlined, UserOutlined, SearchOutlined } from "@ant-design/icons";
-import { PlusCircle } from "lucide-react";
+import { Home, PlusCircle, User } from "lucide-react";
 
 export default function CompanyMenu() {
   const menuItems = [
     <Link className="w-full" href="/">
-      <HomeOutlined />
+      <Home />
       Inicio
     </Link>,
     <Link className="w-full" href="/company/profile">
-      <UserOutlined />
+      <User />
       Perfil
     </Link>,
     <Link className="w-full" href="/company/create-vacancy">

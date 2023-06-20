@@ -3,17 +3,16 @@ import { GetServerSideProps } from "next";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { ToastContainer } from "react-toastify";
+import { useRouter } from "next/router";
 
-import { getUser } from "../../../services/api/userLogged";
-import { Company } from "../../../utils/types/users/company";
 import { createVacancyFormSchema } from "../../../utils/validators/create-vancancy-schema";
 import { Form } from "../../../components/Form";
 import { getAPIClient } from "../../../services/api/clientApi";
-import { Area } from "../../../utils/types/areas/area";
+import { Area } from "../../../utils/types/area";
 import { api } from "../../../services/api/api";
 import { notifyError, notifySuccess } from "../../../components/toasts/toast";
-import { ToastContainer } from "react-toastify";
-import { useRouter } from "next/router";
+import { Company } from "../../../utils/types/users/company";
 
 type CreateVacancyFormData = z.infer<typeof createVacancyFormSchema>;
 
@@ -52,7 +51,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
 
       <FormProvider {...createVacancyForm}>
         <form onSubmit={handleSubmit(createVacancy)} className="flex flex-col">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="grid grid-cols-1">
             <div className="mr-2">
               <Form.Field>
                 <Form.Label htmlFor="title">Nome da Vaga</Form.Label>
@@ -62,7 +61,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
             </div>
             <div className="mr-2">
               <Form.Field>
-                <Form.Label htmlFor="salary">Salário</Form.Label>
+                <Form.Label htmlFor="salary">Salário opcional</Form.Label>
                 <Form.InputText name="salary" type="number" />
                 <Form.ErrorMessage field="salary" />
               </Form.Field>
@@ -126,7 +125,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
                 <Form.ErrorMessage field="areaId" />
               </Form.Field>
             </div>
-            <div className="lg:col-span-2">
+            <div className="">
               <Form.Field className="flex items-center justify-center my-2 gap-1">
                 <Form.Label htmlFor="remote">Vaga remota?</Form.Label>
                 <Form.InputCheckbox name="remote" title="remote" />
@@ -150,8 +149,14 @@ export default function CreateVacancy({ areas, company }: PageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const company = await getUser<Company>(ctx);
-  if (!company) {
+  try {
+    const apiClient = getAPIClient(ctx);
+    const company = await apiClient.get<Company>("/companies/profile");
+    const areas = await apiClient.get<Area[]>("/areas");
+    return {
+      props: { areas: areas.data, company: company.data },
+    };
+  } catch (error) {
     return {
       redirect: {
         destination: "/",
@@ -159,11 +164,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
-
-  const apiClient = getAPIClient(ctx);
-  const areas = await apiClient.get<Area[]>("/areas");
-
-  return {
-    props: { areas: areas.data, company: company },
-  };
 };

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Region } from './region.entity';
 
 @Entity()
 export class City {
@@ -9,8 +10,14 @@ export class City {
   name: string;
 
   @Column()
-  uf: string;
+  state: string;
 
-  @Column({ unique: true })
-  fullName: string;
+  @ManyToOne(() => Region)
+  region: Region;
+
+  @Column()
+  regionId: number;
+
+  @Column()
+  IBGECityCode: number;
 }

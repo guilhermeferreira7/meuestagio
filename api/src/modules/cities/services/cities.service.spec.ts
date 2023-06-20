@@ -8,17 +8,17 @@ import { CitiesService } from './cities.service';
 
 const cityOne = {
   name: 'Guarapuava',
-  uf: 'PR',
+  state: 'Paraná',
 };
 
 const citiesArray = [
   {
     name: 'Guarapuava',
-    uf: 'PR',
+    state: 'Paraná',
   },
   {
     name: 'Curitiba',
-    uf: 'PR',
+    state: 'Paraná',
   },
 ];
 
@@ -60,7 +60,7 @@ describe('CityService', () => {
       const cityCreated = await service.createCity(cityOne);
       const cityTwo = {
         name: 'Guarapuava',
-        uf: 'PR',
+        state: 'Paraná',
       };
 
       jest
@@ -91,7 +91,7 @@ describe('CityService', () => {
 
   describe('findAll()', () => {
     it('should return all cities', async () => {
-      const cities = await service.findAll();
+      const cities = await service.findAll({ page: 0, limit: 10 });
       expect(cities).toEqual(citiesArray);
       expect(repository.find).toHaveBeenCalled();
     });

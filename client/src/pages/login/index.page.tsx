@@ -32,21 +32,19 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col flex-1 items-center container w-full text-black">
-      <div className="">
-        <h2 className="text-lg my-3 text-center">
-          Seja bem vindo! Faça login ou
-          <Link href="/create-account" className="text-primary font-bold">
-            {" "}
-            cadastre-se{" "}
-          </Link>
-          para acessar a plataforma!
-        </h2>
-      </div>
+    <div className="flex flex-col items-center w-full">
+      <h2 className="text-2xl my-5 text-center">
+        Seja bem vindo! Faça login ou
+        <Link href="/create-account" className="text-primary font-bold">
+          {" "}
+          cadastre-se{" "}
+        </Link>
+        para acessar a plataforma!
+      </h2>
 
       <FormProvider {...loginForm}>
         <form
-          className="flex flex-col gap-2 w-1/3"
+          className="flex flex-col gap-2 w-5/6 lg:w-2/5"
           onSubmit={handleSubmit(handleLogin)}
         >
           <Form.Field>

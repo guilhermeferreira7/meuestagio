@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { Role } from '../../utils/roles';
+import { Role } from './roles';
 import { UserAuth } from './types/user-auth';
 
 describe('AuthService', () => {

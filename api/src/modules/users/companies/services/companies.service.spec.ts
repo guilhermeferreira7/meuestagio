@@ -10,6 +10,7 @@ const oneCompany = {
   email: 'companyone@gmail.com',
   password: 'abc123',
   cnpj: '12345678901234',
+  cityId: 1,
 };
 
 const mockCompaniesRepository = {

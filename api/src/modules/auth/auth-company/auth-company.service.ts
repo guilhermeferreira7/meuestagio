@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import bcryptService from '../../../utils/bcriptUtils';
-import { UserAuth } from '../types/user-auth';
-import { Role } from '../../../utils/roles';
 import { CompaniesService } from '../../users/companies/services/companies.service';
+import { Role } from '../roles/roles';
+import { UserAuth } from '../../../types/auth/user-auth';
 
 @Injectable()
 export class AuthCompanyService {

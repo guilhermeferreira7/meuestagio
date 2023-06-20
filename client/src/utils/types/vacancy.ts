@@ -1,4 +1,4 @@
-import { Area } from "../areas/area";
+import { Area } from "./area";
 
 export type Vacancy = {
   id: number;

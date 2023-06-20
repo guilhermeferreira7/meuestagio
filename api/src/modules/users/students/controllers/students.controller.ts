@@ -14,7 +14,10 @@ import { Student } from '../entities/student.entity';
 import { StudentsService } from '../services/students.service';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
-import { ReqAuth } from '../../../auth/types/request';
+import { ReqAuth } from '../../../../types/auth/request';
+import { Role } from '../../../auth/roles/roles';
+import { HasRoles } from '../../../auth/roles/roles.decorator';
+import { RolesGuard } from '../../../auth/roles/roles.guard';
 
 @Controller('students')
 export class StudentsController {
@@ -25,10 +28,11 @@ export class StudentsController {
     return await this.studentService.createStudent(createStudentDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
-    const student = await this.studentService.findOne(req.user.sub);
+    const student = await this.studentService.findByEmail(req.user.email);
 
     if (!student) {
       throw new UnauthorizedException();
@@ -38,7 +42,8 @@ export class StudentsController {
     return result;
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch()
   async update(
     @Request() req: ReqAuth,
