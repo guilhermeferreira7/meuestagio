@@ -40,7 +40,10 @@ export class StudentsService {
   }
 
   async findByEmail(email: string): Promise<Student> {
-    return this.repository.findOneBy({ email });
+    return await this.repository.findOne({
+      relations: ['course', 'institution', 'city'],
+      where: { email },
+    });
   }
 
   async findOne(id: number): Promise<Student> {
