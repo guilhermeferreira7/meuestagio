@@ -63,7 +63,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
           signIn(data.email, data.password, data.userRole);
         }, 2000);
       } catch (error: any) {
-        notifyError(error.response?.data?.message);
+        notifyError("" + error.response?.data?.message);
       }
     } else {
       notifyWarning();
@@ -82,7 +82,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
 
       <FormProvider {...createAccountForm}>
         <form
-          className="flex flex-col gap-2 w-5/6 lg:w-1/3 mb-4"
+          className="flex flex-col gap-2 w-5/6 lg:w-2/5"
           onSubmit={handleSubmit(createAccount)}
         >
           <Form.Field>

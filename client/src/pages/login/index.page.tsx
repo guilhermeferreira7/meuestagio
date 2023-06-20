@@ -32,7 +32,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center w-full text-black">
+    <div className="flex flex-col items-center w-full">
       <h2 className="text-2xl my-5 text-center">
         Seja bem vindo! Faça login ou
         <Link href="/create-account" className="text-primary font-bold">
@@ -44,7 +44,7 @@ export default function Login() {
 
       <FormProvider {...loginForm}>
         <form
-          className="flex flex-col gap-2"
+          className="flex flex-col gap-2 w-5/6 lg:w-2/5"
           onSubmit={handleSubmit(handleLogin)}
         >
           <Form.Field>

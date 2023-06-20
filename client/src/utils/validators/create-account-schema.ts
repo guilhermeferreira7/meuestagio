@@ -22,14 +22,12 @@ export const createUserFormSchema = z
       if (data.userRole === "company") {
         if (!data.cnpj) {
           return false;
-        } else {
-          return cnpj.isValid(data.cnpj);
         }
       }
       return true;
     },
     {
-      message: "O CNPJ é inválido",
+      message: "O CNPJ é obrigatório",
       path: ["cnpj"],
     }
   )

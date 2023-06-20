@@ -29,7 +29,7 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex flex-col flex-1 items-center justify-center container w-full text-black">
+    <div className="flex flex-col items-center justify-center w-full">
       <h2 className="text-2xl font-semibold mb-2">
         Acessar como administrador
       </h2>

@@ -2,7 +2,6 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { User } from "../../../utils/types/users/user";
-import RegisterCity from "./_register-city";
 import ibgeApi from "../../../services/api/ibgeApi";
 
 interface AdminRegisterProps {
@@ -12,9 +11,7 @@ interface AdminRegisterProps {
 export default function AdminRegister({ states }: AdminRegisterProps) {
   return (
     <div className="my-5 w-full">
-      <div className="flex flex-col items-center justify-center w-full gap-2">
-        <RegisterCity states={states} />
-      </div>
+      <div className="flex flex-col items-center justify-center w-full gap-2"></div>
     </div>
   );
 }
