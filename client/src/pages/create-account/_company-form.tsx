@@ -47,7 +47,7 @@ export default function CreateCompanyForm({ cities }: CreateCompanyFormProps) {
           {cities.map((city) => {
             return (
               <option key={city.id} value={city.id}>
-                {city.name}
+                {city.name} - {city.state}
               </option>
             );
           })}
