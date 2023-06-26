@@ -7,7 +7,6 @@ export class CreateVacancyDto {
   @IsNotEmpty()
   description: string;
 
-  @IsNotEmpty()
   salary: number;
 
   @IsNotEmpty()
@@ -18,15 +17,6 @@ export class CreateVacancyDto {
 
   @IsNotEmpty()
   companyId: number;
-
-  @IsNotEmpty()
-  requirements: string;
-
-  @IsNotEmpty()
-  desirableRequirements: string;
-
-  @IsNotEmpty()
-  activities: string;
 
   @IsNotEmpty()
   keyWords: string;

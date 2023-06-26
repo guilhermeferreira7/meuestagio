@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Home, PlusCircle, User } from "lucide-react";
+import { Home, ListOrdered, PlusCircle, User } from "lucide-react";
 
 export default function CompanyMenu() {
   const menuItems = [
@@ -15,6 +15,10 @@ export default function CompanyMenu() {
     <Link className="w-full" href="/company/create-vacancy">
       <PlusCircle />
       Cadastrar vaga
+    </Link>,
+    <Link className="w-full" href="/company/vacancies">
+      <ListOrdered />
+      Vagas cadastradas
     </Link>,
   ];
   return menuItems;

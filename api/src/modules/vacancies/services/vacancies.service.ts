@@ -18,12 +18,17 @@ export class VacanciesService {
   }
 
   async findAll() {
-    const vacancies = await this.repository.find({ relations: ['company'] });
+    const vacancies = await this.repository.find({
+      relations: ['company', 'city'],
+    });
     const result = vacancies.map((vacancy) => {
       return {
         ...vacancy,
         company: {
           name: vacancy.company.name,
+        },
+        city: {
+          name: vacancy.city.name,
         },
       };
     });

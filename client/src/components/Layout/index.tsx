@@ -44,7 +44,9 @@ export default function PageLayout({ children }: PageLayoutProps) {
             <div className="hidden lg:flex">
               <PageMenu menuItems={menuItems} />
             </div>
-            <main className="flex w-full mt-5">{children}</main>
+            <main className="flex flex-col items-center w-full mt-5">
+              {children}
+            </main>
           </div>
           <footer className="p-4 justify-center mt-auto border-t-2 border-opacity-10">
             <Footer />

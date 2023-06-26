@@ -14,7 +14,7 @@ export class Vacancy {
   @Column()
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   salary: number;
 
   @Column()
@@ -31,15 +31,6 @@ export class Vacancy {
 
   @ManyToOne(() => Company)
   company: Company;
-
-  @Column()
-  requirements: string;
-
-  @Column({ nullable: true })
-  desirableRequirements: string;
-
-  @Column()
-  activities: string;
 
   @Column()
   keyWords: string;

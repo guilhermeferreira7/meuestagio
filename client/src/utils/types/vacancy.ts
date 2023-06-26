@@ -6,9 +6,6 @@ export type Vacancy = {
   description: string;
   salary: number;
   remote: boolean;
-  requirements: string;
-  desirableRequirements: string;
-  activities: string;
   keyWords: string;
   areaId: number;
   companyId: number;
