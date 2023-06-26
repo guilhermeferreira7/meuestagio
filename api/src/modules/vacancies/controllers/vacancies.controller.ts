@@ -32,11 +32,6 @@ export class VacanciesController {
     @Body() createVacancyDto: CreateVacancyDto,
     @Request() req: ReqAuth,
   ) {
-    const company = await this.companiesService.findByEmail(req.user.email);
-    if (!company) {
-      throw new UnauthorizedException();
-    }
-
     return this.vacanciesService.create(createVacancyDto);
   }
 
