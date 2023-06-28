@@ -2,7 +2,14 @@ import { z } from "zod";
 
 export const createVacancyFormSchema = z.object({
   title: z.string().min(3, "O título precisa de pelo menos 3 caracteres"),
-  salary: z.string().optional(),
+  salary: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val) {
+        return null;
+      }
+    }),
   remote: z.boolean(),
   keyWords: z.string().refine(
     (val) => {

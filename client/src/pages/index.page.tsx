@@ -1,29 +1,15 @@
 import { GetServerSideProps } from "next";
-import Head from "next/head";
 import { parseCookies } from "nookies";
 import React from "react";
-import { getAPIClient } from "../services/api/clientApi";
 import Link from "next/link";
-import { ArrowRight, Building, ChevronRight } from "lucide-react";
-import CompanyCard from "../components/index-page/company-card";
-import CardVacancy from "./student/dashboard/_card-vacancy";
-import CardVacancyPublic from "../components/index-page/vacancy-card-public";
+
+import { getAPIClient } from "../services/api/clientApi";
+import CompanyCard from "../components/Index/company-card";
+import CardVacancyPublic from "../components/Index/vacancy-card-public";
 import { Vacancy } from "../utils/types/vacancy";
 import { Company } from "../utils/types/users/company";
 
 export default function Home() {
-  const vacancy = {
-    id: "1",
-    title: "Vaga de teste",
-    company: {
-      name: "Empresa de teste",
-    },
-    description:
-      "Descrição de teste para a vaga de teste muito muito muito muito muito muito muito muito muito muito muito muito muito muito muito  grande",
-    salary: 1000,
-    keyWords: "teste, teste2, teste3",
-  };
-
   return (
     <div className="flex flex-col flex-1 items-center w-full my-5">
       <div className="text-center">

@@ -12,7 +12,7 @@ import { Form } from "../../../components/Form";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Area } from "../../../utils/types/area";
 import { api } from "../../../services/api/api";
-import { notifyError, notifySuccess } from "../../../components/toasts/toast";
+import { notifyError, notifySuccess } from "../../../components/Toasts/toast";
 import { Company } from "../../../utils/types/users/company";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
@@ -30,6 +30,8 @@ interface PageProps {
 export default function CreateVacancy({ areas, company }: PageProps) {
   const router = useRouter();
   const [description, setDescription] = useState("");
+  console.log("-----create-vacancy-----");
+  console.log(api.defaults.headers);
 
   const createVacancyForm = useForm<CreateVacancyFormData>({
     resolver: zodResolver(createVacancyFormSchema),
@@ -37,19 +39,18 @@ export default function CreateVacancy({ areas, company }: PageProps) {
   const { handleSubmit } = createVacancyForm;
 
   const createVacancy = async (data: CreateVacancyFormData) => {
-    console.log("??");
-
     try {
       await api.post("/vacancies", {
         ...data,
         cityId: company.cityId,
         companyId: company.id,
         description,
+        regionId: company.city.regionId,
+        state: company.city.state,
       });
       notifySuccess("Vaga criada com sucesso!");
-      router.push("/company/dashboard");
     } catch (error: any) {
-      notifyError("" + `Erro ao criar vaga! ${error.response?.data?.message}`);
+      notifyError(`Erro ao criar vaga! ${error.response?.data?.message}`);
     }
   };
 
@@ -151,6 +152,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const apiClient = getAPIClient(ctx);
     const company = await apiClient.get<Company>("/companies/profile");
     const areas = await apiClient.get<Area[]>("/areas");
+
+    console.log(apiClient.defaults.headers);
     return {
       props: { areas: areas.data, company: company.data },
     };
