@@ -1,5 +1,9 @@
-import { toast } from "react-toastify";
-import { toastDefaultConfig } from "./default-config";
+import { ToastOptions, toast } from "react-toastify";
+
+const toastDefaultConfig: ToastOptions = {
+  hideProgressBar: true,
+  draggable: false,
+};
 
 export function notifySuccess(message: string = "Sucesso!") {
   toast.success(message, toastDefaultConfig);
