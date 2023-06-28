@@ -34,7 +34,7 @@ export class CompaniesController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
-    const company = await this.companiesService.findOne(req.user.sub);
+    const company = await this.companiesService.findOne(req.user.email);
     if (!company) {
       throw new UnauthorizedException();
     }

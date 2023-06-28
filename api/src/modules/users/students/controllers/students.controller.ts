@@ -49,13 +49,13 @@ export class StudentsController {
     @Request() req: ReqAuth,
     @Body() updateStudentDto: UpdateStudentDto,
   ): Promise<any> {
-    const student = await this.studentService.findOne(req.user.sub);
+    const student = await this.studentService.findOne(req.user.email);
     if (!student) {
       throw new UnauthorizedException();
     }
 
     const updatedStudent = await this.studentService.updateStudent(
-      student.id,
+      student.email,
       updateStudentDto,
     );
 
