@@ -43,6 +43,9 @@ export function AuthProvider({ children }: Props) {
 
     const response = await api.post<LoginResponse>(path, { email, password });
     setUser(response.data.user);
+    api.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${response.data.access_token}`;
 
     setCookie(undefined, "next.token", response.data.access_token, {
       maxAge: 60 * 60 * 24 * 7, // 7 days

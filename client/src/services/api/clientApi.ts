@@ -3,7 +3,7 @@ import { parseCookies } from "nookies";
 import { API_BASE_URL } from "../../constants/api";
 
 export function getAPIClient(ctx?: any) {
-  const { ["next.token"]: token } = parseCookies(ctx);
+  const { "next.token": token } = parseCookies(ctx);
 
   const api = axios.create({
     baseURL: API_BASE_URL,
@@ -11,8 +11,6 @@ export function getAPIClient(ctx?: any) {
 
   if (token) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  } else {
-    api.defaults.headers.common["Authorization"] = undefined;
   }
 
   return api;
