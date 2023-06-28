@@ -10,6 +10,8 @@ export type Vacancy = {
   areaId: number;
   companyId: number;
   cityId: number;
+  regionId: string;
+  state: string;
   company: {
     id: number;
     name: string;

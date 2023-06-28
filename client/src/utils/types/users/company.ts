@@ -4,4 +4,14 @@ export type Company = {
   email: string;
   cnpj: string;
   cityId: number;
+  city: {
+    id: number;
+    name: string;
+    regionId: string;
+    region: {
+      id: string;
+      name: string;
+    };
+    state: string;
+  };
 };
