@@ -1,14 +1,15 @@
 import React, { ReactNode, useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 
-import StudentMenu from "./menus/student-menu";
-import DefaultMenu from "./menus/default-menu";
-import CompanyMenu from "./menus/company-menu";
-import AdminMenu from "./menus/admin-menu";
+import defaultMenu from "./menus/default-menu";
+import studentMenu from "./menus/student-menu";
+import companyMenu from "./menus/company-menu";
+import adminMenu from "./menus/admin-menu";
 import Header from "./header";
 import PageMenu from "./page-menu";
 import Footer from "./footer";
 import { Role } from "../../utils/types/auth/user-auth";
+import MenuItem from "./_menu-item";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -17,20 +18,17 @@ interface PageLayoutProps {
 export default function PageLayout({ children }: PageLayoutProps) {
   const { user } = useContext(AuthContext);
 
-  let menuItems = DefaultMenu();
+  let menuItems = defaultMenu;
 
   switch (user?.role) {
     case Role.Student:
-      menuItems = StudentMenu();
+      menuItems = studentMenu;
       break;
     case Role.Company:
-      menuItems = CompanyMenu();
+      menuItems = companyMenu;
       break;
     case Role.Admin:
-      menuItems = AdminMenu();
-      break;
-    default:
-      menuItems = DefaultMenu();
+      menuItems = adminMenu;
       break;
   }
 
@@ -44,7 +42,9 @@ export default function PageLayout({ children }: PageLayoutProps) {
             <div className="hidden lg:flex">
               <PageMenu menuItems={menuItems} />
             </div>
-            <main className="flex w-full mt-5">{children}</main>
+            <main className="flex flex-col items-center w-full mt-5">
+              {children}
+            </main>
           </div>
           <footer className="p-4 justify-center mt-auto border-t-2 border-opacity-10">
             <Footer />
@@ -56,7 +56,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
           <ul className="menu p-4 w-80 h-full bg-base-100">
             {menuItems?.map((item: any, key: any) => (
               <li key={key} className="border-b-2">
-                {item}
+                <MenuItem {...item} />
               </li>
             ))}
           </ul>

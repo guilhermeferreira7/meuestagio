@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import {
   notifyError,
   notifySuccess,
-} from "../../../../components/toasts/toast";
+} from "../../../../components/Toasts/toast";
 import { useRouter } from "next/router";
 
 interface RegisterCityProps {
@@ -46,7 +46,7 @@ export default function RegisterCity({ states }: RegisterCityProps) {
     const regionName = regionalCities[0].microrregiao.nome;
 
     api
-      .post("/cities/region", {
+      .post("/cities/regions", {
         name: regionName,
         IBGECode: regionId,
         state: regionalCities[0].microrregiao.mesorregiao.UF.nome,

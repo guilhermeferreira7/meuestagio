@@ -35,7 +35,7 @@ export class CitiesController {
 
   @HasRoles(Role.ADMIN)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Post('region')
+  @Post('regions')
   async createRegion(
     @Body() createRegionDto: CreateRegionDto,
   ): Promise<Region> {
@@ -47,6 +47,16 @@ export class CitiesController {
     return await this.citiesService.findAll({
       page: request.query.page,
       limit: request.query.limit,
+      state: request.query.state,
+    });
+  }
+
+  @Get('regions')
+  async getRegions(@Request() request): Promise<Region[]> {
+    return await this.citiesService.findRegionsByState({
+      page: request.query.page,
+      limit: request.query.limit,
+      state: request.query.state,
     });
   }
 

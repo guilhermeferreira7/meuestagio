@@ -1,6 +1,5 @@
-export type City = {
+export type Region = {
   id: number;
   name: string;
   state: string;
-  regionId: number;
 };

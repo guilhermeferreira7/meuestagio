@@ -44,7 +44,7 @@ export default function Login() {
 
       <FormProvider {...loginForm}>
         <form
-          className="flex flex-col gap-2 w-5/6 lg:w-2/5"
+          className="flex flex-col gap-2 w-5/6 lg:w-3/5"
           onSubmit={handleSubmit(handleLogin)}
         >
           <Form.Field>

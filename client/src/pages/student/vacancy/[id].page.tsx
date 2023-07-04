@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { api } from "../../../services/api/api";
-import { notifyError } from "../../../components/toasts/toast";
+import { notifyError } from "../../../components/Toasts/toast";
 import { ToastContainer } from "react-toastify";
 import { Vacancy } from "../../../utils/types/vacancy";
 

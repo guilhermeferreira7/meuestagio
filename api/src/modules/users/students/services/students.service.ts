@@ -40,13 +40,16 @@ export class StudentsService {
   }
 
   async findByEmail(email: string): Promise<Student> {
-    return this.repository.findOneBy({ email });
-  }
-
-  async findOne(id: number): Promise<Student> {
     return await this.repository.findOne({
       relations: ['course', 'institution', 'city'],
-      where: { id },
+      where: { email },
+    });
+  }
+
+  async findOne(email: string): Promise<Student> {
+    return await this.repository.findOne({
+      relations: ['course', 'institution', 'city'],
+      where: { email },
     });
   }
 
@@ -54,8 +57,8 @@ export class StudentsService {
     return await this.repository.find();
   }
 
-  async updateStudent(id: number, student: UpdateStudentDto) {
-    const studentToUpdate = await this.findOne(id);
+  async updateStudent(email: string, student: UpdateStudentDto) {
+    const studentToUpdate = await this.findOne(email);
 
     if (!studentToUpdate) {
       throw new BadRequestException();
@@ -64,9 +67,9 @@ export class StudentsService {
     const validStudent = await this.validator.validateUpdate(student);
     if (!validStudent) throw new BadRequestException();
 
-    await this.repository.update(id, student);
+    await this.repository.update(email, student);
 
-    const studentUpdated = await this.findOne(id);
+    const studentUpdated = await this.findOne(email);
 
     return studentUpdated;
   }

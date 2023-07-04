@@ -11,7 +11,7 @@ import {
   notifyError,
   notifySuccess,
   notifyWarning,
-} from "../../components/toasts/toast";
+} from "../../components/Toasts/toast";
 import { createUserFormSchema } from "../../utils/validators/create-account-schema";
 
 import { Form } from "../../components/Form";

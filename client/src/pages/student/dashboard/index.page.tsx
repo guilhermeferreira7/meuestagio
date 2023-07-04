@@ -1,86 +1,197 @@
 import { GetServerSideProps } from "next";
-import React from "react";
+import React, { useState } from "react";
 
-import CardVacancy from "./_card-vacancy";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Student } from "../../../utils/types/users/student";
 import { Vacancy } from "../../../utils/types/vacancy";
+import { City } from "../../../utils/types/city";
+import { api } from "../../../services/api/api";
+import { Region } from "../../../utils/types/region";
+import { VACANCIES_STUDENT_LIMIT } from "../../../constants/request";
+import Filters from "./_filters";
+import SearchBox from "./_search";
+import ListVacancies from "./_list-vacancies";
+import { useRouter } from "next/router";
 
 interface StudentPageProps {
-  vacancies: Vacancy[];
+  vacanciesData: Vacancy[];
   student: Student;
+  states: string[];
 }
 
 export default function StudentVacancies({
-  vacancies,
+  vacanciesData,
   student,
+  states,
 }: StudentPageProps) {
-  return (
-    <div className="flex flex-col items-center">
-      <div>{student?.city?.name}</div>
-      <div className="collapse">
-        <input type="checkbox" />
-        <div className="collapse-title text-primary text-xl font-medium underline italic text-center">
-          Alterar cidade
-        </div>
-        <div className="collapse-content flex gap-1">
-          <select
-            name=""
-            id=""
-            className="select select-primary"
-            defaultValue={1}
-          >
-            <option disabled value="1">
-              Escolha um estado
-            </option>
-          </select>
-          <select
-            name=""
-            id=""
-            className="select select-primary"
-            defaultValue={1}
-          >
-            <option disabled value="1">
-              Escolha uma região
-            </option>
-          </select>
-          <select
-            name=""
-            id=""
-            className="select select-primary"
-            defaultValue={1}
-          >
-            <option disabled value="1">
-              Escolha uma cidade
-            </option>
-          </select>
-        </div>
-      </div>
-      <div className="flex flex-row justify-center my-4 ">
-        <div className="flex flex-col items-center gap-2 mx-2">
-          <div className="w-96 flex flex-col items-center gap-2">
-            <input
-              type="text"
-              placeholder="Pesquisar vagas"
-              className="w-full pl-2 input input-primary"
-            />
-            <div className="flex justify-center items-center gap-1">
-              <span>Vagas remotas?</span>
-              <input type="checkbox" className="checkbox checkbox-primary" />
-              <button className="btn btn-primary w-5/6">Buscar</button>
-            </div>
-          </div>
-        </div>
-      </div>
+  const [filters, setFilters] = useState<{
+    state?: string;
+    region?: string;
+    city?: string;
+    search?: string;
+  }>({ city: student.city.id + "" });
+  const [cities, setCities] = useState<City[]>([]);
+  const [regions, setRegions] = useState<Region[]>([]);
+  const [cityName, setCityName] = useState<string>(student.city.name);
+  const [regionName, setRegionName] = useState<string>("");
+  const [hasMoreVacancies, setHasMoreVacancies] = useState<boolean>(true);
+  const [vacancies, setVacancies] = useState<Vacancy[]>(vacanciesData);
 
-      <div className="flex flex-col gap-2 mx-8 w-4/5 mb-4">
-        {vacancies?.map((vacancy: Vacancy) => (
-          <div key={vacancy.id}>
-            <CardVacancy vacancy={vacancy} />
-          </div>
-        ))}
-      </div>
-    </div>
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isRemote, setIsRemote] = useState<boolean>(false);
+
+  const search = async (searchTerm: string) => {
+    const vacancies = await api.get<Vacancy[]>("/vacancies", {
+      params: {
+        search: searchTerm,
+        remote: isRemote,
+      },
+    });
+
+    setVacancies(vacancies.data);
+    setFilters({ search: searchTerm });
+  };
+
+  const onStateChange = async (state: string) => {
+    setHasMoreVacancies(true);
+    if (!state) {
+      const vacanciesData = await api.get<Vacancy[]>("/vacancies", {
+        params: {
+          limit: VACANCIES_STUDENT_LIMIT,
+        },
+      });
+      setVacancies(vacanciesData.data);
+      setFilters({});
+      return;
+    }
+
+    const cities = await api.get<City[]>("/cities", {
+      params: {
+        state,
+      },
+    });
+    const regions = await api.get<Region[]>("/cities/regions", {
+      params: {
+        state,
+      },
+    });
+
+    const vacanciesData = await api.get<Vacancy[]>("/vacancies", {
+      params: {
+        page: 0,
+        limit: VACANCIES_STUDENT_LIMIT,
+        state,
+      },
+    });
+    setVacancies(vacanciesData.data);
+    setCities(cities.data);
+    setRegions(regions.data);
+    setFilters({ state });
+  };
+
+  const onRegionChange = async (region: string) => {
+    setHasMoreVacancies(true);
+    if (!region) {
+      const vacanciesData = await api.get<Vacancy[]>("/vacancies", {
+        params: {
+          state: filters.state,
+          limit: VACANCIES_STUDENT_LIMIT,
+        },
+      });
+      setVacancies(vacanciesData.data);
+      setFilters({ state: filters.state });
+      return;
+    }
+    setRegionName(JSON.parse(region).name);
+    setFilters({ region: JSON.parse(region).id, state: filters.state });
+    setHasMoreVacancies(true);
+
+    const vacanciesData = await api.get<Vacancy[]>("/vacancies", {
+      params: {
+        page: 0,
+        limit: VACANCIES_STUDENT_LIMIT,
+        region: JSON.parse(region).id,
+      },
+    });
+    setVacancies(vacanciesData.data);
+  };
+
+  const onCityChange = async (city: City | null) => {
+    setHasMoreVacancies(true);
+    if (!city) {
+      const vacanciesData = await api.get<Vacancy[]>("/vacancies", {
+        params: {
+          region: filters.region,
+          limit: VACANCIES_STUDENT_LIMIT,
+        },
+      });
+      setVacancies(vacanciesData.data);
+      setFilters({ region: filters.region });
+      return;
+    }
+
+    setCityName(city.name);
+    const vacanciesData = await api.get<Vacancy[]>("/vacancies", {
+      params: {
+        city: city.id,
+      },
+    });
+    setVacancies(vacanciesData.data);
+    setFilters({ region: filters.region, city: city.id + "" });
+  };
+
+  const moreVacancies = async () => {
+    try {
+      const response = await api.get("/vacancies", {
+        params: {
+          page: vacancies.length,
+          limit: VACANCIES_STUDENT_LIMIT,
+          ...filters,
+        },
+      });
+      setHasMoreVacancies(response.data.length > 0);
+      setVacancies([...vacancies, ...response.data]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <>
+      <h2 className="text-lg">
+        {filters.city
+          ? `Vagas em ${cityName} (cidade)`
+          : filters.region
+          ? `Vagas em ${regionName} (região)`
+          : filters.state
+          ? `Vagas em ${filters.state} (estado)`
+          : filters.search
+          ? `Busca: ${filters.search}`
+          : "Vagas em todo o Brasil"}
+      </h2>
+
+      <Filters
+        states={states}
+        onStateChange={onStateChange}
+        onRegionChange={onRegionChange}
+        cities={cities}
+        regions={regions}
+        onCityChange={onCityChange}
+      />
+
+      <SearchBox
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        search={search}
+        setRemote={setIsRemote}
+      />
+
+      <ListVacancies
+        vacancies={vacancies}
+        hasMoreVacancies={hasMoreVacancies}
+        moreVacancies={moreVacancies}
+      />
+    </>
   );
 }
 
@@ -88,22 +199,41 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const apiClient = getAPIClient(ctx);
     const student = await apiClient.get<Student>("/students/profile");
-    console.log(student.data);
+    const cities = await apiClient.get<City[]>("/cities");
+    const states: any = [];
+    cities.data.forEach((city) => {
+      if (!states.includes(city.state)) {
+        states.push(city.state);
+      }
+    });
 
-    const getVacancies = await apiClient.get("/vacancies");
-    const vacancies = getVacancies.data;
+    const vacancies = await apiClient.get<Vacancy[]>("/vacancies", {
+      params: {
+        limit: VACANCIES_STUDENT_LIMIT,
+        city: student.data.city.id,
+      },
+    });
     return {
       props: {
-        vacancies,
+        vacanciesData: vacancies.data,
+        states,
         student: student.data,
       },
     };
   } catch (error: any) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
+    if (error.response?.status === 401) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    } else {
+      console.log(error.response?.data?.message);
+    }
   }
+
+  return {
+    props: {},
+  };
 };

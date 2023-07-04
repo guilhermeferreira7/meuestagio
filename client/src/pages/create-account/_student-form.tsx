@@ -28,12 +28,6 @@ export default function CreateStudentForm({
   form,
 }: CreateStudentFormProps) {
   const [courses, setCourses] = useState<Course[]>([]);
-  const [courseSelected, setCourseSelected] = useState<string>("");
-
-  const changeCourseSelected = (event: any) => {
-    const id = event.target.value;
-    setCourseSelected(id);
-  };
 
   const changeCourses = async (event: any) => {
     form.setValue("courseId", "");
@@ -45,7 +39,6 @@ export default function CreateStudentForm({
       if (institution) form.setValue("cityId", institution.cityId + "");
 
       const response = await api.get<Course[]>(`/institutions/${id}/courses`);
-      setCourseSelected("");
       setCourses(response.data);
     } catch (error) {
       console.log(error);
@@ -82,11 +75,7 @@ export default function CreateStudentForm({
       </Form.Field>
       <Form.Field>
         <Form.Label htmlFor="courseId">Curso</Form.Label>
-        <Form.InputSelect
-          name="courseId"
-          value={courseSelected}
-          onChange={changeCourseSelected}
-        >
+        <Form.InputSelect name="courseId">
           <option disabled value="">
             Qual seu curso?
           </option>

@@ -29,13 +29,13 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full">
+    <>
       <h2 className="text-2xl font-semibold mb-2">
         Acessar como administrador
       </h2>
       <FormProvider {...loginForm}>
         <form
-          className="flex flex-col gap-2 w-1/3"
+          className="flex flex-col gap-2 w-5/6 lg:w-2/5"
           onSubmit={handleSubmit(handleLogin)}
         >
           <Form.InputRadio
@@ -65,6 +65,6 @@ export default function AdminLogin() {
           <button className="btn btn-primary">Login</button>
         </form>
       </FormProvider>
-    </div>
+    </>
   );
 }

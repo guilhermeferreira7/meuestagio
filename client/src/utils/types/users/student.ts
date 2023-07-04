@@ -12,6 +12,7 @@ export type Student = {
   phoneVerified: boolean;
   userVerified: boolean;
   city: {
+    id: number;
     name: string;
   };
 };

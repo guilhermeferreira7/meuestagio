@@ -44,10 +44,10 @@ export class CompaniesService {
     return await this.companiesRepository.findOneBy({ cnpj });
   }
 
-  async findOne(id: number): Promise<Company> {
+  async findOne(email: string): Promise<Company> {
     return await this.companiesRepository.findOne({
       relations: ['city'],
-      where: { id },
+      where: { email },
     });
   }
 }
