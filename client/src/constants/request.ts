@@ -1,0 +1,1 @@
+export const VACANCIES_STUDENT_LIMIT = 10;

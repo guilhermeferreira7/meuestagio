@@ -28,10 +28,7 @@ interface PageProps {
 }
 
 export default function CreateVacancy({ areas, company }: PageProps) {
-  const router = useRouter();
   const [description, setDescription] = useState("");
-  console.log("-----create-vacancy-----");
-  console.log(api.defaults.headers);
 
   const createVacancyForm = useForm<CreateVacancyFormData>({
     resolver: zodResolver(createVacancyFormSchema),

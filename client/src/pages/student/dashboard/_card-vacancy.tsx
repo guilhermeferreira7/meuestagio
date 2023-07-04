@@ -18,10 +18,16 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
           <span>
             <Building2 />
           </span>
-          <p className="line-clamp-1 text-lg">{vacancy.company.name}</p>
+          <p className="line-clamp-1 text-lg">
+            ID: {vacancy.id} {vacancy.company.name}
+          </p>
         </div>
         <p className="line-clamp-3">Descrição: {vacancy.description}</p>
-        <p>Salário: R$ {vacancy.salary},00</p>
+        {vacancy.salary ? (
+          <p>Salário: R$ {vacancy.salary},00</p>
+        ) : (
+          <p>Salário a combinar</p>
+        )}
         <div className="card-actions flex flex-row items-center justify-between">
           <ul>
             {vacancy.keyWords.split(",").map((keyWord, index) => (

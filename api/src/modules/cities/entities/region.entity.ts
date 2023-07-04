@@ -5,7 +5,7 @@ export class Region {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   IBGECode: number;
 
   @Column()

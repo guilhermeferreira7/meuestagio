@@ -17,9 +17,19 @@ export class VacanciesService {
     return vacancy;
   }
 
-  async findAll() {
+  async findAll({ page, limit, state, region, city }) {
     const vacancies = await this.repository.find({
-      relations: ['company', 'city'],
+      skip: page,
+      take: limit,
+      order: {
+        id: 'DESC',
+      },
+      where: {
+        state,
+        regionId: region,
+        cityId: city,
+      },
+      relations: ['company', 'city', 'region'],
     });
     const result = vacancies.map((vacancy) => {
       return {

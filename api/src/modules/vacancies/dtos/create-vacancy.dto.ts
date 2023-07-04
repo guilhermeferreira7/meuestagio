@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateVacancyDto {
   @IsNotEmpty()
@@ -7,10 +7,17 @@ export class CreateVacancyDto {
   @IsNotEmpty()
   description: string;
 
+  @IsOptional()
   salary: number;
 
   @IsNotEmpty()
   cityId: number;
+
+  @IsNotEmpty()
+  regionId: string;
+
+  @IsNotEmpty()
+  state: string;
 
   @IsNotEmpty()
   remote: boolean;

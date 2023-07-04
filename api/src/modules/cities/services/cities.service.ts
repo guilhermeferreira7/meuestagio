@@ -45,12 +45,28 @@ export class CitiesService {
     return await this.regionsRepository.save(newRegion);
   }
 
-  async findAll({ page, limit }): Promise<City[]> {
+  async findAll({ page, limit, state }): Promise<City[]> {
     return await this.citiesRepository.find({
       skip: page,
       take: limit,
       order: {
         id: 'DESC',
+      },
+      where: {
+        state,
+      },
+    });
+  }
+
+  async findRegionsByState({ page, limit, state }): Promise<Region[]> {
+    return await this.regionsRepository.find({
+      skip: page,
+      take: limit,
+      order: {
+        id: 'DESC',
+      },
+      where: {
+        state,
       },
     });
   }
