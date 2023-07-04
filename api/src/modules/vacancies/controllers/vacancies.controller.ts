@@ -34,6 +34,7 @@ export class VacanciesController {
       state: request.query.state,
       region: request.query.region,
       city: request.query.city,
+      search: request.query.search,
     });
   }
 

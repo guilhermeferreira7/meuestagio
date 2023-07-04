@@ -11,18 +11,28 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
   return (
     <div className="card shadow-sm shadow-primary">
       <div className="card-body">
-        <div className="card-title">
+        <div className="card-title flex justify-between">
           <h2 className="text-primary font-bold">{vacancy.title}</h2>
+          <h2 className="font-normal text-sm">Código da vaga: {vacancy.id}</h2>
         </div>
         <div className="flex flex-row gap-1">
           <span>
             <Building2 />
           </span>
-          <p className="line-clamp-1 text-lg">
-            ID: {vacancy.id} {vacancy.company.name}
-          </p>
+          <p className="line-clamp-1 text-lg">{vacancy.company.name}</p>
         </div>
-        <p className="line-clamp-3">Descrição: {vacancy.description}</p>
+        <div className="line-clamp-3">
+          Descrição:
+          <div
+            dangerouslySetInnerHTML={{
+              __html: vacancy.description,
+            }}
+          />
+        </div>
+        <p>
+          Local: {vacancy.city.name} - {vacancy.state} -{" "}
+          {vacancy.remote ? <span>Remoto</span> : <span>Presencial</span>}
+        </p>
         {vacancy.salary ? (
           <p>Salário: R$ {vacancy.salary},00</p>
         ) : (
@@ -30,12 +40,12 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
         )}
         <div className="card-actions flex flex-row items-center justify-between">
           <ul>
-            {vacancy.keyWords.split(",").map((keyWord, index) => (
+            {vacancy.keywords.split(",").map((keyword, index) => (
               <li
                 key={index}
                 className="inline-block bg-base-200 rounded-full px-3 py-1 text-sm font-semibold mr-2"
               >
-                {keyWord}
+                {keyword}
               </li>
             ))}
           </ul>

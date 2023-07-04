@@ -11,7 +11,7 @@ export const createVacancyFormSchema = z.object({
       }
     }),
   remote: z.boolean(),
-  keyWords: z.string().refine(
+  keywords: z.string().refine(
     (val) => {
       const words = val.split(",");
       return (

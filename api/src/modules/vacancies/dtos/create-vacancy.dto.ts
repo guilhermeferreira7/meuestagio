@@ -26,7 +26,7 @@ export class CreateVacancyDto {
   companyId: number;
 
   @IsNotEmpty()
-  keyWords: string;
+  keywords: string;
 
   @IsNotEmpty()
   areaId: number;

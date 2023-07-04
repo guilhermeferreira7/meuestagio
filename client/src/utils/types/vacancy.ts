@@ -6,10 +6,13 @@ export type Vacancy = {
   description: string;
   salary: number;
   remote: boolean;
-  keyWords: string;
+  keywords: string;
   areaId: number;
   companyId: number;
   cityId: number;
+  city: {
+    name: string;
+  };
   regionId: string;
   state: string;
   company: {

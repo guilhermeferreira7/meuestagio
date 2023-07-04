@@ -110,11 +110,11 @@ export default function CreateVacancy({ areas, company }: PageProps) {
             </div>
             <div>
               <Form.Field>
-                <Form.Label htmlFor="keyWords">
+                <Form.Label htmlFor="keywords">
                   Palavras chaves {"("}separados por vírgulas{")"}
                 </Form.Label>
-                <Form.InputText name="keyWords" />
-                <Form.ErrorMessage field="keyWords" />
+                <Form.InputText name="keywords" />
+                <Form.ErrorMessage field="keywords" />
               </Form.Field>
             </div>
             <div>

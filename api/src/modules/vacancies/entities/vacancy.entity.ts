@@ -43,7 +43,7 @@ export class Vacancy {
   company: Company;
 
   @Column()
-  keyWords: string;
+  keywords: string;
 
   @Column()
   areaId: number;

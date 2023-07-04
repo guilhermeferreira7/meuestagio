@@ -28,6 +28,7 @@ export default function StudentVacancies({
     state?: string;
     region?: string;
     city?: string;
+    search?: string;
   }>({ city: student.city.id + "" });
   const [cities, setCities] = useState<City[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
@@ -35,6 +36,19 @@ export default function StudentVacancies({
   const [regionName, setRegionName] = useState<string>("");
   const [hasMoreVacancies, setHasMoreVacancies] = useState<boolean>(true);
   const [vacancies, setVacancies] = useState<Vacancy[]>(vacanciesData);
+
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const search = async (searchTerm: string) => {
+    const vacancies = await api.get<Vacancy[]>("/vacancies", {
+      params: {
+        search: searchTerm,
+      },
+    });
+
+    setVacancies(vacancies.data);
+    setFilters({ search: searchTerm });
+  };
 
   const onStateChange = async (state: string) => {
     setHasMoreVacancies(true);
@@ -143,14 +157,15 @@ export default function StudentVacancies({
   return (
     <>
       <h2 className="text-lg">
-        Vagas em
         {filters.city
-          ? ` ${cityName} (cidade)`
+          ? `Vagas em ${cityName} (cidade)`
           : filters.region
-          ? ` ${regionName} (região)`
+          ? `Vagas em ${regionName} (região)`
           : filters.state
-          ? ` ${filters.state} (estado)`
-          : " todo o Brasil"}
+          ? `Vagas em ${filters.state} (estado)`
+          : filters.search
+          ? `Busca: ${filters.search}`
+          : "Vagas em todo o Brasil"}
       </h2>
 
       <Filters
@@ -162,7 +177,11 @@ export default function StudentVacancies({
         onCityChange={onCityChange}
       />
 
-      <SearchBox />
+      <SearchBox
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        search={search}
+      />
 
       <ListVacancies
         vacancies={vacancies}
