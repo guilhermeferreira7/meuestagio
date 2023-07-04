@@ -38,11 +38,13 @@ export default function StudentVacancies({
   const [vacancies, setVacancies] = useState<Vacancy[]>(vacanciesData);
 
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isRemote, setIsRemote] = useState<boolean>(false);
 
   const search = async (searchTerm: string) => {
     const vacancies = await api.get<Vacancy[]>("/vacancies", {
       params: {
         search: searchTerm,
+        remote: isRemote,
       },
     });
 
@@ -181,6 +183,7 @@ export default function StudentVacancies({
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         search={search}
+        setRemote={setIsRemote}
       />
 
       <ListVacancies

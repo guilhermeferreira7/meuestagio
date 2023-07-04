@@ -35,6 +35,7 @@ export class VacanciesController {
       region: request.query.region,
       city: request.query.city,
       search: request.query.search,
+      remote: request.query.remote,
     });
   }
 

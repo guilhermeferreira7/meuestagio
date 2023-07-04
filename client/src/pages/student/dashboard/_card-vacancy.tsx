@@ -12,7 +12,18 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
     <div className="card shadow-sm shadow-primary">
       <div className="card-body">
         <div className="card-title flex justify-between">
-          <h2 className="text-primary font-bold">{vacancy.title}</h2>
+          <h2 className="text-primary font-bold">
+            {vacancy.title}{" "}
+            {vacancy.remote ? (
+              <span className="text-black font-normal">
+                {"("}Remoto{")"}
+              </span>
+            ) : (
+              <span className="text-black font-normal">
+                {"("}Presencial{")"}
+              </span>
+            )}
+          </h2>
           <h2 className="font-normal text-sm">Código da vaga: {vacancy.id}</h2>
         </div>
         <div className="flex flex-row gap-1">
@@ -30,8 +41,7 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
           />
         </div>
         <p>
-          Local: {vacancy.city.name} - {vacancy.state} -{" "}
-          {vacancy.remote ? <span>Remoto</span> : <span>Presencial</span>}
+          Local: {vacancy.city.name} - {vacancy.state}
         </p>
         {vacancy.salary ? (
           <p>Salário: R$ {vacancy.salary},00</p>

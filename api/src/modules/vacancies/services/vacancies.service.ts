@@ -18,7 +18,7 @@ export class VacanciesService {
     return vacancy;
   }
 
-  async findAll({ page, limit, state, region, city, search }) {
+  async findAll({ page, limit, state, region, city, search, remote }) {
     if (search) {
       const vacancies = await this.repository
         .createQueryBuilder()
@@ -26,6 +26,7 @@ export class VacanciesService {
         .where('title ILIKE :search', { search: `%${search}%` })
         .orWhere('description ILIKE :search', { search: `%${search}%` })
         .orWhere('keywords ILIKE :search', { search: `%${search}%` })
+        .addOrderBy('remote', remote === 'true' ? 'DESC' : 'ASC')
         .leftJoinAndSelect('Vacancy.company', 'company')
         .leftJoinAndSelect('Vacancy.city', 'city')
         .leftJoinAndSelect('Vacancy.region', 'region')
