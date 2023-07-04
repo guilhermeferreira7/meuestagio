@@ -9,6 +9,8 @@ const createStudentDto: CreateStudentDto = {
   email: 'email1@example.com',
   password: 'changeme',
   institutionId: 1,
+  courseId: 1,
+  cityId: 1,
 };
 
 const mockService = {

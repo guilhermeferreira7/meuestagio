@@ -5,20 +5,28 @@ import { Repository } from 'typeorm';
 
 import { City } from '../entities/city.entity';
 import { CitiesService } from './cities.service';
+import { CreateCityDto } from '../dtos/create-city.dto';
+import { Region } from '../entities/region.entity';
 
-const cityOne = {
+const cityOne: CreateCityDto = {
   name: 'Guarapuava',
   state: 'Paraná',
+  IBGECityCode: 4109401,
+  regionId: 1,
 };
 
 const citiesArray = [
   {
     name: 'Guarapuava',
     state: 'Paraná',
+    IBGECityCode: 4109401,
+    regionId: 1,
   },
   {
     name: 'Curitiba',
     state: 'Paraná',
+    IBGECityCode: 4109402,
+    regionId: 2,
   },
 ];
 
@@ -29,22 +37,35 @@ const mockRepository = {
   findOneBy: jest.fn(),
 };
 
+const mockRegionsRepository = {
+  create: jest.fn((dto) => dto),
+  save: jest.fn((region) => Promise.resolve(region)),
+  find: jest.fn(() => citiesArray),
+  findOneBy: jest.fn(),
+};
+
 describe('CityService', () => {
   let service: CitiesService;
   let repository: Repository<City>;
+  let regionsRepository: Repository<Region>;
 
   const CITY_REPOSITORY_TOKEN = getRepositoryToken(City);
+  const REGIONS_REPOSITORY_TOKEN = getRepositoryToken(Region);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CitiesService,
         { provide: CITY_REPOSITORY_TOKEN, useValue: mockRepository },
+        { provide: REGIONS_REPOSITORY_TOKEN, useValue: mockRegionsRepository },
       ],
     }).compile();
 
     service = module.get<CitiesService>(CitiesService);
     repository = module.get<Repository<City>>(CITY_REPOSITORY_TOKEN);
+    regionsRepository = module.get<Repository<Region>>(
+      REGIONS_REPOSITORY_TOKEN,
+    );
   });
 
   it('service should be defined', () => {
@@ -53,6 +74,7 @@ describe('CityService', () => {
 
   it('repository be defined', () => {
     expect(repository).toBeDefined();
+    expect(regionsRepository).toBeDefined();
   });
 
   describe('create()', () => {
@@ -61,6 +83,8 @@ describe('CityService', () => {
       const cityTwo = {
         name: 'Guarapuava',
         state: 'Paraná',
+        IBGECityCode: 4109401,
+        regionId: 1,
       };
 
       jest
@@ -91,7 +115,7 @@ describe('CityService', () => {
 
   describe('findAll()', () => {
     it('should return all cities', async () => {
-      const cities = await service.findAll({ page: 0, limit: 10 });
+      const cities = await service.findAll({ limit: 10, page: 1, state: '' });
       expect(cities).toEqual(citiesArray);
       expect(repository.find).toHaveBeenCalled();
     });

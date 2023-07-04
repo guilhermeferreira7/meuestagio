@@ -13,7 +13,7 @@ export class AuthStudentService {
     email: string,
     password: string,
   ): Promise<UserAuth | null> {
-    const student = await this.userService.findByEmail(email);
+    const student = await this.userService.findOne(email);
 
     const validCredentials =
       student && (await bcryptService.compare(password, student?.password));

@@ -14,6 +14,8 @@ const oneStudent: CreateStudentDto = {
   email: 'student@email.com',
   password: 'abc123',
   institutionId: 1,
+  courseId: 1,
+  cityId: 1,
 };
 
 const studentsArray: CreateStudentDto[] = [
@@ -22,19 +24,22 @@ const studentsArray: CreateStudentDto[] = [
     email: 'student@email.com',
     password: 'abc123',
     institutionId: 1,
+    courseId: 1,
+    cityId: 1,
   },
   {
     name: 'student two',
     email: 'student2@email.com',
     password: 'abc123',
     institutionId: 1,
+    courseId: 1,
+    cityId: 1,
   },
 ];
 
 const mockStudentsRepository = {
   create: jest.fn((dto) => dto),
   save: jest.fn((student) => Promise.resolve(student)),
-  findOneBy: jest.fn(() => undefined),
   findOne: jest.fn(),
   find: jest.fn(() => studentsArray),
 };
@@ -98,7 +103,7 @@ describe('StudentsService', () => {
       };
 
       jest
-        .spyOn(studentsRepository, 'findOneBy')
+        .spyOn(studentsRepository, 'findOne')
         .mockReturnValueOnce(Promise.resolve(existingStudent));
 
       try {
@@ -148,12 +153,12 @@ describe('StudentsService', () => {
   });
 
   describe('findOne()', () => {
-    it('should return one student by id', async () => {
+    it('should return one student by email', async () => {
       const spyFind = jest.spyOn(studentsRepository, 'findOne');
-      expect(service.findOne(1));
+      expect(service.findOne('student@email.com'));
       expect(spyFind).toBeCalledWith({
-        relations: ['course', 'institution'],
-        where: { id: 1 },
+        relations: ['course', 'institution', 'city'],
+        where: { email: 'student@email.com' },
       });
     });
   });

@@ -13,7 +13,7 @@ describe('AuthStudentService', () => {
       providers: [
         AuthStudentService,
         { provide: JwtService, useValue: { sign: jest.fn() } },
-        { provide: StudentsService, useValue: { findByEmail: jest.fn() } },
+        { provide: StudentsService, useValue: { findOne: jest.fn() } },
         {
           provide: getRepositoryToken(Student),
           useValue: {

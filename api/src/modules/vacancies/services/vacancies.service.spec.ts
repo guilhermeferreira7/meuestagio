@@ -3,18 +3,19 @@ import { VacanciesService } from './vacancies.service';
 import { Vacancy } from '../entities/vacancy.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { CreateVacancyDto } from '../dtos/create-vacancy.dto';
 
-const vacancy = {
+const vacancy: CreateVacancyDto = {
   title: 'Test vacancy',
   description: 'Test description',
   salary: 1000,
   cityId: 1,
   remote: false,
   companyId: 1,
-  requirements: 'Test requirements',
-  desirableRequirements: 'Test desirable requirements',
-  activities: 'Test activities',
   areaId: 1,
+  keywords: 'test, vacancy',
+  regionId: '1',
+  state: 'Paraná',
 };
 
 const mockVacanciesRepository = {

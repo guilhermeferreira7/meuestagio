@@ -21,7 +21,7 @@ export class StudentsService {
   ) {}
 
   async createStudent(createStudent: CreateStudentDto): Promise<Student> {
-    const emailUsed = await this.findByEmail(createStudent.email);
+    const emailUsed = await this.findOne(createStudent.email);
     if (emailUsed) {
       throw new ConflictException('Email já cadastrado!');
     }
@@ -37,13 +37,6 @@ export class StudentsService {
     });
 
     return await this.repository.save(newStudent);
-  }
-
-  async findByEmail(email: string): Promise<Student> {
-    return await this.repository.findOne({
-      relations: ['course', 'institution', 'city'],
-      where: { email },
-    });
   }
 
   async findOne(email: string): Promise<Student> {
