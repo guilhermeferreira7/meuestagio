@@ -18,12 +18,73 @@ const vacancy: CreateVacancyDto = {
   state: 'Paraná',
 };
 
+const vacancies = [
+  {
+    id: 1,
+    title: 'Test vacancy',
+    description: 'Test description',
+    salary: 1000,
+    cityId: 1,
+    remote: false,
+    companyId: 1,
+    areaId: 1,
+    keywords: 'test, vacancy',
+    regionId: '1',
+    state: 'Paraná',
+    company: {
+      name: 'Test company',
+    },
+    city: {
+      name: 'City Name',
+    },
+  },
+  {
+    id: 2,
+    title: 'Test vacancy 2',
+    description: 'Test description',
+    salary: 1000,
+    cityId: 1,
+    remote: false,
+    companyId: 1,
+    areaId: 1,
+    keywords: 'test, vacancy',
+    regionId: '1',
+    state: 'Paraná',
+    company: {
+      name: 'Test company',
+    },
+    city: {
+      name: 'City Name',
+    },
+  },
+];
+
 const mockVacanciesRepository = {
   create: jest.fn((dto) => dto),
   save: jest.fn((vacancy) => Promise.resolve(vacancy)),
   findOneBy: jest.fn(() => undefined),
-  findOne: jest.fn(),
-  find: jest.fn(),
+  findOne: jest.fn(
+    () =>
+      new Promise((resolve) => {
+        resolve({ ...vacancy, company: { name: 'Test company' } });
+      }),
+  ),
+  find: jest.fn(
+    () =>
+      new Promise((resolve) => {
+        resolve(vacancies);
+      }),
+  ),
+  createQueryBuilder: jest.fn(() => ({
+    select: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis(),
+    orWhere: jest.fn().mockReturnThis(),
+    addOrderBy: jest.fn().mockReturnThis(),
+    leftJoinAndSelect: jest.fn().mockReturnThis(),
+    skip: jest.fn().mockReturnThis(),
+    take: jest.fn().mockReturnThis(),
+    getMany: jest.fn().mockReturnThis(),
+  })),
 };
 
 describe('VacanciesService', () => {
@@ -65,6 +126,56 @@ describe('VacanciesService', () => {
     it('should call repository.save', async () => {
       await service.create(vacancy);
       expect(repository.save).toBeCalled();
+    });
+  });
+
+  describe('findAll()', () => {
+    it('should call repository.find', async () => {
+      await service.findAll({
+        page: 0,
+        limit: 10,
+        state: 'Paraná',
+        region: 1,
+        city: 1,
+        search: '',
+        remote: false,
+      });
+      expect(repository.find).toBeCalled();
+    });
+
+    it('should call repository.find with search', async () => {
+      await service.findAll({
+        page: 0,
+        limit: 10,
+        state: 'Paraná',
+        region: 1,
+        city: 1,
+        search: 'test',
+        remote: false,
+      });
+      expect(repository.createQueryBuilder).toBeCalled();
+      expect(repository.find).toBeCalled();
+    });
+
+    it('should call repository.find with remote', async () => {
+      await service.findAll({
+        page: 0,
+        limit: 10,
+        state: 'Paraná',
+        region: 1,
+        city: 1,
+        search: '',
+        remote: true,
+      });
+      expect(repository.createQueryBuilder).toBeCalled();
+      expect(repository.find).toBeCalled();
+    });
+  });
+
+  describe('findOne()', () => {
+    it('should call repository.findOne', async () => {
+      await service.findOne(1);
+      expect(repository.findOne).toBeCalled();
     });
   });
 });

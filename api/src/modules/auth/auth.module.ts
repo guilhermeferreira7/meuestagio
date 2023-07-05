@@ -13,6 +13,8 @@ import { LocalCompanyStrategy } from './strategies/company.strategy';
 import { AuthAdminService } from './auth-admin/auth-admin.service';
 import { LocalAdminStrategy } from './strategies/admin.strategy';
 import { jwtConstants } from '../../constants/jwt';
+import { User } from '../users/user/user.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Global()
 @Module({
@@ -23,6 +25,7 @@ import { jwtConstants } from '../../constants/jwt';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '14d' },
     }),
+    TypeOrmModule.forFeature([User]),
   ],
   providers: [
     AuthService,

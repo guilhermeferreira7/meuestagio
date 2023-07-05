@@ -8,7 +8,6 @@ import { City } from '../cities/entities/city.entity';
 import { Company } from './companies/entities/company.entity';
 
 import { StudentsService } from './students/services/students.service';
-import { StudentValidator } from './students/services/students-validator.service';
 
 import { StudentsController } from './students/controllers/students.controller';
 import { CompaniesService } from './companies/services/companies.service';
@@ -19,7 +18,7 @@ import { AdminController } from './admin/controllers/admin.controller';
   imports: [
     TypeOrmModule.forFeature([City, Student, Company, Institution, Course]),
   ],
-  providers: [StudentsService, CompaniesService, StudentValidator],
+  providers: [StudentsService, CompaniesService],
   controllers: [StudentsController, CompaniesController, AdminController],
   exports: [StudentsService, CompaniesService],
 })

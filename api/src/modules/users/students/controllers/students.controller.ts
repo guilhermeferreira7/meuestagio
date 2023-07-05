@@ -62,6 +62,7 @@ export class StudentsController {
     return updatedStudent;
   }
 
+  // remove this later
   @Get()
   async getAll(): Promise<Student[]> {
     return await this.studentService.findAll();

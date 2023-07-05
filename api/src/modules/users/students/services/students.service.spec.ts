@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import bcryptService from '../../../../utils/bcriptUtils';
 import { Student } from '../entities/student.entity';
 import { StudentsService } from './students.service';
-import { StudentValidator } from './students-validator.service';
 import { CreateStudentDto } from '../dtos/create-student.dto';
 
 const oneStudent: CreateStudentDto = {
@@ -46,7 +45,6 @@ const mockStudentsRepository = {
 
 describe('StudentsService', () => {
   let service: StudentsService;
-  let studentValidator: StudentValidator;
   let studentsRepository: Repository<Student>;
 
   const STUDENT_REPOSITORY_TOKEN = getRepositoryToken(Student);
@@ -55,15 +53,7 @@ describe('StudentsService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        StudentsService,
-        {
-          provide: StudentValidator,
-          useValue: {
-            validateCreate: jest.fn(() => Promise.resolve(oneStudent)),
-          },
-        },
-      ],
+      providers: [StudentsService],
     })
       .useMocker((token) => {
         switch (token) {
@@ -74,7 +64,6 @@ describe('StudentsService', () => {
       .compile();
 
     service = module.get<StudentsService>(StudentsService);
-    studentValidator = module.get<StudentValidator>(StudentValidator);
 
     studentsRepository = module.get<Repository<Student>>(
       STUDENT_REPOSITORY_TOKEN,
@@ -83,7 +72,6 @@ describe('StudentsService', () => {
 
   it('services should be defined', () => {
     expect(service).toBeDefined();
-    expect(studentValidator).toBeDefined();
   });
 
   it('repositories should be defined', () => {
@@ -113,20 +101,6 @@ describe('StudentsService', () => {
         expect(error).toBeInstanceOf(ConflictException);
         expect(error.message).toBe('Email já cadastrado!');
       }
-    });
-
-    it('should throw error if validator service fails', async () => {
-      jest
-        .spyOn(studentValidator, 'validateCreate')
-        .mockReturnValueOnce(Promise.resolve(null));
-
-      try {
-        await service.createStudent(oneStudent);
-        fail();
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException);
-      }
-      expect(studentValidator.validateCreate).toBeCalledWith(oneStudent);
     });
 
     it('should hash password correctly', async () => {
