@@ -32,13 +32,9 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
           </span>
           <p className="line-clamp-1 text-lg">{vacancy.company.name}</p>
         </div>
-        <div className="line-clamp-3">
+        <div className="line-clamp-4">
           Descrição:
-          <div
-            dangerouslySetInnerHTML={{
-              __html: vacancy.description,
-            }}
-          />
+          <div>{vacancy.description.replace(/<[^>]*>?/gm, " ")}</div>
         </div>
         <p>
           Local: {vacancy.city.name} - {vacancy.state}

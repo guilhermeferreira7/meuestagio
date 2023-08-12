@@ -135,10 +135,6 @@ export default function CreateVacancy({ areas, company }: PageProps) {
         </form>
       </FormProvider>
 
-      <pre>
-        <code>{JSON.stringify(createVacancyForm.getValues(), null, 2)}</code>
-      </pre>
-
       <ToastContainer />
     </>
   );
