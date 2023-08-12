@@ -68,7 +68,7 @@ export class VacanciesService {
   async findOne(id: number) {
     const vacancy = await this.repository.findOne({
       where: { id: id },
-      relations: ['company', 'area'],
+      relations: ['company', 'area', 'city', 'region'],
     });
     return {
       ...vacancy,
