@@ -11,7 +11,6 @@ import { VACANCIES_STUDENT_LIMIT } from "../../../constants/request";
 import Filters from "./_filters";
 import SearchBox from "./_search";
 import ListVacancies from "./_list-vacancies";
-import { useRouter } from "next/router";
 
 interface StudentPageProps {
   vacanciesData: Vacancy[];
@@ -168,6 +167,20 @@ export default function StudentVacancies({
           : filters.search
           ? `Busca: ${filters.search}`
           : "Vagas em todo o Brasil"}
+        <span
+          className="ml-2 underline font-semibold hover:cursor-pointer"
+          onClick={async () => {
+            setFilters({});
+            const vacanciesData = await api.get<Vacancy[]>("/vacancies", {
+              params: {
+                limit: VACANCIES_STUDENT_LIMIT,
+              },
+            });
+            setVacancies(vacanciesData.data);
+          }}
+        >
+          Remover todos os filtros
+        </span>
       </h2>
 
       <Filters
