@@ -39,6 +39,13 @@ export class VacanciesController {
     });
   }
 
+  @HasRoles(Role.COMPANY)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Get('company/:id')
+  async findAllByCompany(@Param('id') id: string) {
+    return await this.vacanciesService.findAllByCompany(+id);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.vacanciesService.findOne(+id);

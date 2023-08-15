@@ -65,6 +65,28 @@ export class VacanciesService {
     return result;
   }
 
+  async findAllByCompany(companyId: number) {
+    const vacancies = await this.repository.find({
+      where: {
+        companyId,
+      },
+      relations: ['company', 'area', 'city', 'region'],
+    });
+    const result = vacancies.map((vacancy) => {
+      return {
+        ...vacancy,
+        company: {
+          name: vacancy.company.name,
+        },
+        city: {
+          name: vacancy.city.name,
+        },
+      };
+    });
+
+    return result;
+  }
+
   async findOne(id: number) {
     const vacancy = await this.repository.findOne({
       where: { id: id },
