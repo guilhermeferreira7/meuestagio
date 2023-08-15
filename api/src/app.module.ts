@@ -8,6 +8,7 @@ import { InstitutionsModule } from './modules/institutions/institutions.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { VacanciesModule } from './modules/vacancies/vacancies.module';
 import { AreasModule } from './modules/areas/areas.module';
+import { JobApplicationModule } from './modules/job-applications/job-applications.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AreasModule } from './modules/areas/areas.module';
     InstitutionsModule,
     CoursesModule,
     VacanciesModule,
+    JobApplicationModule,
   ],
 })
 export class AppModule {}

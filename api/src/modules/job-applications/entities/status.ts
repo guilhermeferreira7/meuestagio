@@ -1,0 +1,5 @@
+export enum JobApplicationStatus {
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPANY_CLOSED = 'COMPANY_CLOSED',
+  STUDENT_REJECTED = 'STUDENT_REJECTED',
+}
