@@ -1,11 +1,12 @@
 import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { api } from "../../../services/api/api";
 import { notifyError } from "../../../components/Toasts/toast";
 import { ToastContainer } from "react-toastify";
 import { Vacancy } from "../../../utils/types/vacancy";
+import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
 
 export default function Vacancy() {
   const router = useRouter();
@@ -33,35 +34,49 @@ export default function Vacancy() {
               Código da vaga: {vacancy.id}
             </h2>
 
-            <button className="btn btn-sm h-12 btn-primary text-sm lg:text-xl m-2 normal-case">
+            <label
+              htmlFor="modal"
+              className="btn btn-sm h-12 btn-primary text-sm lg:text-xl m-2 normal-case"
+            >
               Quero me candidatar
-            </button>
+            </label>
           </div>
           <div className="lg:flex flex-row">
             <div className="lg:w-1/3 text-xl">
-              <h2>Área: {vacancy.area?.title}</h2>
-              <h2>Empresa: {vacancy.company?.name}</h2>
-              <h2>
-                Salário:{" "}
+              <h2 className="flex items-center gap-1">
+                <GraduationCap />
+                {vacancy.area?.title}
+              </h2>
+              <h2 className="flex items-center gap-1">
+                <Building />
+                {vacancy.company?.name}
+              </h2>
+              <h2 className="flex items-center gap-1">
+                <Banknote />{" "}
                 {vacancy.salary ? (
                   <span className="font-semibold">R$ {vacancy.salary},00</span>
                 ) : (
-                  <span>Não informado</span>
+                  <span>Salário não informado</span>
                 )}
               </h2>
-              <h2>Cidade: {vacancy.city?.name}</h2>
+              <h2 className="flex items-center gap-1">
+                <MapPin /> {vacancy.city?.name}
+              </h2>
 
-              <h2>
-                {vacancy.keywords
-                  ?.split(", ")
-                  .map((keyword: any, index: any) => (
-                    <span
-                      key={index}
-                      className="font-semibold text-primary inline-block mr-4 underline"
-                    >
-                      {keyword}{" "}
-                    </span>
-                  ))}
+              <h2 className="flex items-center gap-1">
+                <Hash />
+                <p>
+                  {vacancy.keywords
+                    ?.split(", ")
+                    .map((keyword: any, index: any) => (
+                      <span
+                        key={index}
+                        className="font-semibold text-primary inline-block mr-4 underline"
+                      >
+                        {keyword}{" "}
+                      </span>
+                    ))}
+                </p>
               </h2>
             </div>
             <div className="divider divider-horizontal"></div>
@@ -77,6 +92,23 @@ export default function Vacancy() {
                 </div>
               </h2>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <input type="checkbox" id="modal" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box">
+          <p className="text-lg font-bold">
+            Tem certeza que deseja se candidatar a vaga?
+          </p>
+          <div className="modal-action">
+            <label htmlFor="modal" className="btn btn-warning">
+              Cancelar
+            </label>
+            <button className="btn btn-info" onClick={() => {}}>
+              Confirmar
+            </button>
           </div>
         </div>
       </div>

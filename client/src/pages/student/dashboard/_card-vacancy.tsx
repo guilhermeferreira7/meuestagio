@@ -1,4 +1,3 @@
-import { Building2 } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Vacancy } from "../../../utils/types/vacancy";
@@ -9,7 +8,7 @@ interface CardVacancyProps {
 
 export default function CardVacancy({ vacancy }: CardVacancyProps) {
   return (
-    <div className="card shadow-sm shadow-primary">
+    <div className="card hover:bg-base-200 group shadow-sm shadow-primary">
       <div className="card-body">
         <div className="card-title flex justify-between">
           <h2 className="text-primary font-bold">
@@ -27,9 +26,6 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
           <h2 className="font-normal text-sm">Código da vaga: {vacancy.id}</h2>
         </div>
         <div className="flex flex-row gap-1">
-          <span>
-            <Building2 />
-          </span>
           <p className="line-clamp-1 text-lg">{vacancy.company.name}</p>
         </div>
         <div className="line-clamp-4">
@@ -49,7 +45,7 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
             {vacancy.keywords.split(",").map((keyword, index) => (
               <li
                 key={index}
-                className="inline-block bg-base-200 rounded-full px-3 py-1 text-sm font-semibold mr-2"
+                className="inline-block group-hover:bg-white bg-base-200 rounded-full px-3 py-1 text-sm font-semibold mr-2"
               >
                 {keyword}
               </li>
