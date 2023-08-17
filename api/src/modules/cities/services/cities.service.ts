@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import { CreateCityDto } from '../dtos/create-city.dto';
 import { CreateRegionDto } from '../dtos/create-region.dto';
@@ -45,17 +45,26 @@ export class CitiesService {
     return await this.regionsRepository.save(newRegion);
   }
 
-  async findAll({ page, limit, state }): Promise<City[]> {
-    return await this.citiesRepository.find({
+  async findAll({ page, limit, state, name, orderBy }): Promise<City[]> {
+    const byId = orderBy === 'id' ? 'DESC' : undefined;
+    const byName = orderBy === 'name' ? 'ASC' : undefined;
+
+    const res = await this.citiesRepository.find({
       skip: page,
       take: limit,
       order: {
-        id: 'DESC',
+        id: byId,
+        name: byName,
       },
       where: {
         state,
+        name: name ? ILike(`%${name}%`) : undefined,
       },
     });
+
+    console.log(res);
+
+    return res;
   }
 
   async findRegionsByState({ page, limit, state }): Promise<Region[]> {
