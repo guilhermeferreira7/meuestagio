@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { Institution } from '../entities/institution.entity';
@@ -17,8 +25,10 @@ export class InstitutionsController {
   ) {}
 
   @Get()
-  async getAll(): Promise<Institution[]> {
-    return await this.institutionsService.findAll();
+  async getAll(@Request() req): Promise<Institution[]> {
+    return await this.institutionsService.findAll({
+      cityId: req.query.cityId,
+    });
   }
 
   @HasRoles(Role.ADMIN)

@@ -41,8 +41,11 @@ export class InstitutionsService {
     return await this.institutionsReposity.findOneBy({ id });
   }
 
-  async findAll(): Promise<Institution[]> {
-    return await this.institutionsReposity.find({ relations: ['city'] });
+  async findAll({ cityId }): Promise<Institution[]> {
+    return await this.institutionsReposity.find({
+      relations: ['city'],
+      where: { cityId },
+    });
   }
 
   private async validate(institution: CreateInstitutionDto): Promise<boolean> {
