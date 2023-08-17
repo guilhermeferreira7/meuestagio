@@ -2,9 +2,11 @@ export type Student = {
   name: string;
   email: string;
   institution: {
+    id: number;
     name: string;
   };
   course: {
+    id: number;
     name: string;
   };
   phone?: number;
@@ -14,5 +16,6 @@ export type Student = {
   city: {
     id: number;
     name: string;
+    state: string;
   };
 };

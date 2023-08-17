@@ -15,7 +15,7 @@ export function InputText(props: InputProps): JSX.Element {
     <input
       id={props.name}
       type="text"
-      className="bg-white rounded input input-primary"
+      className="bg-white rounded input input-primary disabled:placeholder:text-gray-500"
       {...register(props.name)}
       {...props}
     />
