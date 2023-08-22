@@ -3,36 +3,66 @@ import React from "react";
 
 import { Student } from "../../../utils/types/users/student";
 import { getAPIClient } from "../../../services/api/clientApi";
-import Profile from "./_profile";
-import Resume from "./_resume";
 import { City } from "../../../utils/types/city";
 import { Institution } from "../../../utils/types/institution";
 import { Course } from "../../../utils/types/course";
+import AppCard from "../../../components/AppCard";
+import { User } from "lucide-react";
+import ContactInfoForm from "./_contact-form";
+import EducationForm from "./_education-form";
+import AddressForm from "./_address-form";
 
 interface StudentProfileProps {
   student: Student;
   cities: City[];
-  instituions: Institution[];
+  institutions: Institution[];
   courses: Course[];
 }
 
 export default function StudentProfile({
   student,
   cities,
-  instituions,
+  institutions,
   courses,
 }: StudentProfileProps) {
   return (
     <>
       <div className="flex flex-col gap-2 w-11/12">
-        {/* <Profile
-          student={student}
-          institutions={instituions}
-          courses={courses}
-          cities={cities}
-        /> */}
+        <AppCard>
+          <h1 className="font-semibold text-2xl flex items-center gap-1">
+            <User />
+            Dados pessoais
+          </h1>
 
-        <Resume />
+          <div className="divider"></div>
+          <ContactInfoForm
+            initialData={{
+              ...student,
+            }}
+          />
+
+          <div className="divider"></div>
+          <EducationForm
+            initialData={{
+              institution: student.institution.id,
+              course: {
+                id: student.course.id,
+                name: student.course.name,
+              },
+            }}
+            courses={courses}
+            institutions={institutions}
+          />
+
+          <div className="divider"></div>
+          <AddressForm
+            initialData={{
+              city: student.city.name,
+              state: student.city.state,
+            }}
+            cities={cities}
+          />
+        </AppCard>
       </div>
     </>
   );
@@ -43,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
     const apiClient = getAPIClient(ctx);
     const student = await apiClient.get<Student>("/students/profile");
     const cities = await apiClient.get<City[]>("/cities");
-    const instituions = await apiClient.get<Institution[]>("/institutions", {
+    const institutions = await apiClient.get<Institution[]>("/institutions", {
       params: {
         cityId: student.data.city.id,
       },
@@ -52,13 +82,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
       `/institutions/${student.data.institution.id}/courses`
     );
 
-    console.log(courses);
-
     return {
       props: {
         student: student.data,
         cities: cities.data,
-        instituions: instituions.data,
+        institutions: institutions.data,
         courses: courses.data,
       },
     };

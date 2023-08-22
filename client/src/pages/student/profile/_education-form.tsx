@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Contact, Pencil, School } from "lucide-react";
-import { editEducationSchema } from "../../../../utils/validators/edit-profile-schema";
-import { Course } from "../../../../utils/types/course";
-import { api } from "../../../../services/api/api";
-import { Form } from "../../../../components/Form";
+import { Pencil, School } from "lucide-react";
+import { editEducationSchema } from "../../../utils/validators/edit-profile-schema";
+import { Course } from "../../../utils/types/course";
+import { api } from "../../../services/api/api";
+import { Form } from "../../../components/Form";
 
 type EducationData = z.infer<typeof editEducationSchema>;
 

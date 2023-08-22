@@ -3,8 +3,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Contact, Pencil } from "lucide-react";
-import { editContactSchema } from "../../../../utils/validators/edit-profile-schema";
-import { Form } from "../../../../components/Form";
+import { editContactSchema } from "../../../utils/validators/edit-profile-schema";
+import { Form } from "../../../components/Form";
 
 type ContactData = z.infer<typeof editContactSchema>;
 
