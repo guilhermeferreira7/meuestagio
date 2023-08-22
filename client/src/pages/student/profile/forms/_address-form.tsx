@@ -94,6 +94,9 @@ export default function AddressForm({ initialData, cities }: any) {
               defaultValue={initialData.state}
               onChange={setCities}
             >
+              <option disabled value={initialData.state}>
+                {initialData.state}
+              </option>
               {states.map((state: any) => (
                 <option value={state}>{state}</option>
               ))}
@@ -107,7 +110,9 @@ export default function AddressForm({ initialData, cities }: any) {
               disabled={formDisabled}
               defaultValue={initialData.city}
             >
-              <option value={initialData.city}>{initialData.city}</option>
+              <option disabled value={initialData.city}>
+                {initialData.city}
+              </option>
 
               {citiesFiltered.map((city: any) => (
                 <option value={city.name}>{city.name}</option>
