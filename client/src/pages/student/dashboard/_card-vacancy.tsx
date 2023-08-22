@@ -8,7 +8,7 @@ interface CardVacancyProps {
 
 export default function CardVacancy({ vacancy }: CardVacancyProps) {
   return (
-    <div className="card hover:bg-base-200 group shadow-sm shadow-primary">
+    <>
       <div className="card-body">
         <div className="card-title flex justify-between">
           <h2 className="text-primary font-bold">
@@ -52,13 +52,13 @@ export default function CardVacancy({ vacancy }: CardVacancyProps) {
             ))}
           </ul>
           <Link
-            className="btn btn-sm btn-info md:btn-md"
+            className="w-full btn btn-sm btn-info md:btn-md"
             href={`vacancy/${vacancy.id}`}
           >
             Ver mais detalhes
           </Link>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -9,7 +9,7 @@ export class ResumesService {
   }
 
   findAll() {
-    return `This action returns all resumes`;
+    return null;
   }
 
   findOne(id: number) {
