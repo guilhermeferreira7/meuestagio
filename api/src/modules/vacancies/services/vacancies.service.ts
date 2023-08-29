@@ -72,6 +72,9 @@ export class VacanciesService {
       where: {
         companyId,
       },
+      order: {
+        id: 'DESC',
+      },
       relations: ['company', 'area', 'city', 'region'],
     });
     const result = vacancies.map((vacancy) => {

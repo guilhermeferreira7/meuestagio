@@ -55,7 +55,16 @@ export default function PageLayout({ children }: PageLayoutProps) {
           <label htmlFor="my-drawer" className="drawer-overlay"></label>
           <ul className="menu p-4 w-80 h-full bg-base-100">
             {menuItems?.map((item: any, key: any) => (
-              <li key={key} className="border-b-2">
+              <li
+                key={key}
+                className="border-b-2"
+                onClick={() => {
+                  const drawer = document.getElementById("my-drawer");
+                  if (drawer) {
+                    drawer.click();
+                  }
+                }}
+              >
                 <MenuItem {...item} />
               </li>
             ))}
