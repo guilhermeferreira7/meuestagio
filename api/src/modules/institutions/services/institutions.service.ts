@@ -43,8 +43,8 @@ export class InstitutionsService {
 
   async findAll({ cityId }): Promise<Institution[]> {
     return await this.institutionsReposity.find({
-      relations: ['city'],
       where: { cityId },
+      relations: ['city'],
     });
   }
 

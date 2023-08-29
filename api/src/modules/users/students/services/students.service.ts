@@ -10,12 +10,15 @@ import { CreateStudentDto } from '../dtos/create-student.dto';
 import { Student } from '../entities/student.entity';
 import bcryptService from '../../../../utils/bcriptUtils';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
+import { Resume } from '../../../resumes/entities/resume.entity';
 
 @Injectable()
 export class StudentsService {
   constructor(
     @InjectRepository(Student)
     private readonly repository: Repository<Student>,
+    @InjectRepository(Resume)
+    private readonly resumeRepository: Repository<Resume>,
   ) {}
 
   async createStudent(createStudent: CreateStudentDto): Promise<Student> {
@@ -31,7 +34,11 @@ export class StudentsService {
       password,
     });
 
-    return await this.repository.save(newStudent);
+    const studentSave = await this.repository.save(newStudent);
+    const resume = this.resumeRepository.create({ studentId: newStudent.id });
+    await this.resumeRepository.save(resume);
+
+    return studentSave;
   }
 
   async findOne(email: string): Promise<Student> {

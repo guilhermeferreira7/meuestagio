@@ -62,8 +62,6 @@ export class CitiesService {
       },
     });
 
-    console.log(res);
-
     return res;
   }
 

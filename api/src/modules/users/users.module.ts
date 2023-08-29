@@ -13,10 +13,18 @@ import { StudentsController } from './students/controllers/students.controller';
 import { CompaniesService } from './companies/services/companies.service';
 import { CompaniesController } from './companies/controllers/companies.controller';
 import { AdminController } from './admin/controllers/admin.controller';
+import { Resume } from '../resumes/entities/resume.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([City, Student, Company, Institution, Course]),
+    TypeOrmModule.forFeature([
+      City,
+      Student,
+      Company,
+      Institution,
+      Course,
+      Resume,
+    ]),
   ],
   providers: [StudentsService, CompaniesService],
   controllers: [StudentsController, CompaniesController, AdminController],

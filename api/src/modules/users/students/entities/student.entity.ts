@@ -18,7 +18,6 @@ export class Student extends User {
   @Column({ nullable: true })
   courseId: number;
 
-  // id do curriculo
   @Column({ nullable: true })
   resumeId: number;
 
