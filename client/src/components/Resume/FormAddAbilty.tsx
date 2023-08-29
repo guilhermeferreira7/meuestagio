@@ -80,7 +80,7 @@ export default function FormAddSkill({ resumeId, skills }: FormAddSkillProps) {
         </form>
       </FormProvider>
       <div className="w-full mt-3">
-        {skillsUpdated.length === 0 ? (
+        {!skillsUpdated ? (
           <p className="text-center">Nenhuma habilidade cadastrada</p>
         ) : (
           skillsUpdated.map((skill) => (

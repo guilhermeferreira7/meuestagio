@@ -50,7 +50,7 @@ export default function ResumeView({ student, resume }: ResumeViewProps) {
           <div className="flex flex-col items-start">
             <h2 className="text-lg font-semibold">Habilidades</h2>
             <div className="flex flex-col gap-1 p-2">
-              {resume.skills.length > 0 ? (
+              {resume.skills?.length > 0 ? (
                 resume.skills.map((skill, index) => (
                   <div className="flex items-center gap-1" key={index}>
                     <p>
