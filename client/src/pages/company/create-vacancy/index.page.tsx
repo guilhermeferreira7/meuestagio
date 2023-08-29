@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GetServerSideProps } from "next";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,6 +6,7 @@ import { z } from "zod";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
+import { Loader } from "lucide-react";
 
 import { createVacancyFormSchema } from "../../../utils/validators/create-vancancy-schema";
 import { Form } from "../../../components/Form";
@@ -29,6 +30,8 @@ interface PageProps {
 
 export default function CreateVacancy({ areas, company }: PageProps) {
   const [description, setDescription] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const createVacancyForm = useForm<CreateVacancyFormData>({
     resolver: zodResolver(createVacancyFormSchema),
@@ -36,6 +39,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
   const { handleSubmit } = createVacancyForm;
 
   const createVacancy = async (data: CreateVacancyFormData) => {
+    setIsLoading(true);
     try {
       await api.post("/vacancies", {
         ...data,
@@ -45,9 +49,13 @@ export default function CreateVacancy({ areas, company }: PageProps) {
         regionId: company.city.regionId,
         state: company.city.state,
       });
+      setTimeout(() => {
+        router.push("vacancies");
+      }, 2000);
       notifySuccess("Vaga criada com sucesso!");
     } catch (error: any) {
       notifyError(`Erro ao criar vaga! ${error.response?.data?.message}`);
+      setIsLoading(false);
     }
   };
 
@@ -119,19 +127,34 @@ export default function CreateVacancy({ areas, company }: PageProps) {
             </div>
             <div>
               <Form.Field className="flex items-center justify-center my-2 gap-1">
-                <Form.Label htmlFor="remote">Vaga remota?</Form.Label>
-                <Form.InputCheckbox name="remote" title="remote" />
+                <Form.InputCheckbox
+                  name="remote"
+                  title="remote"
+                  label="Vaga remota?"
+                />
                 <Form.ErrorMessage field="remote" />
               </Form.Field>
             </div>
           </div>
 
-          <button
-            className="btn btn-primary w-2/3 mt-2 self-center"
-            type="submit"
-          >
-            Criar vaga
-          </button>
+          {isLoading ? (
+            <button
+              className="btn btn-warning w-2/3 mt-2 self-center"
+              type="button"
+            >
+              Criando vaga...
+              <span className="animate-spin ml-2">
+                <Loader />
+              </span>
+            </button>
+          ) : (
+            <button
+              className="btn btn-primary w-2/3 mt-2 self-center"
+              type="submit"
+            >
+              Criar vaga
+            </button>
+          )}
         </form>
       </FormProvider>
 

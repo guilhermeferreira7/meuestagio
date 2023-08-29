@@ -4,24 +4,19 @@ import { Home, ListOrdered, PlusCircle, User } from "lucide-react";
 
 const companyMenu = [
   {
-    icon: <Home />,
-    href: "/",
-    label: "Início",
-  },
-  {
     icon: <User />,
     href: "/company/profile",
-    label: "Perfil",
+    label: "Perfil da empresa",
+  },
+  {
+    icon: <ListOrdered />,
+    href: "/company/dashboard",
+    label: "Vagas cadastradas",
   },
   {
     icon: <PlusCircle />,
     href: "/company/create-vacancy",
     label: "Cadastrar vaga",
-  },
-  {
-    icon: <ListOrdered />,
-    href: "/company/vacancies",
-    label: "Vagas cadastradas",
   },
 ];
 

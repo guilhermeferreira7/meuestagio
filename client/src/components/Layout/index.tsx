@@ -57,7 +57,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
             {menuItems?.map((item: any, key: any) => (
               <li
                 key={key}
-                className="border-b-2"
+                className="border-b-2 w-full"
                 onClick={() => {
                   const drawer = document.getElementById("my-drawer");
                   if (drawer) {
