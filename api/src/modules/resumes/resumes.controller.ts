@@ -3,19 +3,19 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Delete,
   Param,
   UseGuards,
   Request,
   Put,
 } from '@nestjs/common';
 import { ResumesService } from './resumes.service';
-import { CreateResumeDto } from './dto/create-resume.dto';
 import { HasRoles } from '../auth/roles/roles.decorator';
 import { Role } from '../auth/roles/roles';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles/roles.guard';
 import { UpdateResumeDto } from './dto/update-resume.dto';
+import { CreateSkillDto } from './dto/create-skill.dto';
 
 @Controller('resumes')
 export class ResumesController {
@@ -34,5 +34,19 @@ export class ResumesController {
   @Put('/me')
   async update(@Body() body: UpdateResumeDto) {
     return await this.resumesService.update(body.id, body);
+  }
+
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('/me/skills')
+  async addSkill(@Body() body: CreateSkillDto) {
+    return await this.resumesService.addSkill(body);
+  }
+
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Delete('/me/skills/:id')
+  async deleteSkill(@Param('id') id: number) {
+    return await this.resumesService.deleteSkill(id);
   }
 }

@@ -6,23 +6,44 @@ export type Resume = {
   student: Student;
   title: string;
   about: string;
-  skills: string;
+  skills: Skill[];
   educations: Education[];
   experiences: Experience[];
-  languages: string;
+  languages: Language[];
 };
 
-type Experience = {
+export type Skill = {
+  id: number;
+  resumeId: number;
+  name: string;
+  level: SkillLevel;
+};
+
+export enum SkillLevel {
+  Basic = "Básico",
+  Intermediate = "Intermediário",
+  Advanced = "Avançado",
+}
+
+export type Language = {
+  id: number;
+  resumeId: number;
+  name: string;
+  level: LanguageLevel;
+};
+
+export type Experience = {
   id: number;
   resumeId: number;
   company: string;
-  jobTitle: string;
+  position: string;
   description: string;
   startDate: string;
   endDate: string;
+  currentJob: boolean;
 };
 
-type Education = {
+export type Education = {
   id: number;
   resumeId: number;
   school: string;
@@ -32,9 +53,16 @@ type Education = {
   endDate: string;
 };
 
-enum Degree {
+export enum Degree {
   HighSchool = "Ensino Médio",
   Technical = "Ensino Técnico",
   Undergraduate = "Ensino Superior",
   Postgraduate = "Pós-Graduação",
+}
+
+export enum LanguageLevel {
+  Basic = "Básico",
+  Intermediate = "Intermediário",
+  Advanced = "Avançado",
+  Fluent = "Fluente",
 }

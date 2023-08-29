@@ -27,7 +27,7 @@ export default function StudentProfile({
 }: StudentProfileProps) {
   return (
     <>
-      <div className="flex flex-col gap-2 w-11/12">
+      <div className="flex flex-col gap-2 w-11/12 mb-4">
         <AppCard>
           <h1 className="font-semibold text-2xl flex items-center gap-1">
             <User />
