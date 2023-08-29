@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const editContactSchema = z.object({
   name: z.string().min(1).max(255),
-  email: z.string().email().min(1).max(255),
+  email: z.string().email({ message: "Email inválido" }).min(1).max(255),
   phone: z.string().min(1).max(255),
 });
 
