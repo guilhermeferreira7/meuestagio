@@ -33,7 +33,7 @@ export default function FormAddSkill({ resumeId, skills }: FormAddSkillProps) {
       });
       createSkillForm.reset();
       notifySuccess("Habilidade adicionada com sucesso");
-      setSkills([...skillsUpdated, response.data]);
+      setSkills([response.data, ...skillsUpdated]);
     } catch (error: any) {
       console.log(error.response?.data?.message);
     }
@@ -79,42 +79,32 @@ export default function FormAddSkill({ resumeId, skills }: FormAddSkillProps) {
           <button className="lg:w-3/12 btn btn-primary">Adicionar</button>
         </form>
       </FormProvider>
-      <div className="overflow-x-auto w-full max-h-60 mt-2">
+      <div className="w-full mt-3">
         {skillsUpdated.length === 0 ? (
           <p className="text-center">Nenhuma habilidade cadastrada</p>
         ) : (
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Nível</th>
-                <th>Ação</th>
-              </tr>
-            </thead>
-            <tbody>
-              {skillsUpdated.map((skill) => (
-                <tr key={skill.id}>
-                  <td>{skill.name}</td>
-                  <td>{skill.level}</td>
-                  <td>
-                    <Modal.Button type="error" id="deleteSkill">
-                      <Trash />
-                    </Modal.Button>
-                    <Modal.Content
-                      id="deleteSkill"
-                      cancelText="Não"
-                      confirmAction={() => deleteSkill(skill)}
-                      confirmText="Sim"
-                    >
-                      <p className="w-full text-center">
-                        Excluir a habilidade {skill.name} ?
-                      </p>
-                    </Modal.Content>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          skillsUpdated.map((skill) => (
+            <>
+              <p className="text-lg flex items-center justify-between gap-1">
+                {skill.name} - {skill.level}{" "}
+                <Modal.Button type="error" id="deleteSkill" size="sm">
+                  <Trash />
+                </Modal.Button>
+              </p>
+              <div className="divider"></div>
+
+              <Modal.Content
+                id="deleteSkill"
+                cancelText="Não"
+                confirmAction={() => deleteSkill(skill)}
+                confirmText="Sim"
+              >
+                <p className="w-full text-center">
+                  Excluir a habilidade {skill.name} ?
+                </p>
+              </Modal.Content>
+            </>
+          ))
         )}
       </div>
     </>
