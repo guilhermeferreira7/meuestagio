@@ -23,13 +23,15 @@ export class VacanciesService {
       const vacancies = await this.repository
         .createQueryBuilder()
         .select()
-        .where('title ILIKE :search', { search: `%${search}%` })
+        .where('Vacancy.title ILIKE :search', { search: `%${search}%` })
         .orWhere('description ILIKE :search', { search: `%${search}%` })
         .orWhere('keywords ILIKE :search', { search: `%${search}%` })
+        .orWhere('area.title ILIKE :search', { search: `%${search}%` })
         .addOrderBy('remote', remote === 'true' ? 'DESC' : 'ASC')
         .leftJoinAndSelect('Vacancy.company', 'company')
         .leftJoinAndSelect('Vacancy.city', 'city')
         .leftJoinAndSelect('Vacancy.region', 'region')
+        .leftJoinAndSelect('Vacancy.area', 'area')
         .skip(page)
         .take(limit)
         .getMany();
@@ -48,7 +50,7 @@ export class VacanciesService {
         regionId: region,
         cityId: city,
       },
-      relations: ['company', 'city', 'region'],
+      relations: ['company', 'city', 'region', 'area'],
     });
     const result = vacancies.map((vacancy) => {
       return {
