@@ -35,11 +35,6 @@ export class Resume {
   })
   about: string;
 
-  @Column({
-    nullable: true,
-  })
-  languages: string;
-
   @OneToMany(() => Education, (education) => education.resume, {
     nullable: true,
   })
@@ -53,7 +48,7 @@ export class Resume {
   @OneToMany(() => Language, (language) => language.resume, {
     nullable: true,
   })
-  language: Language[];
+  languages: Language[];
 
   @OneToMany(() => Skill, (skill) => skill.resume, {
     nullable: true,

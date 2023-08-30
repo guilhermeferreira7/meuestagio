@@ -2,6 +2,8 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Education } from '../entities/education.entity';
 import { Experience } from '../entities/experiences.entity';
 import { Skill } from '../entities/skill.entity';
+import { Language } from '../entities/language.entity';
+import { Project } from '../entities/project.entity';
 
 export class UpdateResumeDto {
   @IsNotEmpty()
@@ -16,13 +18,13 @@ export class UpdateResumeDto {
   @IsString()
   about: string;
 
-  @IsOptional()
-  @IsString()
-  languages: string;
-
   skills: Skill[];
 
   educations: Education[];
 
   experiences: Experience[];
+
+  projects: Project[];
+
+  languages: Language[];
 }

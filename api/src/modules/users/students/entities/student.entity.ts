@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { Institution } from '../../../institutions/entities/institution.entity';
 import { User } from '../../user/user.entity';
 import { Course } from '../../../courses/entities/course.entity';
+import { Resume } from '../../../resumes/entities/resume.entity';
 
 @Entity()
 export class Student extends User {
@@ -21,6 +22,6 @@ export class Student extends User {
   @Column({ nullable: true })
   resumeId: number;
 
-  @Column({ nullable: true })
-  period: string;
+  @ManyToOne(() => Resume)
+  resume: Resume;
 }
