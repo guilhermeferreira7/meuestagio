@@ -1,6 +1,8 @@
 import React from "react";
 import { Vacancy } from "../../../utils/types/vacancy";
 import { ArrowDown, ChevronDown } from "lucide-react";
+import Link from "next/link";
+import AppCard from "../../../components/AppCard";
 
 interface VacancyCompanyCardProps {
   vacancy: any;
@@ -11,32 +13,26 @@ export default function VacancyCompanyCard({
 }: VacancyCompanyCardProps) {
   return (
     <>
-      <div className="w-full flex flex-col items-center justify-center hover:bg-base-200 mb-2 p-2 text-xl border rounded-md border-primary">
-        <span>
+      <AppCard>
+        <h2 className="flex justify-between text-2xl">
           {vacancy.title} - {vacancy.remote ? "Remoto" : "Presencial"} - Código:{" "}
           {vacancy.id}
-        </span>
-        <div className="flex items-center">
-          <div tabIndex={0} className="collapse w-full">
-            <div className="collapse-title text-center text-primary underline">
-              Ver detalhes
-            </div>
-            <div className="collapse-content">
-              <div className="flex flex-col items-center gap-1">
-                <p>
-                  Local: {vacancy.city.name} - {vacancy.state}
-                </p>
-                <p>Palavras chave: {vacancy.keywords}</p>
-                <div>
-                  <button className="btn btn-primary">
-                    Ver Candidatos {`(10)`}
-                  </button>
-                </div>
-              </div>
-            </div>
+        </h2>
+        <div className="flex flex-col md:flex-row gap-1 justify-between">
+          <div className="flex flex-col items-start text-xl">
+            <p>
+              Local: {vacancy.city.name} - {vacancy.state}
+            </p>
+            <p>Palavras chave: {vacancy.keywords}</p>
           </div>
+          <Link
+            href={`vacancy/applications/${vacancy.id}`}
+            className="btn btn-primary"
+          >
+            Ver Candidatos
+          </Link>
         </div>
-      </div>
+      </AppCard>
     </>
   );
 }

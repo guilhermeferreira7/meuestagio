@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GetServerSideProps } from "next";
-import { Book } from "lucide-react";
+import { Book, ChevronLeft } from "lucide-react";
 
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Student } from "../../../utils/types/users/student";
@@ -8,6 +8,7 @@ import { Resume } from "../../../utils/types/resume";
 import ResumeForm from "./_form";
 import ResumeView from "./_view";
 import { api } from "../../../services/api/api";
+import { useRouter } from "next/router";
 
 interface PageProps {
   student: Student;
@@ -17,6 +18,9 @@ interface PageProps {
 export default function ResumePage({ student, resume }: PageProps) {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [resumeUpdated, setResumeUpdated] = useState<Resume>(resume);
+  const router = useRouter();
+
+  const vacancyId = router.query.vacancy;
 
   async function updateResume() {
     setEditMode(!editMode);
@@ -31,6 +35,16 @@ export default function ResumePage({ student, resume }: PageProps) {
   return (
     <>
       <div className="w-11/12">
+        {vacancyId && (
+          <button
+            onClick={() => {
+              router.push(`/student/vacancy/${vacancyId}`);
+            }}
+            className="flex items-center gap-1 underline text-blue-400"
+          >
+            <ChevronLeft /> Voltar
+          </button>
+        )}
         <h1 className="flex justify-between items-center">
           <div className="flex items-center gap-1">
             <Book />

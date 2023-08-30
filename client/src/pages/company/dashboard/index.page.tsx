@@ -4,6 +4,7 @@ import { getAPIClient } from "../../../services/api/clientApi";
 import { Company } from "../../../utils/types/users/company";
 import { Vacancy } from "../../../utils/types/vacancy";
 import VacancyCompanyCard from "./_vacancy-card";
+import { JobApplication } from "../../../utils/types/job-application";
 
 interface CompanyVacanciesProps {
   vacancies: Vacancy[];
@@ -12,7 +13,7 @@ interface CompanyVacanciesProps {
 export default function CompanyVacancies({ vacancies }: CompanyVacanciesProps) {
   return (
     <>
-      <div className="w-full p-4">
+      <div className="w-full p-4 flex flex-col gap-2">
         {vacancies?.map((vacancy: Vacancy) => (
           <VacancyCompanyCard key={vacancy.id} vacancy={vacancy} />
         ))}

@@ -9,6 +9,13 @@ export class Vacancy {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({
+    type: 'enum',
+    enum: ['active', 'inactive'],
+    default: 'active',
+  })
+  status: string;
+
   @Column()
   title: string;
 

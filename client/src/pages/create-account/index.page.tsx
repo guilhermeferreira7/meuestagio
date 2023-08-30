@@ -80,7 +80,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
 
       <FormProvider {...createAccountForm}>
         <form
-          className="flex flex-col gap-2 w-5/6 lg:w-2/5"
+          className="flex flex-col gap-2 w-11/12"
           onSubmit={handleSubmit(createAccount)}
         >
           <Form.Field>
