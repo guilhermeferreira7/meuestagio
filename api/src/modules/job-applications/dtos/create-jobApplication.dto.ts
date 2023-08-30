@@ -7,4 +7,7 @@ export class CreateJobApplicationDto {
 
   @IsNotEmpty()
   studentId: number;
+
+  @IsNotEmpty()
+  resumeId: number;
 }

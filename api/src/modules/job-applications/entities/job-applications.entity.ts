@@ -8,6 +8,7 @@ import {
 import { JobApplicationStatus } from './status';
 import { Student } from '../../users/students/entities/student.entity';
 import { Vacancy } from '../../vacancies/entities/vacancy.entity';
+import { Resume } from '../../resumes/entities/resume.entity';
 
 @Entity()
 export class JobApplication {
@@ -19,6 +20,12 @@ export class JobApplication {
 
   @Column()
   studentId: number;
+
+  @ManyToOne(() => Resume)
+  resume: Resume;
+
+  @Column()
+  resumeId: number;
 
   @ManyToOne(() => Vacancy)
   vacancy: Vacancy;

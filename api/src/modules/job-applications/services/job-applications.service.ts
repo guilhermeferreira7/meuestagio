@@ -25,6 +25,12 @@ export class JobApplicationsService {
     const jobApplications = await this.jobApplicationRepository.find({
       where: { vacancyId },
       relations: [
+        'resume',
+        'resume.skills',
+        'resume.languages',
+        'resume.experiences',
+        'resume.educations',
+        'resume.projects',
         'student',
         'student.city',
         'student.institution',
@@ -47,5 +53,12 @@ export class JobApplicationsService {
     });
 
     return response;
+  }
+
+  async findByStudentId(studentId: number): Promise<JobApplication[]> {
+    return await this.jobApplicationRepository.find({
+      where: { studentId },
+      relations: ['vacancy', 'vacancy.company', 'vacancy.company.city'],
+    });
   }
 }

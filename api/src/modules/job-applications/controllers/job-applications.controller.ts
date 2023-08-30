@@ -13,20 +13,16 @@ import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { CreateJobApplicationDto } from '../dtos/create-jobApplication.dto';
 import { JobApplicationsService } from '../services/job-applications.service';
-import { StudentsService } from '../../users/students/services/students.service';
-import { CompaniesService } from '../../users/companies/services/companies.service';
 
 @Controller('job-applications')
 export class JobApplicationsController {
   constructor(
     private readonly jobApplicationsService: JobApplicationsService,
-    private readonly studentsService: StudentsService,
-    private readonly companiesService: CompaniesService,
   ) {}
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Post()
+  @Post('apply')
   async create(@Body() createJobApplicationDto: CreateJobApplicationDto) {
     return await this.jobApplicationsService.create(createJobApplicationDto);
   }
@@ -34,7 +30,14 @@ export class JobApplicationsController {
   @HasRoles(Role.COMPANY)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('company')
-  async findByVacancyId(@Body() body: any) {
-    return this.jobApplicationsService.findByVacancyId(body.vacancyId);
+  async findByVacancyId(@Request() req: any) {
+    return this.jobApplicationsService.findByVacancyId(req.query.vacancyId);
+  }
+
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Get('student')
+  async findByStudentId(@Request() req: any) {
+    return this.jobApplicationsService.findByStudentId(req.query.studentId);
   }
 }
