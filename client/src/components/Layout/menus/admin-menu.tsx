@@ -12,6 +12,11 @@ const adminMenu = [
     href: "/admin/register/cities",
     label: "Cadastrar cidades",
   },
+  {
+    icon: <Plus />,
+    href: "/admin/register/institutions",
+    label: "Cadastrar instituições",
+  },
 ];
 
 export default adminMenu;

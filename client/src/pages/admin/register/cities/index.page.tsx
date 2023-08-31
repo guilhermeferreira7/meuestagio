@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import ibgeApi from "../../../../services/api/ibgeApi";
+import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
+
+import ibgeApi from "../../../../services/api/ibgeApi";
 import { getAPIClient } from "../../../../services/api/clientApi";
 import { User } from "../../../../utils/types/users/user";
 import { api } from "../../../../services/api/api";
@@ -8,8 +10,7 @@ import { ToastContainer } from "react-toastify";
 import {
   notifyError,
   notifySuccess,
-} from "../../../../components/Toasts/toast";
-import { useRouter } from "next/router";
+} from "../../../../components/toasts/toast";
 
 interface RegisterCityProps {
   states: any;
