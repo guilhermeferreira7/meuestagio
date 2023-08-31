@@ -45,7 +45,13 @@ export class CitiesService {
     return await this.regionsRepository.save(newRegion);
   }
 
-  async findAll({ page, limit, state, name, orderBy }): Promise<City[]> {
+  async findAll({
+    page,
+    limit,
+    state = null,
+    name = null,
+    orderBy = null,
+  }): Promise<City[]> {
     const byId = orderBy === 'id' ? 'DESC' : undefined;
     const byName = orderBy === 'name' ? 'ASC' : undefined;
 

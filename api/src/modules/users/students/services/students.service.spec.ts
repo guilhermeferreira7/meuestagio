@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException, BadRequestException } from '@nestjs/common';
+import { ConflictException, BadRequestException, Res } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -7,6 +7,8 @@ import bcryptService from '../../../../utils/bcriptUtils';
 import { Student } from '../entities/student.entity';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from '../dtos/create-student.dto';
+import { ResumesService } from '../../../resumes/resumes.service';
+import { Resume } from '../../../resumes/entities/resume.entity';
 
 const oneStudent: CreateStudentDto = {
   name: 'student one',
@@ -43,11 +45,18 @@ const mockStudentsRepository = {
   find: jest.fn(() => studentsArray),
 };
 
+const mockResumesRepository = {
+  create: jest.fn((dto) => dto),
+  save: jest.fn((resume) => Promise.resolve(resume)),
+};
+
 describe('StudentsService', () => {
   let service: StudentsService;
+  let resumesRepository: Repository<Resume>;
   let studentsRepository: Repository<Student>;
 
   const STUDENT_REPOSITORY_TOKEN = getRepositoryToken(Student);
+  const RESUME_REPOSITORY_TOKEN = getRepositoryToken(Resume);
   const HASHED_PASS = 'hashedPass';
 
   beforeEach(async () => {
@@ -59,6 +68,8 @@ describe('StudentsService', () => {
         switch (token) {
           case STUDENT_REPOSITORY_TOKEN:
             return mockStudentsRepository;
+          case RESUME_REPOSITORY_TOKEN:
+            return mockResumesRepository;
         }
       })
       .compile();
@@ -68,6 +79,7 @@ describe('StudentsService', () => {
     studentsRepository = module.get<Repository<Student>>(
       STUDENT_REPOSITORY_TOKEN,
     );
+    resumesRepository = module.get<Repository<Resume>>(RESUME_REPOSITORY_TOKEN);
   });
 
   it('services should be defined', () => {
@@ -76,6 +88,7 @@ describe('StudentsService', () => {
 
   it('repositories should be defined', () => {
     expect(studentsRepository).toBeDefined();
+    expect(resumesRepository).toBeDefined();
   });
 
   describe('createStudent()', () => {
