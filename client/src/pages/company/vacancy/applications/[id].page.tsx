@@ -55,7 +55,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       "/job-applications/company",
       {
         params: {
-          vacancyId: ctx.query.id,
+          jobId: ctx.query.id,
         },
       }
     );

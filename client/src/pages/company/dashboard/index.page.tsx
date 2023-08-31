@@ -1,21 +1,21 @@
 import { GetServerSideProps } from "next";
 import React from "react";
+
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Company } from "../../../utils/types/users/company";
-import { Vacancy } from "../../../utils/types/vacancy";
-import VacancyCompanyCard from "./_vacancy-card";
-import { JobApplication } from "../../../utils/types/job-application";
+import { Job } from "../../../utils/types/job";
+import JobCompanyCard from "../../../components/Company/JobCompanyCard";
 
-interface CompanyVacanciesProps {
-  vacancies: Vacancy[];
+interface CompanyJobsProps {
+  jobs: Job[];
 }
 
-export default function CompanyVacancies({ vacancies }: CompanyVacanciesProps) {
+export default function CompanyJobs({ jobs }: CompanyJobsProps) {
   return (
     <>
       <div className="w-full p-4 flex flex-col gap-2">
-        {vacancies?.map((vacancy: Vacancy) => (
-          <VacancyCompanyCard key={vacancy.id} vacancy={vacancy} />
+        {jobs?.map((job: Job) => (
+          <JobCompanyCard key={job.id} job={job} />
         ))}
       </div>
     </>
@@ -25,16 +25,14 @@ export default function CompanyVacancies({ vacancies }: CompanyVacanciesProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const apiClient = getAPIClient(ctx);
-    const company = await apiClient.get<Company>("/companies/profile");
 
-    const vacancies = await apiClient.get<Vacancy[]>(
-      `/vacancies/company/${company.data.id}`
-    );
+    const company = await apiClient.get<Company>("/companies/profile");
+    const jobs = await apiClient.get<Job[]>(`/jobs/company/${company.data.id}`);
 
     return {
       props: {
         company: company.data,
-        vacancies: vacancies.data,
+        jobs: jobs.data,
       },
     };
   } catch (error) {

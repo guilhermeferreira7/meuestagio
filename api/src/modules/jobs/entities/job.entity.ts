@@ -5,7 +5,7 @@ import { City } from '../../cities/entities/city.entity';
 import { Region } from '../../cities/entities/region.entity';
 
 @Entity()
-export class Vacancy {
+export class Job {
   @PrimaryGeneratedColumn()
   id: number;
 

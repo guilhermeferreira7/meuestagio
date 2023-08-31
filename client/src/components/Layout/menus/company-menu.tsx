@@ -15,7 +15,7 @@ const companyMenu = [
   },
   {
     icon: <PlusCircle />,
-    href: "/company/create-vacancy",
+    href: "/company/create-job",
     label: "Cadastrar vaga",
   },
 ];

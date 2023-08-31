@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-.vacancyDescription ul {
+.jobDescription ul {
   list-style-type: initial;
   padding-left: 0;
 }
 
-.vacancyDescription ul li {
+.jobDescription ul li {
   margin-left: 1.5rem;
 }

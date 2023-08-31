@@ -1,45 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { CreateVacancyDto } from '../dtos/create-vacancy.dto';
+import { CreateJobDto } from '../dtos/create-job.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Vacancy } from '../entities/vacancy.entity';
+import { Job } from '../entities/job.entity';
 import { Repository } from 'typeorm';
 import { Company } from '../../users/companies/entities/company.entity';
 
 @Injectable()
-export class VacanciesService {
+export class JobsService {
   constructor(
-    @InjectRepository(Vacancy)
-    private readonly repository: Repository<Vacancy>,
+    @InjectRepository(Job)
+    private readonly repository: Repository<Job>,
   ) {}
 
-  async create(createVacancyDto: CreateVacancyDto): Promise<Vacancy> {
-    const vacancy = this.repository.create(createVacancyDto);
-    await this.repository.save(vacancy);
-    return vacancy;
+  async create(createJobDto: CreateJobDto): Promise<Job> {
+    const job = this.repository.create(createJobDto);
+    await this.repository.save(job);
+    return job;
   }
 
   async findAll({ page, limit, state, region, city, search, remote }) {
     if (search) {
-      const vacancies = await this.repository
+      const jobs = await this.repository
         .createQueryBuilder()
         .select()
-        .where('Vacancy.title ILIKE :search', { search: `%${search}%` })
+        .where('Job.title ILIKE :search', { search: `%${search}%` })
         .orWhere('description ILIKE :search', { search: `%${search}%` })
         .orWhere('keywords ILIKE :search', { search: `%${search}%` })
         .orWhere('area.title ILIKE :search', { search: `%${search}%` })
         .addOrderBy('remote', remote === 'true' ? 'DESC' : 'ASC')
-        .leftJoinAndSelect('Vacancy.company', 'company')
-        .leftJoinAndSelect('Vacancy.city', 'city')
-        .leftJoinAndSelect('Vacancy.region', 'region')
-        .leftJoinAndSelect('Vacancy.area', 'area')
+        .leftJoinAndSelect('Job.company', 'company')
+        .leftJoinAndSelect('Job.city', 'city')
+        .leftJoinAndSelect('Job.region', 'region')
+        .leftJoinAndSelect('Job.area', 'area')
         .skip(page)
         .take(limit)
         .getMany();
 
-      return vacancies;
+      return jobs;
     }
 
-    const vacancies = await this.repository.find({
+    const jobs = await this.repository.find({
       skip: page,
       take: limit,
       order: {
@@ -52,14 +52,14 @@ export class VacanciesService {
       },
       relations: ['company', 'city', 'region', 'area'],
     });
-    const result = vacancies.map((vacancy) => {
+    const result = jobs.map((job) => {
       return {
-        ...vacancy,
+        ...job,
         company: {
-          name: vacancy.company.name,
+          name: job.company.name,
         },
         city: {
-          name: vacancy.city.name,
+          name: job.city.name,
         },
       };
     });
@@ -68,7 +68,7 @@ export class VacanciesService {
   }
 
   async findAllByCompany(companyId: number) {
-    const vacancies = await this.repository.find({
+    const jobs = await this.repository.find({
       where: {
         companyId,
       },
@@ -77,14 +77,14 @@ export class VacanciesService {
       },
       relations: ['company', 'area', 'city', 'region'],
     });
-    const result = vacancies.map((vacancy) => {
+    const result = jobs.map((job) => {
       return {
-        ...vacancy,
+        ...job,
         company: {
-          name: vacancy.company.name,
+          name: job.company.name,
         },
         city: {
-          name: vacancy.city.name,
+          name: job.city.name,
         },
       };
     });
@@ -93,14 +93,14 @@ export class VacanciesService {
   }
 
   async findOne(id: number) {
-    const vacancy = await this.repository.findOne({
+    const job = await this.repository.findOne({
       where: { id: id },
       relations: ['company', 'area', 'city', 'region'],
     });
     return {
-      ...vacancy,
+      ...job,
       company: {
-        name: vacancy.company.name,
+        name: job.company.name,
       },
     };
   }

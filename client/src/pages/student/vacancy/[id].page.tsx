@@ -8,31 +8,27 @@ import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { api } from "../../../services/api/api";
 import { notifyError, notifySuccess } from "../../../components/Toasts/toast";
-import { Vacancy } from "../../../utils/types/vacancy";
+import { Job } from "../../../utils/types/job";
 import { Student } from "../../../utils/types/users/student";
 import { Resume } from "../../../utils/types/resume";
 import { JobApplication } from "../../../utils/types/job-application";
 
-interface VacancyProps {
+interface JobProps {
   student: Student;
   resumeId: number;
   applied: boolean;
 }
 
-export default function VacancyPage({
-  student,
-  resumeId,
-  applied,
-}: VacancyProps) {
+export default function JobPage({ student, resumeId, applied }: JobProps) {
   const router = useRouter();
   const { id } = router.query;
-  const [vacancy, setVacancy] = useState<Vacancy | null>(null);
+  const [job, setJob] = useState<Job | null>(null);
 
   useEffect(() => {
     api
-      .get<Vacancy>(`/vacancies/${id}`)
+      .get<Job>(`/jobs/${id}`)
       .then((response) => {
-        setVacancy(response.data);
+        setJob(response.data);
       })
       .catch((error) => {
         notifyError(error.response.data.message);
@@ -43,7 +39,7 @@ export default function VacancyPage({
     try {
       await api.post("job-applications/apply", {
         studentId: student.id,
-        vacancyId: vacancy?.id,
+        jobId: job?.id,
         resumeId,
       });
       document.getElementById("modal")?.click();
@@ -56,7 +52,7 @@ export default function VacancyPage({
     }
   };
 
-  while (!vacancy) {
+  while (!job) {
     return <h1>Carregando...</h1>;
   }
 
@@ -66,8 +62,8 @@ export default function VacancyPage({
         <div className="card card-bordered p-3 w-full">
           <div className="flex justify-between">
             <h2 className="text-2xl font-bold py-3">
-              {vacancy.title} - {vacancy.remote ? "Remoto" : "Presencial"} -
-              Código da vaga: {vacancy.id}
+              {job.title} - {job.remote ? "Remoto" : "Presencial"} - Código da
+              vaga: {job.id}
             </h2>
 
             {applied ? (
@@ -87,49 +83,47 @@ export default function VacancyPage({
             <div className="lg:w-1/3 text-xl">
               <h2 className="flex items-center gap-1">
                 <GraduationCap />
-                {vacancy.area?.title}
+                {job.area?.title}
               </h2>
               <h2 className="flex items-center gap-1">
                 <Building />
-                {vacancy.company?.name}
+                {job.company?.name}
               </h2>
               <h2 className="flex items-center gap-1">
                 <Banknote />{" "}
-                {vacancy.salary ? (
-                  <span className="font-semibold">R$ {vacancy.salary},00</span>
+                {job.salary ? (
+                  <span className="font-semibold">R$ {job.salary},00</span>
                 ) : (
                   <span>Salário não informado</span>
                 )}
               </h2>
               <h2 className="flex items-center gap-1">
-                <MapPin /> {vacancy.city?.name}
+                <MapPin /> {job.city?.name}
               </h2>
 
               <h2 className="flex items-center gap-1">
                 <Hash />
                 <p>
-                  {vacancy.keywords
-                    ?.split(", ")
-                    .map((keyword: any, index: any) => (
-                      <span
-                        key={index}
-                        className="font-semibold text-primary inline-block mr-4 underline"
-                      >
-                        {keyword}{" "}
-                      </span>
-                    ))}
+                  {job.keywords?.split(", ").map((keyword: any, index: any) => (
+                    <span
+                      key={index}
+                      className="font-semibold text-primary inline-block mr-4 underline"
+                    >
+                      {keyword}{" "}
+                    </span>
+                  ))}
                 </p>
               </h2>
             </div>
             <div className="divider divider-horizontal"></div>
 
             <div className="lg:w-2/3">
-              <h2 className="text-xl vacancyDescription">
+              <h2 className="text-xl jobDescription">
                 Sobre a vaga:
                 <div>
                   <div
                     className="text-xl"
-                    dangerouslySetInnerHTML={{ __html: vacancy.description }}
+                    dangerouslySetInnerHTML={{ __html: job.description }}
                   />
                 </div>
               </h2>
@@ -147,7 +141,7 @@ export default function VacancyPage({
           <p>
             Ou{" "}
             <Link
-              href={`/student/resume?vacancy=${vacancy.id}`}
+              href={`/student/resume?job=${job.id}`}
               className="text-blue-500 underline"
             >
               Atualize seu currículo
@@ -189,7 +183,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     let applied = false;
     if (
       jobApplications.data.some(
-        (jobApplication) => jobApplication.vacancy.id === Number(ctx.query.id)
+        (jobApplication) => jobApplication.job.id === Number(ctx.query.id)
       )
     ) {
       applied = true;

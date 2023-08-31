@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { Loader } from "lucide-react";
 
-import { createVacancyFormSchema } from "../../../utils/validators/create-vancancy-schema";
+import { createJobFormSchema } from "../../../utils/validators/create-vancancy-schema";
 import { Form } from "../../../components/Form";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Area } from "../../../utils/types/area";
@@ -21,27 +21,27 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   loading: () => <p>Loading ...</p>,
 });
 
-type CreateVacancyFormData = z.infer<typeof createVacancyFormSchema>;
+type CreateJobFormData = z.infer<typeof createJobFormSchema>;
 
 interface PageProps {
   areas: Area[];
   company: Company;
 }
 
-export default function CreateVacancy({ areas, company }: PageProps) {
+export default function CreateJob({ areas, company }: PageProps) {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const createVacancyForm = useForm<CreateVacancyFormData>({
-    resolver: zodResolver(createVacancyFormSchema),
+  const createJobForm = useForm<CreateJobFormData>({
+    resolver: zodResolver(createJobFormSchema),
   });
-  const { handleSubmit } = createVacancyForm;
+  const { handleSubmit } = createJobForm;
 
-  const createVacancy = async (data: CreateVacancyFormData) => {
+  const createJob = async (data: CreateJobFormData) => {
     setIsLoading(true);
     try {
-      await api.post("/vacancies", {
+      await api.post("/jobs", {
         ...data,
         cityId: company.cityId,
         companyId: company.id,
@@ -50,7 +50,7 @@ export default function CreateVacancy({ areas, company }: PageProps) {
         state: company.city.state,
       });
       setTimeout(() => {
-        router.push("vacancies");
+        router.push("jobs");
       }, 2000);
       notifySuccess("Vaga criada com sucesso!");
     } catch (error: any) {
@@ -65,9 +65,9 @@ export default function CreateVacancy({ areas, company }: PageProps) {
         Preencha o formulário abaixo para criar uma vaga de estágio
       </h2>
 
-      <FormProvider {...createVacancyForm}>
+      <FormProvider {...createJobForm}>
         <form
-          onSubmit={handleSubmit(createVacancy)}
+          onSubmit={handleSubmit(createJob)}
           className="flex flex-col w-full px-5"
         >
           <div className="grid grid-cols-1 gap-2">

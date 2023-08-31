@@ -1,6 +1,6 @@
 import { Area } from "./area";
 
-export type Vacancy = {
+export type Job = {
   id: number;
   title: string;
   description: string;

@@ -9,26 +9,26 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { VacanciesService } from '../services/vacancies.service';
-import { CreateVacancyDto } from '../dtos/create-vacancy.dto';
+import { JobsService } from '../services/jobs.service';
+import { CreateJobDto } from '../dtos/create-job.dto';
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { RolesGuard } from '../../auth/roles/roles.guard';
 
-@Controller('vacancies')
-export class VacanciesController {
-  constructor(private readonly vacanciesService: VacanciesService) {}
+@Controller('jobs')
+export class JobsController {
+  constructor(private readonly jobsService: JobsService) {}
 
   @HasRoles(Role.COMPANY)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
-  async create(@Body() createVacancyDto: CreateVacancyDto) {
-    return this.vacanciesService.create(createVacancyDto);
+  async create(@Body() createJobDto: CreateJobDto) {
+    return this.jobsService.create(createJobDto);
   }
 
   @Get()
   async findAll(@Request() request) {
-    return await this.vacanciesService.findAll({
+    return await this.jobsService.findAll({
       page: request.query.page,
       limit: request.query.limit,
       state: request.query.state,
@@ -43,11 +43,11 @@ export class VacanciesController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('company/:id')
   async findAllByCompany(@Param('id') id: string) {
-    return await this.vacanciesService.findAllByCompany(+id);
+    return await this.jobsService.findAllByCompany(+id);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return await this.vacanciesService.findOne(+id);
+    return await this.jobsService.findOne(+id);
   }
 }

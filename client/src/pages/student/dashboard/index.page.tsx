@@ -3,21 +3,21 @@ import React, { useState } from "react";
 
 import { getAPIClient } from "../../../services/api/clientApi";
 import { Student } from "../../../utils/types/users/student";
-import { Vacancy } from "../../../utils/types/vacancy";
+import { Job } from "../../../utils/types/job";
 import { City } from "../../../utils/types/city";
 import { api } from "../../../services/api/api";
 import { VACANCIES_STUDENT_LIMIT } from "../../../constants/request";
-import CardVacancy from "./_card-vacancy";
+import JobCard from "../../../components/Student/JobCard";
 
 interface StudentPageProps {
-  vacanciesData: Vacancy[];
+  jobsData: Job[];
   student: Student;
   states: string[];
   initialCities: City[];
 }
 
-export default function StudentVacancies({
-  vacanciesData,
+export default function StudentJobs({
+  jobsData,
   student,
   states,
   initialCities,
@@ -27,13 +27,13 @@ export default function StudentVacancies({
   const [filters, setFilters] = useState<any>({ city: student.city.id + "" });
 
   const [cities, setCities] = useState<City[]>(initialCities);
-  const [vacancies, setVacancies] = useState<Vacancy[]>(vacanciesData);
+  const [jobs, setJobs] = useState<Job[]>(jobsData);
 
   const [isRemote, setIsRemote] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>("");
 
-  const [hasMoreVacancies, setHasMoreVacancies] = useState<boolean>(true);
+  const [hasMoreJobs, setHasMoreJobs] = useState<boolean>(true);
 
   function cleanFilters() {
     updateFilters({});
@@ -47,13 +47,13 @@ export default function StudentVacancies({
   async function search(searchTerm: string) {
     setCurrentSearch(searchTerm);
     try {
-      const vacancies = await api.get<Vacancy[]>("/vacancies", {
+      const jobs = await api.get<Job[]>("/jobs", {
         params: {
           search: searchTerm,
           remote: isRemote,
         },
       });
-      setVacancies(vacancies.data);
+      setJobs(jobs.data);
       setFilters({ search: searchTerm });
     } catch (error: any) {
       console.log(error.response?.data?.message);
@@ -92,28 +92,28 @@ export default function StudentVacancies({
 
   async function updateFilters(filter: any) {
     try {
-      const vacancies = await api.get<Vacancy[]>("/vacancies", {
+      const jobs = await api.get<Job[]>("/jobs", {
         params: {
           ...filter,
         },
       });
-      setVacancies(vacancies.data);
+      setJobs(jobs.data);
     } catch (error: any) {
       console.log(error.response?.data?.message);
     }
   }
 
-  const moreVacancies = async () => {
+  const moreJobs = async () => {
     try {
-      const response = await api.get("/vacancies", {
+      const response = await api.get("/jobs", {
         params: {
-          page: vacancies.length,
+          page: jobs.length,
           limit: VACANCIES_STUDENT_LIMIT,
           ...filters,
         },
       });
-      setHasMoreVacancies(response.data.length > 0);
-      setVacancies([...vacancies, ...response.data]);
+      setHasMoreJobs(response.data.length > 0);
+      setJobs([...jobs, ...response.data]);
     } catch (error: any) {
       console.log(error.response?.data?.message);
     }
@@ -204,10 +204,10 @@ export default function StudentVacancies({
 
       <div className="w-11/12 flex flex-col gap-2 mx-8 mb-4">
         {currentSearch && <p className="text-xl">Busca: {currentSearch}</p>}
-        {vacancies.length > 0 ? (
-          vacancies.map((vacancy: Vacancy) => (
-            <div key={vacancy.id}>
-              <CardVacancy vacancy={vacancy} />
+        {jobs.length > 0 ? (
+          jobs.map((job: Job) => (
+            <div key={job.id}>
+              <JobCard job={job} />
             </div>
           ))
         ) : (
@@ -215,10 +215,10 @@ export default function StudentVacancies({
             <h1 className="text-xl">Nenhuma vaga encontrada... </h1>
           </div>
         )}
-        {hasMoreVacancies ? (
+        {hasMoreJobs ? (
           <button
             className="btn btn-primary w-1/2 self-center"
-            onClick={moreVacancies}
+            onClick={moreJobs}
           >
             Ver mais
           </button>
@@ -247,7 +247,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       (city) => city.state === student.data.city.state
     );
 
-    const vacancies = await apiClient.get<Vacancy[]>("/vacancies", {
+    const jobs = await apiClient.get<Job[]>("/jobs", {
       params: {
         limit: VACANCIES_STUDENT_LIMIT,
         city: student.data.city.id,
@@ -255,7 +255,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     });
     return {
       props: {
-        vacanciesData: vacancies.data,
+        jobsData: jobs.data,
         initialCities,
         states,
         student: student.data,

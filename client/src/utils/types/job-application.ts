@@ -1,6 +1,6 @@
 import { Resume } from "./resume";
 import { Student } from "./users/student";
-import { Vacancy } from "./vacancy";
+import { Job } from "./job";
 
 export type JobApplication = {
   id: number;
@@ -11,6 +11,6 @@ export type JobApplication = {
   resumeId: number;
   resume: Resume;
 
-  vacancyId: number;
-  vacancy: Vacancy;
+  jobId: number;
+  job: Job;
 };

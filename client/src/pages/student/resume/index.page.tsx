@@ -20,7 +20,7 @@ export default function ResumePage({ student, resume }: PageProps) {
   const [resumeUpdated, setResumeUpdated] = useState<Resume>(resume);
   const router = useRouter();
 
-  const vacancyId = router.query.vacancy;
+  const jobId = router.query.job;
 
   async function updateResume() {
     setEditMode(!editMode);
@@ -35,10 +35,10 @@ export default function ResumePage({ student, resume }: PageProps) {
   return (
     <>
       <div className="w-11/12">
-        {vacancyId && (
+        {jobId && (
           <button
             onClick={() => {
-              router.push(`/student/vacancy/${vacancyId}`);
+              router.push(`/student/job/${jobId}`);
             }}
             className="flex items-center gap-1 underline text-blue-400"
           >

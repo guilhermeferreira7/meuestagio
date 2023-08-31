@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { JobApplicationStatus } from './status';
 import { Student } from '../../users/students/entities/student.entity';
-import { Vacancy } from '../../vacancies/entities/vacancy.entity';
+import { Job } from '../../jobs/entities/job.entity';
 import { Resume } from '../../resumes/entities/resume.entity';
 
 @Entity()
@@ -27,11 +27,11 @@ export class JobApplication {
   @Column()
   resumeId: number;
 
-  @ManyToOne(() => Vacancy)
-  vacancy: Vacancy;
+  @ManyToOne(() => Job)
+  job: Job;
 
   @Column()
-  vacancyId: number;
+  jobId: number;
 
   @Column({
     type: 'enum',

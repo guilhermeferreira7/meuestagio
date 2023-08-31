@@ -30,8 +30,8 @@ export class JobApplicationsController {
   @HasRoles(Role.COMPANY)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('company')
-  async findByVacancyId(@Request() req: any) {
-    return this.jobApplicationsService.findByVacancyId(req.query.vacancyId);
+  async findByJobId(@Request() req: any) {
+    return this.jobApplicationsService.findByJobId(req.query.jobId);
   }
 
   @HasRoles(Role.STUDENT)

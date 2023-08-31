@@ -3,7 +3,7 @@ import { JobApplicationStatus } from '../entities/status';
 
 export class CreateJobApplicationDto {
   @IsNotEmpty()
-  vacancyId: number;
+  jobId: number;
 
   @IsNotEmpty()
   studentId: number;

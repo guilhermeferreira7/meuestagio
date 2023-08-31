@@ -2,7 +2,7 @@ import { Building, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-export default function CardVacancyPublic() {
+export default function PublicJobCard() {
   return (
     <div className="flex flex-col m-1 card  shadow-sm shadow-primary">
       <div className="font-semibold">

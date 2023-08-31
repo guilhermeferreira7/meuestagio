@@ -21,9 +21,9 @@ export class JobApplicationsService {
     return await this.jobApplicationRepository.save(jobApplication);
   }
 
-  async findByVacancyId(vacancyId: number): Promise<any[]> {
+  async findByJobId(jobId: number): Promise<any[]> {
     const jobApplications = await this.jobApplicationRepository.find({
-      where: { vacancyId },
+      where: { jobId },
       relations: [
         'resume',
         'resume.skills',
@@ -58,7 +58,7 @@ export class JobApplicationsService {
   async findByStudentId(studentId: number): Promise<JobApplication[]> {
     return await this.jobApplicationRepository.find({
       where: { studentId },
-      relations: ['vacancy', 'vacancy.company', 'vacancy.company.city'],
+      relations: ['job', 'job.company', 'job.company.city'],
     });
   }
 }

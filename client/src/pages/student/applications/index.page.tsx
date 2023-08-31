@@ -24,12 +24,12 @@ export default function JobApplicationsPage({
             <AppCard key={jobApplication.id}>
               <div className="flex justify-between items-center">
                 <div className="w-1/2 flex flex-col gap-1 ">
-                  <h2>Vaga: {jobApplication.vacancy.title}</h2>
-                  <h2>Empresa: {jobApplication.vacancy.company.name}</h2>
+                  <h2>Vaga: {jobApplication.job.title}</h2>
+                  <h2>Empresa: {jobApplication.job.company.name}</h2>
                 </div>
                 <div className="w-1/2 flex flex-col gap-1 ">
                   <Link
-                    href={`vacancy/${jobApplication.vacancy.id}`}
+                    href={`job/${jobApplication.job.id}`}
                     className="btn btn-sm btn-primary"
                   >
                     Detalhes
