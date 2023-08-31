@@ -13,4 +13,7 @@ export class UpdateStudentDto {
 
   @IsOptional()
   courseId: number;
+
+  @IsOptional()
+  cityId: number;
 }

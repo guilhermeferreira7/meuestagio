@@ -26,7 +26,6 @@ export class AuthCompanyService {
         role: Role.COMPANY,
       };
     }
-
     return null;
   }
 }

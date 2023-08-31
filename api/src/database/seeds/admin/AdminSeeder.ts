@@ -7,6 +7,7 @@ export class AdminSeeder implements Seeder {
   async run(dataSource: DataSource): Promise<any> {
     const usersRepository = dataSource.getRepository(User);
 
+    console.log('Gerando usuário administrador...');
     try {
       await usersRepository.upsert(
         {
@@ -16,7 +17,6 @@ export class AdminSeeder implements Seeder {
         },
         ['email'],
       );
-      console.log(`Admin criado com sucesso`);
     } catch (error) {
       console.log(error);
     }

@@ -32,7 +32,7 @@ export class StudentsController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
-    const student = await this.studentService.findByEmail(req.user.email);
+    const student = await this.studentService.findOne(req.user.email);
 
     if (!student) {
       throw new UnauthorizedException();
@@ -62,6 +62,7 @@ export class StudentsController {
     return updatedStudent;
   }
 
+  // remove this later
   @Get()
   async getAll(): Promise<Student[]> {
     return await this.studentService.findAll();

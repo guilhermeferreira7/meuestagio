@@ -5,9 +5,9 @@ import Link from "next/link";
 
 import { getAPIClient } from "../services/api/clientApi";
 import CompanyCard from "../components/Index/company-card";
-import CardVacancyPublic from "../components/Index/vacancy-card-public";
-import { Vacancy } from "../utils/types/vacancy";
+import { Job } from "../utils/types/job";
 import { Company } from "../utils/types/users/company";
+import PublicJobCard from "../components/Index/PublicJobCard";
 
 export default function Home() {
   return (
@@ -55,10 +55,10 @@ export default function Home() {
           Ultimas vagas cadastradas
         </h3>
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
-          <CardVacancyPublic />
-          <CardVacancyPublic />
-          <CardVacancyPublic />
-          <CardVacancyPublic />
+          <PublicJobCard />
+          <PublicJobCard />
+          <PublicJobCard />
+          <PublicJobCard />
         </ul>
       </div>
     </div>
@@ -81,12 +81,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
   }
 
   const apiClient = getAPIClient(ctx);
-  const vacancies = await apiClient.get<Vacancy[]>("/vacancies");
+  const jobs = await apiClient.get<Job[]>("/jobs");
   const companies = await apiClient.get<Company[]>("/companies");
 
   return {
     props: {
-      vacancies: vacancies.data,
+      jobs: jobs.data,
       companies: companies.data,
     },
   };

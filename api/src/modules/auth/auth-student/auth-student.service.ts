@@ -13,20 +13,23 @@ export class AuthStudentService {
     email: string,
     password: string,
   ): Promise<UserAuth | null> {
-    const student = await this.userService.findByEmail(email);
+    const student = await this.userService.findOne(email);
+    if (!student) return null;
 
-    const validCredentials =
-      student && (await bcryptService.compare(password, student?.password));
+    const validCredentials = await bcryptService.compare(
+      password,
+      student.password,
+    );
 
-    if (validCredentials) {
-      return {
-        sub: student.id,
-        email: student.email,
-        name: student.name,
-        role: Role.STUDENT,
-      };
+    if (!validCredentials) {
+      return null;
     }
 
-    return null;
+    return {
+      sub: student.id,
+      email: student.email,
+      name: student.name,
+      role: Role.STUDENT,
+    };
   }
 }

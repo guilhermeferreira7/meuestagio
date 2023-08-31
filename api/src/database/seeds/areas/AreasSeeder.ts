@@ -30,13 +30,12 @@ export class AreasSeeder implements Seeder {
         };
       });
 
+    console.log('Gerando áreas de conhecimento...');
+
     try {
       const areas = await areasRepository.upsert(knowledgeAreasFilter, [
         'cnpqId',
       ]);
-      console.log(
-        `${areas.generatedMaps.length} areas de conhecimento criadas!`,
-      );
     } catch (error) {
       console.log(error);
     }
