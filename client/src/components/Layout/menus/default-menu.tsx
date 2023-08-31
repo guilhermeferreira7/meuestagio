@@ -1,21 +1,21 @@
-import React from "react";
-import Link from "next/link";
-import {
-  HomeOutlined,
-  LoginOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
+import { Home, Shield, UserPlus } from "lucide-react";
 
-export default function DefaultMenu() {
-  const menuItems = [
-    <Link className="w-full" href="/">
-      <HomeOutlined />
-      Inicio
-    </Link>,
-    <Link className="w-full" href="/create-account">
-      <UserAddOutlined />
-      Criar conta
-    </Link>,
-  ];
-  return menuItems;
-}
+const defaultMenu = [
+  {
+    icon: <Home />,
+    href: "/",
+    label: "Inicio",
+  },
+  {
+    icon: <UserPlus />,
+    href: "/create-account",
+    label: "Criar conta",
+  },
+  {
+    icon: <Shield />,
+    href: "/login/admin",
+    label: "Painel Admin",
+  },
+];
+
+export default defaultMenu;

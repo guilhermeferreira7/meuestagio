@@ -5,5 +5,11 @@ export class CreateCityDto {
   name: string;
 
   @IsNotEmpty()
-  uf: string;
+  state: string;
+
+  @IsNotEmpty()
+  regionId: number;
+
+  @IsNotEmpty()
+  IBGECityCode: number;
 }

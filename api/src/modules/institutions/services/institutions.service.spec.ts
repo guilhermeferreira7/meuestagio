@@ -32,7 +32,7 @@ const mockInstitutionsRepository = {
 
 const mockCityRepository = {
   findOneBy: jest.fn((id) =>
-    Promise.resolve({ id, name: 'Guarapuava', uf: 'PR' }),
+    Promise.resolve({ id, name: 'Guarapuava', state: 'PR' }),
   ),
 };
 
@@ -129,7 +129,7 @@ describe('InstitutionsService', () => {
 
   describe('findAll()', () => {
     it('should return all institutions', async () => {
-      const institutions = await institutionsService.findAll();
+      const institutions = await institutionsService.findAll({ cityId: null });
       expect(institutions).toEqual(institutionsArray);
       expect(institutionsRepository.find).toBeCalled();
     });

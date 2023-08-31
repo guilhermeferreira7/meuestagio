@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { City } from '../../cities/entities/city.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export abstract class User {
@@ -24,21 +25,9 @@ export abstract class User {
   @Column({ nullable: true })
   phoneVerified: boolean;
 
-  @Column({ nullable: true })
-  userVerified: boolean;
-
-  @Column({ nullable: true, unique: true })
-  cpf: string;
-
   @ManyToOne(() => City)
   city: City;
 
   @Column({ nullable: true })
   cityId: number;
-
-  @Column({ nullable: true })
-  addressId: number;
-
-  // @ManyToOne(() => Address)
-  // address: Address;
 }

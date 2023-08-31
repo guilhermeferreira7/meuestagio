@@ -10,6 +10,7 @@ const oneCompany = {
   email: 'companyone@gmail.com',
   password: 'abc123',
   cnpj: '12345678901234',
+  cityId: 1,
 };
 
 const mockCompaniesRepository = {
@@ -70,10 +71,11 @@ describe('CompaniesService', () => {
         .spyOn(repository, 'findOneBy')
         .mockReturnValueOnce(Promise.resolve(company));
 
+      jest.spyOn(service, 'findByEmail').mockResolvedValue(undefined);
       try {
         await service.create({ ...oneCompany, email: 'empresa2@gmail.com' });
       } catch (error) {
-        expect(error.message).toBe('Cnpj já cadastrado!');
+        expect(error.message).toBe('CNPJ já cadastrado!');
       }
     });
 

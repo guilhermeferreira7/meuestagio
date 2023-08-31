@@ -9,6 +9,7 @@ const createCompanyDto: CreateCompanyDto = {
   email: 'company@example.com',
   password: 'changeme',
   cnpj: '09249963000106',
+  cityId: 1,
 };
 
 const mockService = {

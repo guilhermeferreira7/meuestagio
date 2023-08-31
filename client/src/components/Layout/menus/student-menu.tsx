@@ -1,17 +1,27 @@
-import React, { useContext } from "react";
-import Link from "next/link";
-import { HomeOutlined, UserOutlined, SearchOutlined } from "@ant-design/icons";
+import React from "react";
+import { Briefcase, Clipboard, GraduationCap, Home, User } from "lucide-react";
 
-export default function StudentMenu() {
-  const menuItems = [
-    <Link className="w-full" href="/">
-      <HomeOutlined />
-      Inicio
-    </Link>,
-    <Link className="w-full" href="/student/profile">
-      <UserOutlined />
-      Perfil
-    </Link>,
-  ];
-  return menuItems;
-}
+const studentMenu = [
+  {
+    icon: <User />,
+    href: "/student/profile",
+    label: "Dados Pessoais",
+  },
+  {
+    icon: <GraduationCap />,
+    href: "/student/resume",
+    label: "Currículo",
+  },
+  {
+    icon: <Briefcase />,
+    href: "/",
+    label: "Vagas",
+  },
+  {
+    icon: <Clipboard />,
+    href: "/student/applications",
+    label: "Candidaturas",
+  },
+];
+
+export default studentMenu;

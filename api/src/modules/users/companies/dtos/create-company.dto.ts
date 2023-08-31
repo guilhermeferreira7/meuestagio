@@ -4,8 +4,9 @@ import { IsCNPJ } from './isCNPJ';
 
 export class CreateCompanyDto extends CreateUserDto {
   @IsNotEmpty()
-  @IsCNPJ('cnpj', {
-    message: 'CNPJ inválido',
-  })
+  // just for test
+  // @IsCNPJ('cnpj', {
+  //   message: 'CNPJ inválido',
+  // })
   cnpj: string;
 }
