@@ -7,6 +7,14 @@ import { CreateRegionDto } from '../dtos/create-region.dto';
 import { City } from '../entities/city.entity';
 import { Region } from '../entities/region.entity';
 
+interface CitiesQuery {
+  page?: number;
+  limit?: number;
+  state?: string;
+  name?: string;
+  orderBy?: string;
+}
+
 @Injectable()
 export class CitiesService {
   constructor(
@@ -20,7 +28,7 @@ export class CitiesService {
     const cityExists = await this.findByName(createCityDto.name);
 
     if (cityExists) {
-      throw new ConflictException('City already exists!');
+      throw new ConflictException('Cidade já cadastrada!');
     }
 
     const newCity = this.citiesRepository.create({
@@ -45,26 +53,28 @@ export class CitiesService {
     return await this.regionsRepository.save(newRegion);
   }
 
-  async findAll({
-    page,
-    limit,
-    state = null,
-    name = null,
-    orderBy = null,
-  }): Promise<City[]> {
-    const byId = orderBy === 'id' ? 'DESC' : undefined;
-    const byName = orderBy === 'name' ? 'ASC' : undefined;
+  async findAll(
+    query: CitiesQuery = {
+      page: 1,
+      limit: 10,
+      state: undefined,
+      name: undefined,
+      orderBy: undefined,
+    },
+  ): Promise<City[]> {
+    const byName = query.orderBy === 'name' ? 'ASC' : 'DESC';
+    const lastCreated = query.orderBy === 'lastCreated' ? 'DESC' : undefined;
 
     const res = await this.citiesRepository.find({
-      skip: page,
-      take: limit,
+      skip: query.page,
+      take: query.limit,
       order: {
-        id: byId,
+        id: lastCreated,
         name: byName,
       },
       where: {
-        state,
-        name: name ? ILike(`%${name}%`) : undefined,
+        state: query.state,
+        name: query.name ? ILike(`%${query.name}%`) : undefined,
       },
     });
 

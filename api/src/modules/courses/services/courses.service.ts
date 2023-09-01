@@ -49,7 +49,7 @@ export class CoursesService {
     });
 
     if (courseAlreadyExists) {
-      throw new ConflictException('Course already exists!');
+      throw new ConflictException('Esse curso já existe nessa instituição!');
     }
 
     return true;
