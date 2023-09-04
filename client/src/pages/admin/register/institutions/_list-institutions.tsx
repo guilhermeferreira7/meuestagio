@@ -18,13 +18,15 @@ export default function ListInstitutions({
   const [counter, setCounter] = useState(1);
   const [institutionsUpdated, setInstitutionsUpdated] =
     useState<Institution[]>(institutions);
+  const [search, setSearch] = useState("");
+  const limit = 10;
 
   const handleChangePage = async (next: number) => {
     try {
       const res = await api.get<Institution[]>("institutions", {
         params: {
           page: next,
-          limit: 3,
+          limit,
         },
       });
       setPage(next);
@@ -42,12 +44,15 @@ export default function ListInstitutions({
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const search = e.currentTarget.search.value;
+    setSearch(e.currentTarget.search.value);
+    if (!search) return;
+    setPage(0);
+    setCounter(0);
     try {
       const res = await api.get<Institution[]>("institutions", {
         params: {
           page: 0,
-          limit: 3,
+          limit,
           name: search,
         },
       });
@@ -59,7 +64,6 @@ export default function ListInstitutions({
 
   return (
     <>
-      <h2 className="text-xl font-bold mb-2">Instituições cadastradas</h2>
       <form className="flex gap-1 my-2" onSubmit={handleSearch}>
         <div className="flex flex-col flex-1">
           <label htmlFor="search" className="font-semibold">
@@ -77,6 +81,22 @@ export default function ListInstitutions({
           <Search />
         </button>
       </form>
+      {search && (
+        <div className="flex justify-between">
+          <span className="italic">
+            Resultados para: <strong>{search}</strong>
+          </span>
+          <button
+            className="text-error text-lg underline"
+            onClick={() => {
+              handleChangePage(0);
+              setSearch("");
+            }}
+          >
+            Limpar pesquisa
+          </button>
+        </div>
+      )}
       <div className="overflow-x-auto w-full">
         <table className="table w-full min-h-16">
           <thead>
@@ -88,37 +108,46 @@ export default function ListInstitutions({
             </tr>
           </thead>
           <tbody>
+            {institutionsUpdated.length === 0 && (
+              <tr>
+                <td colSpan={4} className="text-center">
+                  Não existem mais instituições
+                </td>
+              </tr>
+            )}
             {institutionsUpdated.map((i) => (
               <DeleteInstitutionForm key={i.id} institution={i} />
             ))}
           </tbody>
         </table>
-        <div className="join text-center">
-          <button
-            className="join-item btn btn-primary"
-            onClick={() => {
-              handleChangePage(page - 3);
-            }}
-            disabled={page === 0}
-          >
-            «
-          </button>
-          <button
-            className="join-item border rounded-md p-3 mx-1 border-primary text-primary font-semibold"
-            disabled
-          >
-            Página {counter}
-          </button>
-          <button
-            className="join-item btn btn-primary"
-            onClick={() => {
-              handleChangePage(page + 3);
-            }}
-            disabled={institutionsUpdated.length < 3}
-          >
-            »
-          </button>
-        </div>
+        {!search && (
+          <div className="join text-center">
+            <button
+              className="join-item btn btn-primary"
+              onClick={() => {
+                handleChangePage(page - limit);
+              }}
+              disabled={page === 0}
+            >
+              «
+            </button>
+            <button
+              className="join-item border rounded-md p-3 mx-1 border-primary text-primary font-semibold"
+              disabled
+            >
+              Página {counter}
+            </button>
+            <button
+              className="join-item btn btn-primary"
+              onClick={() => {
+                handleChangePage(page + limit);
+              }}
+              disabled={institutionsUpdated.length < limit}
+            >
+              »
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

@@ -32,6 +32,8 @@ export class InstitutionsController {
       limit: req.query.limit,
       name: req.query.name,
       cityId: req.query.cityId,
+      orderBy: req.query.orderBy,
+      order: req.query.order,
     });
   }
 

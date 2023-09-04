@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { City } from "@customTypes/city";
 import { Institution } from "@customTypes/institution";
 import { api } from "@services/api/api";
-import { createInstitutionFormSchema } from "@utils/validators/create-institution-schema";
+import { createInstitutionFormSchema } from "@utils/validators/institution-schema";
 
 import { Form } from "@components/Form";
 import { notify } from "@components/toasts/toast";
@@ -61,7 +61,6 @@ export default function CreateInstitutionForm({
 
   return (
     <>
-      <h2 className="text-xl font-bold">Cadastrar Instituição</h2>
       <FormProvider {...createInstitutionForm}>
         <form
           className="flex flex-col gap-1"

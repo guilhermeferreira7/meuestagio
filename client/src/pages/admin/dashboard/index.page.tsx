@@ -27,17 +27,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       props: {},
     };
   } catch (error: any) {
-    if (error.response.status === 401) {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-    }
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
   }
-
-  return {
-    props: {},
-  };
 };

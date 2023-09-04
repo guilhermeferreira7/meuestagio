@@ -11,6 +11,8 @@ type InstitutionsQuery = {
   limit?: number;
   cityId?: number;
   name?: string;
+  orderBy?: string;
+  order?: string;
 };
 
 @Injectable()
@@ -72,6 +74,8 @@ export class InstitutionsService {
       limit: undefined,
       cityId: undefined,
       name: undefined,
+      orderBy: undefined,
+      order: undefined,
     },
   ): Promise<Institution[]> {
     return await this.institutionsReposity.find({
@@ -80,6 +84,9 @@ export class InstitutionsService {
       where: {
         cityId: query.cityId,
         name: query.name ? ILike(`%${query.name}%`) : undefined,
+      },
+      order: {
+        [query.orderBy || 'name']: query.order || 'ASC',
       },
       relations: ['city'],
     });

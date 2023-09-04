@@ -1,58 +1,66 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { GetServerSideProps } from "next";
+import { Plus, X } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 
-import AppCard from "@components/AppCard";
-import { getAPIClient } from "@services/api/clientApi";
-import { Institution } from "@customTypes/institution";
 import { User } from "@customTypes/users/user";
-import { Area } from "@customTypes/area";
 import { City } from "@customTypes/city";
+import { Institution } from "@customTypes/institution";
+import { Area } from "@customTypes/area";
+import { Course } from "@customTypes/course";
+import { getAPIClient } from "@services/api/clientApi";
 
-import CreateInstitutionForm from "./_form-create";
-import ListInstitutions from "./_list-institutions";
-import { Plus, X } from "lucide-react";
+import CreateCourseForm from "./_form-create";
+import EditCoursesForm from "./_list";
+import AppCard from "@components/AppCard";
 
 interface CreateCourseFormProps {
-  cities: City[];
   institutions: Institution[];
+  areas: Area[];
+  courses: Course[];
 }
 
-export default function RegisterInstitutions({
-  cities,
+export default function RegisterCourses({
   institutions,
+  areas,
+  courses,
 }: CreateCourseFormProps) {
   const [create, setCreate] = useState(false);
+
   return (
     <>
       <div className="w-11/12 flex flex-col gap-2">
         {create ? (
           <AppCard>
             <h2 className="text-xl font-bold mb-2 flex items-center justify-between">
-              <span>Cadastrar instituição</span>
+              <span>Novo curso</span>
               <button
-                className="btn btn-error gap-1 flex items-center"
-                onClick={() => setCreate(false)}
+                className="btn btn-error"
+                onClick={() => {
+                  setCreate(false);
+                }}
               >
                 <X />
                 Cancelar
               </button>
             </h2>
-            <CreateInstitutionForm cities={cities} />
+            <CreateCourseForm institutions={institutions} areas={areas} />
           </AppCard>
         ) : (
           <AppCard>
             <h2 className="text-xl font-bold mb-2 flex items-center justify-between">
-              <span>Instituições cadastradas</span>
+              <span>Cursos cadastrados</span>
               <button
-                className="btn btn-primary gap-1 flex items-center"
-                onClick={() => setCreate(true)}
+                className="btn btn-primary"
+                onClick={() => {
+                  setCreate(true);
+                }}
               >
                 <Plus />
-                Nova instituição
+                Novo curso
               </button>
             </h2>
-            <ListInstitutions institutions={institutions} />
+            <EditCoursesForm courses={courses} />
           </AppCard>
         )}
       </div>
@@ -62,26 +70,26 @@ export default function RegisterInstitutions({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
+
   try {
-    const apiClient = getAPIClient(ctx);
     await apiClient.get<User>("/admin/profile");
+
     const cities = await apiClient.get<City[]>("/cities", {
       params: { orderBy: "name" },
     });
-    const institutions = await apiClient.get<Institution[]>("/institutions", {
-      params: {
-        page: 0,
-        limit: 10,
-        orderBy: "name",
-        order: "ASC",
-      },
-    });
+    const institutions = await apiClient.get<Institution[]>("/institutions");
     const areas = await apiClient.get<Area[]>("/areas");
+    const courses = await apiClient.get<Course[]>("/courses", {
+      params: { orderBy: "id", order: "DESC" },
+    });
+
     return {
       props: {
         cities: cities.data,
         institutions: institutions.data,
         areas: areas.data,
+        courses: courses.data,
       },
     };
   } catch (error: any) {
