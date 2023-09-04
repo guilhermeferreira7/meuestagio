@@ -26,7 +26,16 @@ export class InstitutionsService {
 
     const newInstitution =
       this.institutionsReposity.create(createInstitutionDto);
-    return await this.institutionsReposity.save(newInstitution);
+    await this.institutionsReposity.save(newInstitution);
+
+    const savedInstitution = await this.findOne(newInstitution.id);
+    return savedInstitution;
+  }
+
+  async delete(id: number) {
+    const institution = await this.findOne(id);
+    await this.institutionsReposity.delete(id);
+    return institution;
   }
 
   async findByName(name: string): Promise<Institution> {
@@ -38,7 +47,16 @@ export class InstitutionsService {
   }
 
   async findOne(id: number): Promise<Institution> {
-    return await this.institutionsReposity.findOneBy({ id });
+    const institution = await this.institutionsReposity.findOne({
+      where: { id },
+      relations: ['city'],
+    });
+
+    if (!institution) {
+      throw new BadRequestException('Instituição não encontrada!');
+    }
+
+    return institution;
   }
 
   async findAll({ cityId }): Promise<Institution[]> {
@@ -52,7 +70,7 @@ export class InstitutionsService {
     const institutionExists = await this.findByName(institution.name);
 
     if (institutionExists) {
-      throw new BadRequestException('Institution already exists!');
+      throw new BadRequestException('Instituição já cadastrada!');
     }
 
     const cityExists = await this.citiesRepository.findOneBy({
