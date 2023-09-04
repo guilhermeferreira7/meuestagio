@@ -1,10 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import { City } from '../../cities/entities/city.entity';
 import { CreateInstitutionDto } from '../dtos/create-institution.dto';
 import { Institution } from '../entities/institution.entity';
+
+type InstitutionsQuery = {
+  page?: number;
+  limit?: number;
+  cityId?: number;
+  name?: string;
+};
 
 @Injectable()
 export class InstitutionsService {
@@ -59,9 +66,21 @@ export class InstitutionsService {
     return institution;
   }
 
-  async findAll({ cityId }): Promise<Institution[]> {
+  async findAll(
+    query: InstitutionsQuery = {
+      page: undefined,
+      limit: undefined,
+      cityId: undefined,
+      name: undefined,
+    },
+  ): Promise<Institution[]> {
     return await this.institutionsReposity.find({
-      where: { cityId },
+      skip: query.page,
+      take: query.limit,
+      where: {
+        cityId: query.cityId,
+        name: query.name ? ILike(`%${query.name}%`) : undefined,
+      },
       relations: ['city'],
     });
   }

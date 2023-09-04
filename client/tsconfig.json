@@ -22,7 +22,8 @@
       "@services/*": ["./src/services/*"],
       "@styles/*": ["./src/styles/*"],
       "@customTypes/*": ["./src/types/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@public/*": ["./public/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],

@@ -17,6 +17,11 @@ const adminMenu = [
     href: "/admin/register/institutions",
     label: "Cadastrar instituições",
   },
+  {
+    icon: <Plus />,
+    href: "/admin/register/courses",
+    label: "Cadastrar cursos",
+  },
 ];
 
 export default adminMenu;

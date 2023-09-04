@@ -1,23 +1,18 @@
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 
 import ibgeApi from "../../../../services/api/ibgeApi";
 import { getAPIClient } from "../../../../services/api/clientApi";
-import { User } from "../../../../utils/types/users/user";
+import { User } from "@customTypes/users/user";
 import { api } from "../../../../services/api/api";
 import { ToastContainer } from "react-toastify";
-import {
-  notifyError,
-  notifySuccess,
-} from "../../../../components/toasts/toast";
+import { notifyError, notifySuccess } from "@components/toasts/toast";
 
 interface RegisterCityProps {
   states: any;
 }
 
 export default function RegisterCity({ states }: RegisterCityProps) {
-  const router = useRouter();
   const [cities, setCities] = useState<any>([]);
   const [microregion, setMicroregion] = useState("");
   const [regionName, setRegionName] = useState<any>([]);
@@ -62,9 +57,6 @@ export default function RegisterCity({ states }: RegisterCityProps) {
             regionName,
           });
         });
-        setTimeout(() => {
-          router.push("/admin/dashboard");
-        }, 1000);
         notifySuccess("Cidades cadastradas com sucesso!");
       })
       .catch((error) => {

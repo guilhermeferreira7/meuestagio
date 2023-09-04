@@ -28,6 +28,9 @@ export class InstitutionsController {
   @Get()
   async getAll(@Request() req): Promise<Institution[]> {
     return await this.institutionsService.findAll({
+      page: req.query.page,
+      limit: req.query.limit,
+      name: req.query.name,
       cityId: req.query.cityId,
     });
   }

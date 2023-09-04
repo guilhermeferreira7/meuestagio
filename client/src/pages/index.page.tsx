@@ -5,10 +5,10 @@ import Link from "next/link";
 
 import { Job } from "@customTypes/job";
 import { Company } from "@customTypes/users/company";
+import { getAPIClient } from "@services/api/clientApi";
 
 import CompanyCard from "@components/Index/company-card";
 import PublicJobCard from "@components/Index/PublicJobCard";
-import { getAPIClient } from "@services/api/clientApi";
 
 export default function Home() {
   return (
