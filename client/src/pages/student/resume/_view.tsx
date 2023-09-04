@@ -1,10 +1,10 @@
-import React from "react";
-import AppCard from "../../../components/AppCard";
-import { Student } from "../../../utils/types/users/student";
-import { Resume } from "../../../utils/types/resume";
-import img from "../../../../public/avatar.png";
+import img from "@public/avatar.png";
 import Image from "next/image";
-import { Crosshair, Info, Pen, Type } from "lucide-react";
+
+import { Student } from "@customTypes/users/student";
+import { Resume } from "@customTypes/resume";
+
+import AppCard from "@components/AppCard";
 
 interface ResumeViewProps {
   student: Student;

@@ -8,13 +8,14 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { Loader } from "lucide-react";
 
-import { createJobFormSchema } from "../../../utils/validators/create-vancancy-schema";
-import { Form } from "../../../components/Form";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { Area } from "../../../utils/types/area";
-import { api } from "../../../services/api/api";
-import { notifyError, notifySuccess } from "../../../components/Toasts/toast";
-import { Company } from "../../../utils/types/users/company";
+import { Area } from "@customTypes/area";
+import { Company } from "@customTypes/users/company";
+import { api } from "@services/api/api";
+import { getAPIClient } from "@services/api/clientApi";
+import { createJobFormSchema } from "@utils/validators/create-vancancy-schema";
+
+import { notifyError, notifySuccess } from "@components/toasts/toast";
+import { Form } from "@components/Form";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,

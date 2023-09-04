@@ -20,3 +20,10 @@ export function notifyInfo(message: string = "Info!") {
 export function notifyWarning(message: string = "Atenção!") {
   toast.warn(message, toastDefaultConfig);
 }
+
+export const notify = {
+  success: notifySuccess,
+  error: notifyError,
+  info: notifyInfo,
+  warning: notifyWarning,
+};

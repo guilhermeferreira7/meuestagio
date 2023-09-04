@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BookDown,
   Briefcase,
@@ -7,7 +6,6 @@ import {
   Crosshair,
   FolderCog,
   GraduationCap,
-  Home,
   Languages,
   Scroll,
   User,

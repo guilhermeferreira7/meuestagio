@@ -1,13 +1,14 @@
+import { useState } from "react";
 import { GetServerSideProps } from "next";
-import React, { useState } from "react";
 
-import { getAPIClient } from "../../../services/api/clientApi";
-import { Student } from "../../../utils/types/users/student";
-import { Job } from "../../../utils/types/job";
-import { City } from "../../../utils/types/city";
-import { api } from "../../../services/api/api";
-import { VACANCIES_STUDENT_LIMIT } from "../../../constants/request";
-import JobCard from "../../../components/Student/JobCard";
+import { VACANCIES_STUDENT_LIMIT } from "@constants/request";
+import { Student } from "@customTypes/users/student";
+import { Job } from "@customTypes/job";
+import { City } from "@customTypes/city";
+import { getAPIClient } from "@services/api/clientApi";
+import { api } from "@services/api/api";
+
+import JobCard from "@components/Student/JobCard";
 
 interface StudentPageProps {
   jobsData: Job[];

@@ -1,18 +1,17 @@
 import { GetServerSideProps } from "next";
-import React from "react";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { Student } from "../../../utils/types/users/student";
-import { JobApplication } from "../../../utils/types/job-application";
-import AppCard from "../../../components/AppCard";
 import Link from "next/link";
 
+import { Student } from "@customTypes/users/student";
+import { JobApplication } from "@customTypes/job-application";
+import { getAPIClient } from "@services/api/clientApi";
+
+import AppCard from "@components/AppCard";
+
 interface JobApplicationsProps {
-  student: Student;
   jobApplications: JobApplication[];
 }
 
 export default function JobApplicationsPage({
-  student,
   jobApplications,
 }: JobApplicationsProps) {
   return (
@@ -57,7 +56,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
       props: {
-        student: student.data,
         jobApplications: jobApplications.data,
       },
     };

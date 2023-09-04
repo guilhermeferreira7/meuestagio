@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { set, z } from "zod";
-import { createSkillSchema } from "../../utils/validators/edit-resume-schema";
+import { z } from "zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "../Form";
-import { Skill, SkillLevel } from "../../utils/types/resume";
-import { api } from "../../services/api/api";
-import { notifySuccess } from "../Toasts/toast";
 import { Trash } from "lucide-react";
-import { Modal } from "../AppModal/Modal";
+
+import { Skill, SkillLevel } from "@customTypes/resume";
+import { notify } from "@components/toasts/toast";
+import { Form } from "@components/Form";
+import { Modal } from "@components/AppModal/Modal";
+import { api } from "@services/api/api";
+import { createSkillSchema } from "@utils/validators/edit-resume-schema";
 
 type FormAddSkill = z.infer<typeof createSkillSchema>;
 
@@ -32,7 +33,7 @@ export default function FormAddSkill({ resumeId, skills }: FormAddSkillProps) {
         resumeId,
       });
       createSkillForm.reset();
-      notifySuccess("Habilidade adicionada com sucesso");
+      notify.success("Habilidade adicionada com sucesso");
       setSkills([response.data, ...skillsUpdated]);
     } catch (error: any) {
       console.log(error.response?.data?.message);
@@ -42,7 +43,7 @@ export default function FormAddSkill({ resumeId, skills }: FormAddSkillProps) {
   const deleteSkill = async (skill: Skill) => {
     try {
       await api.delete(`resumes/me/skills/${skill.id}`);
-      notifySuccess("Habilidade excluída com sucesso");
+      notify.success("Habilidade excluída com sucesso");
       setSkills(skillsUpdated.filter((s) => s.id !== skill.id));
     } catch (error: any) {
       console.log(error.response?.data?.message);

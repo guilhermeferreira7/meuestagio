@@ -2,8 +2,8 @@ import Link from "next/link";
 import React from "react";
 import { Briefcase, DollarSign, MapPin } from "lucide-react";
 
-import { Job } from "../../utils/types/job";
-import AppCard from "../AppCard";
+import AppCard from "@components/AppCard";
+import { Job } from "@customTypes/job";
 
 interface JobCardProps {
   job: Job;

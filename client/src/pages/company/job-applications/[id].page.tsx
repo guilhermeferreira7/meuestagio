@@ -1,10 +1,10 @@
 import { GetServerSideProps } from "next";
 import React from "react";
 
-import { getAPIClient } from "../../../../services/api/clientApi";
-import { Company } from "../../../../utils/types/users/company";
-import { JobApplication } from "../../../../utils/types/job-application";
-import AppCard from "../../../../components/AppCard";
+import { getAPIClient } from "../../../services/api/clientApi";
+import { Company } from "@customTypes/users/company";
+import { JobApplication } from "@customTypes/job-application";
+import AppCard from "@components/AppCard";
 
 interface ApplicationsProps {
   jobApplications: JobApplication[];

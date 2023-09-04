@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Album,
   Briefcase,
@@ -9,14 +9,14 @@ import {
   Pencil,
   Plus,
 } from "lucide-react";
-
-import AppCard from "../../../components/AppCard";
-import { Resume, Skill } from "../../../utils/types/resume";
 import { ToastContainer } from "react-toastify";
-import { notifySuccess } from "../../../components/Toasts/toast";
-import { api } from "../../../services/api/api";
-import { Modal } from "../../../components/AppModal/Modal";
-import FormAddSkill from "../../../components/Resume/FormAddAbilty";
+
+import { Resume } from "@customTypes/resume";
+import { api } from "@services/api/api";
+
+import { notify } from "@components/toasts/toast";
+import AppCard from "@components/AppCard";
+import FormAddSkill from "@components/Resume/FormAddAbilty";
 
 interface ResumeFormProps {
   resume: Resume;
@@ -32,7 +32,7 @@ export default function ResumeForm({ resume }: ResumeFormProps) {
         id: resume?.id,
         title,
       });
-      notifySuccess("Titulo atualizado com sucesso");
+      notify.success("Titulo atualizado com sucesso");
     } catch (error: any) {
       console.log(error.response?.data?.message);
     }
@@ -44,9 +44,9 @@ export default function ResumeForm({ resume }: ResumeFormProps) {
         id: resume?.id,
         about,
       });
-      notifySuccess("Resumo atualizado com sucesso");
+      notify.success("Resumo atualizado com sucesso");
     } catch (error: any) {
-      console.log(error.response?.data?.message);
+      notify.error(error.response?.data?.message || error.message);
     }
   };
 

@@ -7,11 +7,11 @@ import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
 
 import { getAPIClient } from "../../../services/api/clientApi";
 import { api } from "../../../services/api/api";
-import { notifyError, notifySuccess } from "../../../components/Toasts/toast";
-import { Job } from "../../../utils/types/job";
-import { Student } from "../../../utils/types/users/student";
-import { Resume } from "../../../utils/types/resume";
-import { JobApplication } from "../../../utils/types/job-application";
+import { Job } from "@customTypes/job";
+import { Student } from "@customTypes/users/student";
+import { Resume } from "@customTypes/resume";
+import { JobApplication } from "@customTypes/job-application";
+import { notifyError, notifySuccess } from "@components/toasts/toast";
 
 interface JobProps {
   student: Student;

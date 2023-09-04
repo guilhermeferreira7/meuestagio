@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Form } from "../../../components/Form";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-import { editAddressSchema } from "../../../utils/validators/edit-profile-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Map, Pencil } from "lucide-react";
-import { api } from "../../../services/api/api";
-import { City } from "../../../utils/types/city";
+
+import { City } from "@customTypes/city";
+import { api } from "@services/api/api";
+import { editAddressSchema } from "@utils/validators/edit-profile-schema";
+
+import { Form } from "@components/Form";
 
 type AddressData = z.infer<typeof editAddressSchema>;
 

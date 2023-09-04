@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { Role } from "../types/auth/user-auth";
+
+import { Role } from "@customTypes/auth/user-auth";
 
 export const loginSchema = z.object({
   email: z.string().min(1, "Digite seu email"),

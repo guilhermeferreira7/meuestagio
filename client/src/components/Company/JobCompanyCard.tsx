@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 
-import { Job } from "../../utils/types/job";
+import { Job } from "@customTypes/job";
+
 import AppCard from "../AppCard";
 
 interface JobCompanyCardProps {

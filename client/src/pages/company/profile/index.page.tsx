@@ -1,8 +1,7 @@
-import React from "react";
 import { GetServerSideProps } from "next";
 
-import { getAPIClient } from "../../../services/api/clientApi";
-import { Company } from "../../../utils/types/users/company";
+import { Company } from "@customTypes/users/company";
+import { getAPIClient } from "@services/api/clientApi";
 
 export default function CompanyProfile({ company }: { company: Company }) {
   return (
