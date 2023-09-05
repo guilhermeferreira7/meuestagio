@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Resume } from './resume.entity';
 
-enum Level {
+export enum SkillLevel {
   Basic = 'Básico',
   Intermediate = 'Intermediário',
   Advanced = 'Avançado',
@@ -17,8 +17,8 @@ export class Skill {
 
   @Column({
     type: 'enum',
-    enum: Level,
-    default: Level.Basic,
+    enum: SkillLevel,
+    default: SkillLevel.Basic,
   })
   level: string;
 

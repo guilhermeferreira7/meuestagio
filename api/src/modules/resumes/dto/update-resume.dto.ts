@@ -18,13 +18,13 @@ export class UpdateResumeDto {
   @IsString()
   about: string;
 
-  skills: Skill[];
+  skills?: Skill[];
 
-  educations: Education[];
+  educations?: Education[];
 
-  experiences: Experience[];
+  experiences?: Experience[];
 
-  projects: Project[];
+  projects?: Project[];
 
-  languages: Language[];
+  languages?: Language[];
 }

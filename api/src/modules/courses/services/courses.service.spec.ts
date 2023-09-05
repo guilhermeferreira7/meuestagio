@@ -9,6 +9,7 @@ import { Institution } from '../../institutions/entities/institution.entity';
 const oneCourse = {
   name: 'TSI',
   institutionId: 1,
+  areaId: 1,
 };
 
 const mockInstitutionsRepository = {
@@ -16,7 +17,14 @@ const mockInstitutionsRepository = {
 };
 
 const mockCoursesRepository = {
-  findOneBy: jest.fn(),
+  findOneBy: jest.fn((id) =>
+    Promise.resolve({
+      id,
+      name: 'TSI',
+      institutionId: 1,
+      areaId: 1,
+    }),
+  ),
   create: jest.fn(),
   save: jest.fn(),
 };
@@ -74,11 +82,17 @@ describe('CoursesService', () => {
     });
 
     it('should call repository.create', async () => {
+      jest
+        .spyOn(repository, 'findOneBy')
+        .mockResolvedValueOnce(Promise.resolve(undefined));
       await service.createCourse(oneCourse);
       expect(repository.create).toBeCalled();
     });
 
     it('should call repository.save', async () => {
+      jest
+        .spyOn(repository, 'findOneBy')
+        .mockResolvedValueOnce(Promise.resolve(undefined));
       await service.createCourse(oneCourse);
       expect(repository.save).toBeCalled();
     });

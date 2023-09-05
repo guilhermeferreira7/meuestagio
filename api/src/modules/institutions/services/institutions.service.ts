@@ -19,7 +19,7 @@ type InstitutionsQuery = {
 export class InstitutionsService {
   constructor(
     @InjectRepository(Institution)
-    private readonly institutionsReposity: Repository<Institution>,
+    private readonly repository: Repository<Institution>,
     @InjectRepository(City)
     private readonly citiesRepository: Repository<City>,
   ) {}
@@ -27,36 +27,22 @@ export class InstitutionsService {
   async createInstitution(
     createInstitutionDto: CreateInstitutionDto,
   ): Promise<Institution> {
-    const validInstitution = await this.validate(createInstitutionDto);
+    await this.validate(createInstitutionDto);
 
-    if (!validInstitution) {
-      throw new BadRequestException();
-    }
+    const newInstitution = this.repository.create(createInstitutionDto);
+    await this.repository.save(newInstitution);
 
-    const newInstitution =
-      this.institutionsReposity.create(createInstitutionDto);
-    await this.institutionsReposity.save(newInstitution);
-
-    const savedInstitution = await this.findOne(newInstitution.id);
-    return savedInstitution;
+    return await this.findOne(newInstitution.id);
   }
 
   async delete(id: number) {
     const institution = await this.findOne(id);
-    await this.institutionsReposity.delete(id);
+    await this.repository.delete(id);
     return institution;
   }
 
-  async findByName(name: string): Promise<Institution> {
-    return await this.institutionsReposity.findOneBy({ name });
-  }
-
-  async findByCity(cityId: number) {
-    return await this.institutionsReposity.find({ where: { cityId } });
-  }
-
   async findOne(id: number): Promise<Institution> {
-    const institution = await this.institutionsReposity.findOne({
+    const institution = await this.repository.findOne({
       where: { id },
       relations: ['city'],
     });
@@ -78,7 +64,7 @@ export class InstitutionsService {
       order: undefined,
     },
   ): Promise<Institution[]> {
-    return await this.institutionsReposity.find({
+    return await this.repository.find({
       skip: query.page,
       take: query.limit,
       where: {
@@ -92,21 +78,26 @@ export class InstitutionsService {
     });
   }
 
-  private async validate(institution: CreateInstitutionDto): Promise<boolean> {
-    const institutionExists = await this.findByName(institution.name);
+  private async validate(institution: CreateInstitutionDto): Promise<void> {
+    const institutionExists = await this.repository.findOne({
+      where: {
+        name: institution.name,
+        cityId: institution.cityId,
+      },
+    });
 
     if (institutionExists) {
-      throw new BadRequestException('Instituição já cadastrada!');
+      throw new BadRequestException('Instituição já existe neste município!');
     }
 
-    const cityExists = await this.citiesRepository.findOneBy({
-      id: institution.cityId,
+    const cityExists = await this.citiesRepository.findOne({
+      where: {
+        id: institution.cityId,
+      },
     });
 
     if (!cityExists) {
-      return false;
+      throw new BadRequestException('Município não encontrado!');
     }
-
-    return true;
   }
 }

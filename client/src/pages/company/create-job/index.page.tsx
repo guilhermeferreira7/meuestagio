@@ -50,9 +50,7 @@ export default function CreateJob({ areas, company }: PageProps) {
         regionId: company.city.regionId,
         state: company.city.state,
       });
-      setTimeout(() => {
-        router.push("jobs");
-      }, 2000);
+      router.push("dashboard");
       notifySuccess("Vaga criada com sucesso!");
     } catch (error: any) {
       notifyError(`Erro ao criar vaga! ${error.response?.data?.message}`);

@@ -26,12 +26,12 @@ const institutionsArray = [
 const mockInstitutionsRepository = {
   create: jest.fn((dto) => dto),
   save: jest.fn((institution) => Promise.resolve(institution)),
-  findOneBy: jest.fn(() => institutionOne),
+  findOne: jest.fn(() => institutionOne),
   find: jest.fn(() => institutionsArray),
 };
 
 const mockCityRepository = {
-  findOneBy: jest.fn((id) =>
+  findOne: jest.fn((id) =>
     Promise.resolve({ id, name: 'Guarapuava', state: 'PR' }),
   ),
 };
@@ -76,54 +76,39 @@ describe('InstitutionsService', () => {
   });
 
   describe('create()', () => {
+    it('should validate institution', async () => {
+      try {
+        await institutionsService.createInstitution(institutionOne);
+      } catch (error) {
+        expect(error).toBeInstanceOf(BadRequestException);
+        expect(error.message).toBe('Instituição já existe neste município!');
+      }
+    });
+
     it('should call repository.create', async () => {
       jest
-        .spyOn(institutionsRepository, 'findOneBy')
-        .mockImplementation(() => undefined);
+        .spyOn(institutionsRepository, 'findOne')
+        .mockReturnValueOnce(Promise.resolve(undefined));
+
       await institutionsService.createInstitution(institutionOne);
       expect(institutionsRepository.create).toBeCalledWith(institutionOne);
     });
 
     it('should call repository.save', async () => {
+      jest
+        .spyOn(institutionsRepository, 'findOne')
+        .mockReturnValueOnce(Promise.resolve(undefined));
+
       await institutionsService.createInstitution(institutionOne);
       expect(institutionsRepository.save).toBeCalledWith(institutionOne);
-    });
-
-    it('should save with a existing cityId only', async () => {
-      await institutionsService.createInstitution(institutionOne);
-      expect(citiesRepository.findOneBy).toBeCalledWith({
-        id: institutionOne.cityId,
-      });
-    });
-
-    it('should throw error if institution already in database', async () => {
-      const instCreated = await institutionsService.createInstitution(
-        institutionOne,
-      );
-      const instTwo = {
-        name: 'UTFPR',
-        cityId: 1,
-      };
-
-      jest
-        .spyOn(institutionsRepository, 'findOneBy')
-        .mockReturnValue(Promise.resolve(instCreated));
-
-      try {
-        await institutionsService.createInstitution(instTwo);
-        fail();
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException);
-        expect(error.message).toBe('Institution already exists!');
-      }
     });
   });
 
   describe('findOne()', () => {
     it('should return one institution by id', async () => {
       const institution = await institutionsService.findOne(1);
+      expect(institutionsRepository.findOne).toBeCalled();
       expect(institution).toEqual(institutionOne);
-      expect(institutionsRepository.findOneBy).toBeCalledWith({ id: 1 });
     });
   });
 

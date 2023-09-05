@@ -7,16 +7,15 @@ import {
   Delete,
   Param,
   Request,
-  Put,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { CreateCourseDto } from '../dtos/create-course.dto';
 import { CoursesService } from '../services/courses.service';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../auth/roles/roles.guard';
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
-import { Course } from '@modules/courses/entities/course.entity';
+import { Course } from '../entities/course.entity';
 
 @Controller('courses')
 export class CoursesController {
