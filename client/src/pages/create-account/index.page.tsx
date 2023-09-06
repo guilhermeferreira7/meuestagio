@@ -27,7 +27,7 @@ interface PageProps {
 
 export default function CreateAccount({ institutions, cities }: PageProps) {
   const createAccountForm = useForm<CreateAccountFormData>({
-    mode: "onTouched",
+    mode: "all",
     resolver: zodResolver(createUserFormSchema),
   });
   const { handleSubmit } = createAccountForm;
