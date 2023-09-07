@@ -33,7 +33,7 @@ export default function JobPage({ student, resumeId, applied }: JobProps) {
       .catch((error) => {
         notifyError(error.response.data.message);
       });
-  }, []);
+  }, [id]);
 
   const apply = async () => {
     try {

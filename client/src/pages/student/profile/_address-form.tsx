@@ -32,7 +32,7 @@ export default function AddressForm({ initialData, cities }: any) {
       }
       setStates(states);
     });
-  }, []);
+  }, [cities]);
 
   const editProfile = async (data: AddressData) => {
     console.log(data);
@@ -100,7 +100,9 @@ export default function AddressForm({ initialData, cities }: any) {
                 {initialData.state}
               </option>
               {states.map((state: any) => (
-                <option value={state}>{state}</option>
+                <option key={state} value={state}>
+                  {state}
+                </option>
               ))}
             </Form.InputSelect>
             <Form.ErrorMessage field="state" />
@@ -116,8 +118,10 @@ export default function AddressForm({ initialData, cities }: any) {
                 {initialData.city}
               </option>
 
-              {citiesFiltered.map((city: any) => (
-                <option value={city.name}>{city.name}</option>
+              {citiesFiltered.map((city: City) => (
+                <option key={city.id} value={city.name}>
+                  {city.name}
+                </option>
               ))}
             </Form.InputSelect>
             <Form.ErrorMessage field="city" />
