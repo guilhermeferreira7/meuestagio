@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Education } from '../entities/education.entity';
 import { Experience } from '../entities/experiences.entity';
-import { Skill } from '../entities/skill.entity';
+import { Skill } from '../skills/skill.entity';
 import { Language } from '../entities/language.entity';
 import { Project } from '../entities/project.entity';
 

@@ -16,7 +16,6 @@ import { api } from "@services/api/api";
 
 import { notify } from "@components/toasts/toast";
 import AppCard from "@components/AppCard";
-import FormAddSkill from "@components/Resume/FormAddAbilty";
 
 interface ResumeFormProps {
   resume: Resume;
@@ -107,19 +106,7 @@ export default function ResumeForm({ resume }: ResumeFormProps) {
           </AppCard>
         </div>
 
-        <div className="my-3">
-          <AppCard>
-            <h2 className="flex items-center justify-between gap-1 font-semibold text-xl mb-2">
-              <div className="flex items-center gap-1">
-                <Crosshair />
-                <span>Habilidades</span>
-              </div>
-            </h2>
-            <div className="w-full flex flex-col items-start gap-1">
-              <FormAddSkill resumeId={resume.id} skills={resume.skills} />
-            </div>
-          </AppCard>
-        </div>
+        <div className="my-3"></div>
 
         <div className="my-3">
           <AppCard>

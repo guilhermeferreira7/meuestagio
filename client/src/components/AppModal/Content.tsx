@@ -22,14 +22,14 @@ export default function Content({
         <div className="modal-box">
           <h3 className="text-lg">{children}</h3>
           <div className="modal-action">
-            <label htmlFor={id} className="btn btn-warning">
-              {cancelText ? cancelText : "Fechar"}
-            </label>
             {confirmText && (
               <button className="btn btn-info" onClick={confirmAction}>
                 {confirmText}
               </button>
             )}
+            <label htmlFor={id} className="btn btn-error">
+              {cancelText ? cancelText : "Fechar"}
+            </label>
           </div>
         </div>
       </div>

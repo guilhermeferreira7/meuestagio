@@ -5,11 +5,11 @@ import { Briefcase, DollarSign, MapPin } from "lucide-react";
 import AppCard from "@components/AppCard";
 import { Job } from "@customTypes/job";
 
-interface JobCardProps {
+interface JobCardStudentProps {
   job: Job;
 }
 
-export default function JobCard({ job }: JobCardProps) {
+export default function JobCardStudent({ job }: JobCardStudentProps) {
   return (
     <>
       <AppCard>

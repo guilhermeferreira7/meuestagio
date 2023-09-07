@@ -81,12 +81,15 @@ export class CitiesService {
     return res;
   }
 
-  async findRegionsByState({ page, limit, state }): Promise<Region[]> {
+  async findRegionsByState({ page, limit, state, orderBy }): Promise<Region[]> {
+    const byName = orderBy === 'name' ? 'ASC' : 'DESC';
+    const lastCreated = orderBy === 'lastCreated' ? 'DESC' : undefined;
     return await this.regionsRepository.find({
       skip: page,
       take: limit,
       order: {
-        id: 'DESC',
+        id: lastCreated,
+        name: byName,
       },
       where: {
         state,

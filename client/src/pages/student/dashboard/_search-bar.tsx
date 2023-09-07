@@ -13,6 +13,7 @@ type SearchBarProps = {
   onRegionChange: (region: string) => void;
   onCityChange: (city: string) => void;
   setIsRemote: (isRemote: boolean) => void;
+  cleanFilters: () => void;
 };
 
 export default function SearchBar({
@@ -20,11 +21,12 @@ export default function SearchBar({
   states,
   regions,
   cities,
+  search,
   onStateChange,
   onRegionChange,
   onCityChange,
   setIsRemote,
-  search,
+  cleanFilters,
 }: SearchBarProps) {
   return (
     <>
@@ -97,6 +99,12 @@ export default function SearchBar({
             />
           </div>
         </div>
+        <button
+          className="text-error underline font-semibold self-start"
+          onClick={cleanFilters}
+        >
+          Remover filtros
+        </button>
       </form>
     </>
   );

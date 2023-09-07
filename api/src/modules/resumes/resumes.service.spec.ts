@@ -3,7 +3,7 @@ import { ResumesService } from './resumes.service';
 import { Repository } from 'typeorm';
 import { Resume } from './entities/resume.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Skill, SkillLevel } from './entities/skill.entity';
+import { Skill, SkillLevel } from './skills/skill.entity';
 
 const mockRepository = {
   findOne: jest.fn((resume) => resume),

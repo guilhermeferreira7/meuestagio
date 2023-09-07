@@ -54,6 +54,7 @@ export class CitiesController {
       page: request.query.page,
       limit: request.query.limit,
       state: request.query.state,
+      orderBy: request.query.orderBy,
     });
   }
 }

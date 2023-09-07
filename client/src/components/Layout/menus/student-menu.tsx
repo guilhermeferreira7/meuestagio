@@ -28,6 +28,11 @@ const studentMenu = [
           label: "Ver Currículo",
         },
         {
+          icon: <Crosshair />,
+          href: "/student/resume/skills",
+          label: "Habilidades",
+        },
+        {
           icon: <GraduationCap />,
           href: "/student/resume/education",
           label: "Formação",
@@ -36,11 +41,6 @@ const studentMenu = [
           icon: <Building />,
           href: "/student/resume/experience",
           label: "Experiência",
-        },
-        {
-          icon: <Crosshair />,
-          href: "/student/resume/skills",
-          label: "Habilidades",
         },
         {
           icon: <FolderCog />,

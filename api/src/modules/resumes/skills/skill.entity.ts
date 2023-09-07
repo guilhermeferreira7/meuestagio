@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Resume } from './resume.entity';
+import { Resume } from '../entities/resume.entity';
 
 export enum SkillLevel {
   Basic = 'Básico',
@@ -12,7 +12,9 @@ export class Skill {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   name: string;
 
   @Column({

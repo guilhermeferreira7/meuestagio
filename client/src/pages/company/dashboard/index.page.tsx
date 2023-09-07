@@ -3,8 +3,7 @@ import { GetServerSideProps } from "next";
 import { Company } from "@customTypes/users/company";
 import { Job } from "@customTypes/job";
 import { getAPIClient } from "@services/api/clientApi";
-
-import JobCompanyCard from "@components/Company/JobCompanyCard";
+import JobCompanyCard from "./_job-card";
 
 interface CompanyJobsProps {
   jobs: Job[];

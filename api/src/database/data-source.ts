@@ -13,7 +13,7 @@ import { Course } from '../modules/courses/entities/course.entity';
 import { Region } from '../modules/cities/entities/region.entity';
 import { Resume } from '../modules/resumes/entities/resume.entity';
 import { Education } from '../modules/resumes/entities/education.entity';
-import { Skill } from '../modules/resumes/entities/skill.entity';
+import { Skill } from '../modules/resumes/skills/skill.entity';
 import { Language } from '../modules/resumes/entities/language.entity';
 import { Experience } from '../modules/resumes/entities/experiences.entity';
 import { Project } from '../modules/resumes/entities/project.entity';

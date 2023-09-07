@@ -20,12 +20,12 @@ export function useJobsListing({
   regions: initialRegions,
   student,
 }: UseJobsProps) {
-  const [state, setState] = useState<string | undefined>(student.city.state);
+  const [state, setState] = useState<string | undefined>(student?.city.state);
   const [cityName, setCityName] = useState<string | undefined>(
-    student.city.name
+    student?.city.name
   );
   const [regionName, setRegionName] = useState<string>("");
-  const [filters, setFilters] = useState<any>({ city: student.city.id + "" });
+  const [filters, setFilters] = useState<any>({ city: student?.city.id + "" });
 
   const [cities, setCities] = useState<City[]>(initialCities);
   const [regions, setRegions] = useState<Region[]>(initialRegions);
@@ -71,11 +71,13 @@ export function useJobsListing({
       const cities = await api.get<City[]>("/cities", {
         params: {
           state,
+          orderBy: "name",
         },
       });
       const regions = await api.get<Region[]>("/cities/regions", {
         params: {
           state,
+          orderBy: "name",
         },
       });
       setRegions(regions.data);
