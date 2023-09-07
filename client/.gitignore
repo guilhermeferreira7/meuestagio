@@ -8,6 +8,8 @@
 
 # testing
 /coverage
+/.nyc_output
+/instrumented
 
 # next.js
 /.next/
@@ -36,5 +38,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.prettierrc.json

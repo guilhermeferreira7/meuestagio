@@ -7,6 +7,7 @@
     "dev:turbo": "next dev --turbo",
     "build": "next build",
     "start": "next start",
+    "cypress:open": "cypress open",
     "lint": "next lint"
   },
   "dependencies": {
@@ -36,6 +37,10 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.12.0",
+    "@faker-js/faker": "^8.0.2",
+    "babel-plugin-istanbul": "^6.1.1",
+    "cypress": "^13.1.0",
     "@types/cookie": "^0.5.1"
   }
 }
