@@ -3,7 +3,7 @@ import {
   Injectable,
   ConflictException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateCourseDto } from '../dtos/create-course.dto';
@@ -13,6 +13,7 @@ import { Institution } from '../../institutions/entities/institution.entity';
 type CourseQuery = {
   page: number;
   limit: number;
+  name: string;
   institutionId: number;
   areaId: number;
   orderBy: string;
@@ -58,6 +59,7 @@ export class CoursesService {
       where: {
         institutionId: query.institutionId,
         areaId: query.areaId,
+        name: query.name ? ILike(`%${query.name}%`) : undefined,
       },
       order: {
         [orderBy]: query.order || 'ASC',

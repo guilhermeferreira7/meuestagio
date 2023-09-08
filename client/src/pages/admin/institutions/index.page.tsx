@@ -1,67 +1,58 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GetServerSideProps } from "next";
-import { Plus, X } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 
-import { User } from "@customTypes/users/user";
-import { City } from "@customTypes/city";
-import { Institution } from "@customTypes/institution";
-import { Area } from "@customTypes/area";
-import { Course } from "@customTypes/course";
-import { getAPIClient } from "@services/api/clientApi";
-
 import AppCard from "@components/AppCard";
-import CreateCourseForm from "./_form-create";
-import ListCourses from "./_list";
+import { getAPIClient } from "@services/api/clientApi";
+import { Institution } from "@customTypes/institution";
+import { User } from "@customTypes/users/user";
+import { Area } from "@customTypes/area";
+import { City } from "@customTypes/city";
+
+import CreateInstitutionForm from "./_form-create";
+import ListInstitutions from "./_list-institutions";
+import { Plus, X } from "lucide-react";
 
 interface CreateCourseFormProps {
+  cities: City[];
   institutions: Institution[];
-  areas: Area[];
-  courses: Course[];
 }
 
-export default function RegisterCourses({
+export default function RegisterInstitutions({
+  cities,
   institutions,
-  areas,
-  courses,
 }: CreateCourseFormProps) {
   const [create, setCreate] = useState(false);
-  const [coursesUpdated, setCoursesUpdated] = useState<Course[]>(courses);
-
   return (
     <>
       <div className="w-11/12 flex flex-col gap-2">
         {create ? (
           <AppCard>
             <h2 className="text-xl font-bold mb-2 flex items-center justify-between">
-              <span>Novo curso</span>
+              <span>Cadastrar instituição</span>
               <button
-                className="btn btn-error"
-                onClick={() => {
-                  setCreate(false);
-                }}
+                className="btn btn-error gap-1 flex items-center"
+                onClick={() => setCreate(false)}
               >
                 <X />
                 Cancelar
               </button>
             </h2>
-            <CreateCourseForm institutions={institutions} areas={areas} />
+            <CreateInstitutionForm cities={cities} />
           </AppCard>
         ) : (
           <AppCard>
             <h2 className="text-xl font-bold mb-2 flex items-center justify-between">
-              <span>Cursos cadastrados</span>
+              <span>Instituições cadastradas</span>
               <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setCreate(true);
-                }}
+                className="btn btn-primary gap-1 flex items-center"
+                onClick={() => setCreate(true)}
               >
                 <Plus />
-                Novo curso
+                Nova instituição
               </button>
             </h2>
-            <ListCourses courses={coursesUpdated} />
+            <ListInstitutions institutions={institutions} />
           </AppCard>
         )}
       </div>
@@ -71,26 +62,26 @@ export default function RegisterCourses({
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
-
   try {
+    const apiClient = getAPIClient(ctx);
     await apiClient.get<User>("/admin/profile");
-
     const cities = await apiClient.get<City[]>("/cities", {
       params: { orderBy: "name" },
     });
-    const institutions = await apiClient.get<Institution[]>("/institutions");
-    const areas = await apiClient.get<Area[]>("/areas");
-    const courses = await apiClient.get<Course[]>("/courses", {
-      params: { orderBy: "id", order: "DESC", limit: 10 },
+    const institutions = await apiClient.get<Institution[]>("/institutions", {
+      params: {
+        page: 0,
+        limit: 10,
+        orderBy: "name",
+        order: "ASC",
+      },
     });
-
+    const areas = await apiClient.get<Area[]>("/areas");
     return {
       props: {
         cities: cities.data,
         institutions: institutions.data,
         areas: areas.data,
-        courses: courses.data,
       },
     };
   } catch (error: any) {

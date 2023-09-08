@@ -34,6 +34,7 @@ export class CoursesController {
       page: req.query.page,
       limit: req.query.limit,
       institutionId: req.query.institutionId,
+      name: req.query.name,
       areaId: req.query.areaId,
       orderBy: req.query.orderBy,
       order: req.query.order,
