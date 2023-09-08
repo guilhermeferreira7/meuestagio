@@ -8,7 +8,7 @@ import {
 import { Student } from '../../users/students/entities/student.entity';
 import { Experience } from './experiences.entity';
 import { Education } from './education.entity';
-import { Skill } from './skill.entity';
+import { Skill } from '../skills/skill.entity';
 import { Project } from './project.entity';
 import { Language } from './language.entity';
 

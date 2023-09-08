@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GetServerSideProps } from "next";
 import { Book, ChevronLeft } from "lucide-react";
-
-import { getAPIClient } from "../../../services/api/clientApi";
-import { Student } from "../../../utils/types/users/student";
-import { Resume } from "../../../utils/types/resume";
-import ResumeForm from "./_form";
-import ResumeView from "./_view";
-import { api } from "../../../services/api/api";
 import { useRouter } from "next/router";
 
+import { Student } from "@customTypes/users/student";
+import { Resume } from "@customTypes/resume";
+import { getAPIClient } from "@services/api/clientApi";
+import { api } from "@services/api/api";
+
+import ResumeForm from "./_form";
+import ResumeView from "./_view";
 interface PageProps {
   student: Student;
   resume: Resume;

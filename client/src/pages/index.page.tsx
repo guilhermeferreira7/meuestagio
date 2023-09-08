@@ -3,11 +3,12 @@ import { parseCookies } from "nookies";
 import React from "react";
 import Link from "next/link";
 
-import { getAPIClient } from "../services/api/clientApi";
-import CompanyCard from "../components/Index/company-card";
-import { Job } from "../utils/types/job";
-import { Company } from "../utils/types/users/company";
-import PublicJobCard from "../components/Index/PublicJobCard";
+import { Job } from "@customTypes/job";
+import { Company } from "@customTypes/users/company";
+import { getAPIClient } from "@services/api/clientApi";
+
+import CompanyCard from "@components/Index/company-card";
+import PublicJobCard from "@components/Index/PublicJobCard";
 
 export default function Home() {
   return (

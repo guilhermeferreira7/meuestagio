@@ -96,7 +96,7 @@ describe('CityService', () => {
         fail();
       } catch (error) {
         expect(error).toBeInstanceOf(ConflictException);
-        expect(error.message).toBe('City already exists!');
+        expect(error.message).toBe('Cidade já cadastrada!');
       }
     });
 
@@ -113,9 +113,37 @@ describe('CityService', () => {
     });
   });
 
+  describe('createRegion()', () => {
+    it('should throw error if region already in database', async () => {
+      const regionCreated = await service.createRegion({
+        name: 'Sul',
+        IBGECode: 1,
+        state: 'Paraná',
+      });
+
+      const regionTwo = {
+        name: 'Sul',
+        IBGECode: 1,
+        state: 'Paraná',
+      };
+
+      jest
+        .spyOn(regionsRepository, 'findOneBy')
+        .mockReturnValue(Promise.resolve(regionCreated));
+
+      try {
+        await service.createRegion(regionTwo);
+        fail();
+      } catch (error) {
+        expect(error).toBeInstanceOf(ConflictException);
+        expect(error.message).toBe('Região já existe!');
+      }
+    });
+  });
+
   describe('findAll()', () => {
     it('should return all cities', async () => {
-      const cities = await service.findAll({ limit: 10, page: 1 });
+      const cities = await service.findAll();
       expect(cities).toEqual(citiesArray);
       expect(repository.find).toHaveBeenCalled();
     });

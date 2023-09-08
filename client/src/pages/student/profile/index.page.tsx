@@ -1,12 +1,12 @@
 import { GetServerSideProps } from "next";
 import React from "react";
 
-import { Student } from "../../../utils/types/users/student";
+import { Student } from "@customTypes/users/student";
 import { getAPIClient } from "../../../services/api/clientApi";
-import { City } from "../../../utils/types/city";
-import { Institution } from "../../../utils/types/institution";
-import { Course } from "../../../utils/types/course";
-import AppCard from "../../../components/AppCard";
+import { City } from "@customTypes/city";
+import { Institution } from "@customTypes/institution";
+import { Course } from "@customTypes/course";
+import AppCard from "@components/AppCard";
 import { User } from "lucide-react";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";

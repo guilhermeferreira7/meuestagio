@@ -1,5 +1,7 @@
 import React, { ReactNode, useContext } from "react";
-import { AuthContext } from "@/contexts/AuthContext";
+
+import { AuthContext } from "@contexts/AuthContext";
+import { Role } from "@customTypes/auth/user-auth";
 
 import defaultMenu from "./menus/default-menu";
 import studentMenu from "./menus/student-menu";
@@ -8,7 +10,6 @@ import adminMenu from "./menus/admin-menu";
 import Header from "./header";
 import PageMenu from "./page-menu";
 import Footer from "./footer";
-import { Role } from "../../utils/types/auth/user-auth";
 import MenuItem from "./_menu-item";
 
 interface PageLayoutProps {
@@ -18,7 +19,7 @@ interface PageLayoutProps {
 export default function PageLayout({ children }: PageLayoutProps) {
   const { user } = useContext(AuthContext);
 
-  let menuItems = defaultMenu;
+  let menuItems: any = defaultMenu;
 
   switch (user?.role) {
     case Role.Student:
@@ -42,7 +43,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
             <div className="hidden lg:flex">
               <PageMenu menuItems={menuItems} />
             </div>
-            <main className="flex flex-col items-center w-full mt-5">
+            <main className="flex flex-col items-center w-full my-5">
               {children}
             </main>
           </div>
@@ -55,16 +56,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
           <label htmlFor="my-drawer" className="drawer-overlay"></label>
           <ul className="menu p-4 w-80 h-full bg-base-100">
             {menuItems?.map((item: any, key: any) => (
-              <li
-                key={key}
-                className="border-b-2 w-full"
-                onClick={() => {
-                  const drawer = document.getElementById("my-drawer");
-                  if (drawer) {
-                    drawer.click();
-                  }
-                }}
-              >
+              <li key={key} className="border-b-2 w-full">
                 <MenuItem {...item} />
               </li>
             ))}

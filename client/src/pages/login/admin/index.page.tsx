@@ -1,12 +1,14 @@
-import React, { useContext, useState } from "react";
-import { Form } from "../../../components/Form";
+import { useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { AuthContext } from "../../../contexts/AuthContext";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "../../../utils/validators/login-schema";
 import { z } from "zod";
 import { AlertCircle } from "lucide-react";
-import { Role } from "../../../utils/types/auth/user-auth";
+
+import { AuthContext } from "@contexts/AuthContext";
+import { Role } from "@customTypes/auth/user-auth";
+import { loginSchema } from "@utils/validators/login-schema";
+
+import { Form } from "@components/Form";
 
 type LoginData = z.infer<typeof loginSchema>;
 

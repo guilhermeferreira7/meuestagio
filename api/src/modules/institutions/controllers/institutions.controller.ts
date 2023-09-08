@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -27,7 +28,12 @@ export class InstitutionsController {
   @Get()
   async getAll(@Request() req): Promise<Institution[]> {
     return await this.institutionsService.findAll({
+      page: req.query.page,
+      limit: req.query.limit,
+      name: req.query.name,
       cityId: req.query.cityId,
+      orderBy: req.query.orderBy,
+      order: req.query.order,
     });
   }
 
@@ -37,9 +43,17 @@ export class InstitutionsController {
   async create(
     @Body() createInstitutionDto: CreateInstitutionDto,
   ): Promise<Institution> {
+    console.log(createInstitutionDto);
     return await this.institutionsService.createInstitution(
       createInstitutionDto,
     );
+  }
+
+  @HasRoles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<Institution> {
+    return await this.institutionsService.delete(+id);
   }
 
   @Get(':id/courses')

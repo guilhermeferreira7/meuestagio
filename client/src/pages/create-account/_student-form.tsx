@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { Form } from "../../components/Form";
-import { Institution } from "../../utils/types/institution";
-import { Course } from "../../utils/types/course";
-import { api } from "../../services/api/api";
+import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
+
+import { Institution } from "@customTypes/institution";
+import { Course } from "@customTypes/course";
+import { api } from "@services/api/api";
+
+import { Form } from "@components/Form";
 
 interface CreateStudentFormProps {
   institutions: Institution[];
