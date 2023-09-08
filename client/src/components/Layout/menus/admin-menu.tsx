@@ -4,22 +4,22 @@ import { Home, Plus } from "lucide-react";
 const adminMenu = [
   {
     icon: <Home />,
-    href: "/",
+    href: "/admin/dashboard",
     label: "Início",
   },
   {
     icon: <Plus />,
-    href: "/admin/register/cities",
+    href: "/admin/cities",
     label: "Cadastrar cidades",
   },
   {
     icon: <Plus />,
-    href: "/admin/register/institutions",
+    href: "/admin/institutions",
     label: "Cadastrar instituições",
   },
   {
     icon: <Plus />,
-    href: "/admin/register/courses",
+    href: "/admin/courses",
     label: "Cadastrar cursos",
   },
 ];

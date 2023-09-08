@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { GetServerSideProps } from "next";
 
-import ibgeApi from "../../../../services/api/ibgeApi";
-import { getAPIClient } from "../../../../services/api/clientApi";
+import ibgeApi from "../../../services/api/ibgeApi";
+import { getAPIClient } from "../../../services/api/clientApi";
 import { User } from "@customTypes/users/user";
-import { api } from "../../../../services/api/api";
+import { api } from "../../../services/api/api";
 import { ToastContainer } from "react-toastify";
 import { notifyError, notifySuccess } from "@components/toasts/toast";
 
