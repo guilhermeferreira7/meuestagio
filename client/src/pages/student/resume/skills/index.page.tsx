@@ -120,6 +120,7 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
         </AppCard>
       </div>
       <div className="w-11/12 my-3 flex flex-col gap-2 border-l border-l-gray-300">
+        {skillsUpdated.length < 1 && <span>Nenhuma habilidade cadastrada</span>}
         {!skillsUpdated ? (
           <p className="text-center">Nenhuma habilidade cadastrada</p>
         ) : (

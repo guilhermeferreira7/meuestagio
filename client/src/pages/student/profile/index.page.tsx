@@ -7,7 +7,7 @@ import { City } from "@customTypes/city";
 import { Institution } from "@customTypes/institution";
 import { Course } from "@customTypes/course";
 import AppCard from "@components/AppCard";
-import { User } from "lucide-react";
+import { Pencil, User } from "lucide-react";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
 import AddressForm from "./_address-form";
@@ -33,6 +33,24 @@ export default function StudentProfile({
             <User />
             Dados pessoais
           </h1>
+          <div className="divider"></div>
+          <div>
+            <span className="font-semibold flex gap-1 items-center mb-1">
+              <Pencil />
+              Sobre mim
+            </span>
+            <div className="flex gap-1">
+              <textarea
+                name="about"
+                id="about"
+                placeholder="Escreva algo sobre você"
+                className="textarea textarea-primary w-full"
+              >
+                {student?.about}
+              </textarea>
+              <button className="btn btn-primary self-end">Salvar</button>
+            </div>
+          </div>
 
           <div className="divider"></div>
           <ContactInfoForm

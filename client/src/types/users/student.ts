@@ -1,6 +1,7 @@
 export type Student = {
   id: number;
   name: string;
+  about?: string;
   email: string;
   institution: {
     id: number;
