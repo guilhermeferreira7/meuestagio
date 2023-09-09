@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Resume } from './resume.entity';
+import { Resume } from '../entities/resume.entity';
 
-enum Degree {
+export enum Degree {
   HighSchool = 'Ensino Médio',
   Technical = 'Ensino Técnico',
   Undergraduate = 'Ensino Superior',
@@ -34,4 +34,7 @@ export class Education {
 
   @ManyToOne(() => Resume, (resume) => resume.educations)
   resume: Resume;
+
+  @Column()
+  resumeId: number;
 }

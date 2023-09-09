@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Degree } from "../../../../types/resume";
+import { Degree, Education, Resume } from "../../../../types/resume";
 import {
   FormAddEducation,
   createEducationSchema,
@@ -11,8 +11,25 @@ import { getMonths, getYears } from "../../../../utils/helpers/date-helpers";
 
 import { Form } from "../../../../components/Form";
 import AppCard from "../../../../components/AppCard";
+import { api } from "../../../../services/api/api";
+import { notify } from "../../../../components/toasts/toast";
+import axios, { isAxiosError } from "axios";
+import { ToastContainer } from "react-toastify";
+import { GetServerSideProps } from "next";
+import { getAPIClient } from "../../../../services/api/clientApi";
+import { Student } from "../../../../types/users/student";
+import { Trash } from "lucide-react";
 
-export default function PageAddEducation() {
+type PageAddEducationProps = {
+  resumeId: number;
+  educations: Education[];
+};
+
+export default function PageAddEducation({
+  resumeId,
+  educations,
+}: PageAddEducationProps) {
+  const [educationsUpdated, setEducations] = useState<Education[]>(educations);
   const createEducationForm = useForm<FormAddEducation>({
     mode: "all",
     resolver: zodResolver(createEducationSchema),
@@ -20,7 +37,56 @@ export default function PageAddEducation() {
   const { handleSubmit } = createEducationForm;
 
   const createEducation = async (data: FormAddEducation) => {
-    console.log(data);
+    try {
+      const education = await api.post<Education>("/resumes/me/educations", {
+        resumeId,
+        ...data,
+      });
+      notify.success("Formação adicionada com sucesso!");
+      setEducations([education.data, ...educationsUpdated]);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        return notify.error(error.response?.data.message);
+      } else {
+        notify.error("Ocorreu um erro inesperado.");
+      }
+    }
+  };
+
+  const deleteEducation = async (education: Education) => {
+    try {
+      await api.delete(`resumes/me/educations/${education.id}`);
+      setEducations(educationsUpdated.filter((s) => s.id !== education.id));
+      notify.success("Formação excluída com sucesso");
+    } catch (error: any) {
+      notify.error(error.response?.data?.message || error.message);
+    }
+  };
+
+  const EducationItem = ({ education }: { education: Education }) => {
+    const [isDeleting, setIsDeleting] = useState(false);
+    return (
+      <div
+        className="text-lg flex items-center justify-between border-b p-2 border-b-gray-300"
+        key={education.id}
+      >
+        <span>
+          {education.school} - {education.degree} - {education.fieldOfStudy}
+        </span>
+        {isDeleting ? (
+          <button
+            className="btn btn-error"
+            onClick={() => deleteEducation(education)}
+          >
+            Clique para excluir
+          </button>
+        ) : (
+          <button className="btn btn-error" onClick={() => setIsDeleting(true)}>
+            <Trash />
+          </button>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -139,6 +205,45 @@ export default function PageAddEducation() {
           </FormProvider>
         </AppCard>
       </div>
+      <div className="w-11/12 my-3 flex flex-col gap-2 border-l border-l-gray-300">
+        {educationsUpdated.length < 1 && (
+          <span>Nenhuma formação cadastrada</span>
+        )}
+        {!educationsUpdated ? (
+          <p className="text-center">Nenhuma habilidade cadastrada</p>
+        ) : (
+          educationsUpdated.map((education) => (
+            <EducationItem key={education.id} education={education} />
+          ))
+        )}
+      </div>
+      <ToastContainer />
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
+  try {
+    const apiClient = getAPIClient(ctx);
+    const student = await apiClient.get<Student>("/students/profile");
+    const resume = await apiClient.get<Resume>("/resumes/me", {
+      params: {
+        studentId: student.data.id,
+      },
+    });
+
+    return {
+      props: {
+        resumeId: resume.data.id,
+        educations: resume.data.educations,
+      },
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+};

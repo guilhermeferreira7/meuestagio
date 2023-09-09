@@ -44,15 +44,17 @@ export const createEducationSchema = z
       const start = new Date(`${data.startYear}-${data.startMonth}-01`);
       const end = new Date(`${data.endYear}-${data.endMonth}-01`);
 
-      console.log(start, end.getMonth(), end.getFullYear());
-      console.log(start <= end);
-
       return start <= end;
     },
     {
       message: "A data de início deve ser anterior ou igual à data de término",
       path: ["endMonth"],
     }
-  );
+  )
+  .transform((data) => ({
+    ...data,
+    startDate: `${data.startYear}-${data.startMonth}-01`,
+    endDate: `${data.endYear}-${data.endMonth}-01`,
+  }));
 
 export type FormAddEducation = z.infer<typeof createEducationSchema>;

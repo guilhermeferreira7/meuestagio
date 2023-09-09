@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Education } from '../entities/education.entity';
+import { Education } from '../educations/educations.entity';
 import { Experience } from '../entities/experiences.entity';
 
 export class CreateResumeDto {

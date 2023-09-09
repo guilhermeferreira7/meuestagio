@@ -143,16 +143,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
         studentId: student.data.id,
       },
     });
-    const skills = await apiClient.get<Skill[]>("/resumes/me/skills", {
-      params: {
-        resumeId: resume.data.id,
-      },
-    });
 
     return {
       props: {
         resumeId: resume.data.id,
-        skills: skills.data,
+        skills: resume.data.skills,
       },
     };
   } catch (error) {

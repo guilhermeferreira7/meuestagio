@@ -12,7 +12,7 @@ import { Student } from '../modules/users/students/entities/student.entity';
 import { Course } from '../modules/courses/entities/course.entity';
 import { Region } from '../modules/cities/entities/region.entity';
 import { Resume } from '../modules/resumes/entities/resume.entity';
-import { Education } from '../modules/resumes/entities/education.entity';
+import { Education } from '../modules/resumes/educations/educations.entity';
 import { Skill } from '../modules/resumes/skills/skill.entity';
 import { Language } from '../modules/resumes/entities/language.entity';
 import { Experience } from '../modules/resumes/entities/experiences.entity';

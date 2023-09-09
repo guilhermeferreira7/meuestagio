@@ -1,9 +1,14 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Skill } from './skill.entity';
 import { CreateSkillDto } from './create-skill.dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class SkillsService {
@@ -35,7 +40,7 @@ export class SkillsService {
       where: { id },
     });
     if (!skill) {
-      throw new Error('Skill not found');
+      throw new NotFoundException('Habilidade não encontrada');
     }
 
     await this.repository.delete(id);
