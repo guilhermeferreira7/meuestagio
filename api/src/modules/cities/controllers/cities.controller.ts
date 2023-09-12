@@ -43,6 +43,7 @@ export class CitiesController {
       page: request.query.page,
       limit: request.query.limit,
       state: request.query.state,
+      region: request.query.region,
       name: request.query.name,
       orderBy: request.query.orderBy,
     });

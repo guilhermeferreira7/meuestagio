@@ -11,6 +11,7 @@ interface CitiesQuery {
   page?: number;
   limit?: number;
   state?: string;
+  region?: number;
   name?: string;
   orderBy?: string;
 }
@@ -74,6 +75,7 @@ export class CitiesService {
       },
       where: {
         state: query.state,
+        regionId: query.region,
         name: query.name ? ILike(`%${query.name}%`) : undefined,
       },
     });
