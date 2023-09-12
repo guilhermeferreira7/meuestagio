@@ -8,7 +8,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Skill } from './skill.entity';
 import { CreateSkillDto } from './create-skill.dto';
-import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class SkillsService {

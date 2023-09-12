@@ -1,8 +1,8 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Company } from '../entities/company.entity';
 import { Repository } from 'typeorm';
-import { cp } from 'fs';
+
+import { Company } from '../entities/company.entity';
 import { CreateCompanyDto } from '../dtos/create-company.dto';
 import bcryptService from '../../../../utils/bcriptUtils';
 

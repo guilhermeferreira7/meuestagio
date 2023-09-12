@@ -1,17 +1,13 @@
-import { MockFactory, Test, TestingModule } from '@nestjs/testing';
-import { dataSource } from '../../../../database/data-source';
+import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { Role } from '../../../auth/roles/roles';
 import { AdminController } from './admin.controller';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../../user/user.entity';
-import { Repository } from 'typeorm';
 
 const mockRepository = {
   findOne: jest.fn((user) => user),
-};
-
-const dataSourceMock = {
-  getRepository: jest.fn(() => mockRepository),
 };
 
 describe('Admin Controller', () => {

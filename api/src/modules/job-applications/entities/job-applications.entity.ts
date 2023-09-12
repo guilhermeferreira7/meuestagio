@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { JobApplicationStatus } from './status';
 import { Student } from '../../users/students/entities/student.entity';
 import { Job } from '../../jobs/entities/job.entity';

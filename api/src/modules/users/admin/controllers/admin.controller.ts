@@ -35,8 +35,7 @@ export class AdminController {
     if (!admin) {
       throw new UnauthorizedException();
     }
-    const { password, ...result } = admin;
 
-    return result;
+    return admin;
   }
 }

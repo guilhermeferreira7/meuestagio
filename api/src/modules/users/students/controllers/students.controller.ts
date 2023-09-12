@@ -37,9 +37,8 @@ export class StudentsController {
     if (!student) {
       throw new UnauthorizedException();
     }
-    const { password, ...result } = student;
 
-    return result;
+    return student;
   }
 
   @HasRoles(Role.STUDENT)

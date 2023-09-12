@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import bcryptService from '../../../utils/bcriptUtils';
-import { CompaniesService } from '../../users/companies/services/companies.service';
-import { dataSource } from '../../../database/data-source';
 import { User } from '../../users/user/user.entity';
 import { UserAuth } from '../../../types/auth/user-auth';
 import { Role } from '../roles/roles';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthAdminService {
