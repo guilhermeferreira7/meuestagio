@@ -11,7 +11,8 @@ import { Job } from "@customTypes/job";
 import { Student } from "@customTypes/users/student";
 import { Resume } from "@customTypes/resume";
 import { JobApplication } from "@customTypes/job-application";
-import { notifyError, notifySuccess } from "@components/toasts/toast";
+import { notify, notifyError, notifySuccess } from "@components/toasts/toast";
+import { errorToString } from "../../../utils/helpers/error-to-string";
 
 interface JobProps {
   student: Student;
@@ -47,8 +48,8 @@ export default function JobPage({ student, resumeId, applied }: JobProps) {
         router.push("/student/applications");
       }, 1000);
       notifySuccess("Candidatura realizada com sucesso!");
-    } catch (error: any) {
-      console.log(error.response?.data?.message);
+    } catch (error) {
+      notify.error(errorToString(error));
     }
   };
 
@@ -167,11 +168,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apiClient = getAPIClient(ctx);
   try {
     const student = await apiClient.get<Student>("/students/profile");
-    const resume = await apiClient.get<Resume>("/resumes/me", {
-      params: {
-        studentId: student.data.id,
-      },
-    });
     const jobApplications = await apiClient.get<JobApplication[]>(
       "job-applications/student",
       {
@@ -192,7 +188,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       props: {
         student: student.data,
-        resumeId: resume.data.id,
+        resumeId: student.data.resume.id,
         applied,
       },
     };

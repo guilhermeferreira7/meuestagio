@@ -168,7 +168,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const company = await apiClient.get<Company>("/companies/profile");
     const areas = await apiClient.get<Area[]>("/areas");
 
-    console.log(apiClient.defaults.headers);
     return {
       props: { areas: areas.data, company: company.data },
     };
