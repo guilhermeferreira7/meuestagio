@@ -7,23 +7,27 @@ import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
 
 import { getAPIClient } from "../../../services/api/clientApi";
 import { api } from "../../../services/api/api";
-import { Job } from "@customTypes/job";
-import { Student } from "@customTypes/users/student";
-import { Resume } from "@customTypes/resume";
-import { JobApplication } from "@customTypes/job-application";
-import { notify, notifyError, notifySuccess } from "@components/toasts/toast";
 import { errorToString } from "../../../utils/helpers/error-to-string";
+import withStudentAuth from "../../../services/auth/withStudentAuth";
+import { notify } from "../../../components/toasts/toast";
+import { Job } from "../../../types/job";
+import { JobApplication } from "../../../types/job-application";
 
-interface JobProps {
-  student: Student;
+interface JobDetailsPageProps {
+  studentId: number;
   resumeId: number;
   applied: boolean;
 }
 
-export default function JobPage({ student, resumeId, applied }: JobProps) {
+export default function JobDetailsPage({
+  studentId,
+  resumeId,
+  applied,
+}: JobDetailsPageProps) {
   const router = useRouter();
   const { id } = router.query;
   const [job, setJob] = useState<Job | null>(null);
+  const [jobApplied, setApplied] = useState<boolean>(applied);
 
   useEffect(() => {
     api
@@ -32,30 +36,27 @@ export default function JobPage({ student, resumeId, applied }: JobProps) {
         setJob(response.data);
       })
       .catch((error) => {
-        notifyError(error.response.data.message);
+        notify.error(errorToString(error));
       });
   }, [id]);
 
+  if (!job) {
+    return <h1>Carregando...</h1>;
+  }
   const apply = async () => {
     try {
       await api.post("job-applications/apply", {
-        studentId: student.id,
-        jobId: job?.id,
+        studentId: studentId,
+        jobId: job.id,
         resumeId,
       });
       document.getElementById("modal")?.click();
-      setTimeout(() => {
-        router.push("/student/applications");
-      }, 1000);
-      notifySuccess("Candidatura realizada com sucesso!");
+      notify.success("Candidatura realizada com sucesso!");
+      setApplied(true);
     } catch (error) {
       notify.error(errorToString(error));
     }
   };
-
-  while (!job) {
-    return <h1>Carregando...</h1>;
-  }
 
   return (
     <>
@@ -67,7 +68,7 @@ export default function JobPage({ student, resumeId, applied }: JobProps) {
               vaga: {job.id}
             </h2>
 
-            {applied ? (
+            {jobApplied ? (
               <h2 className="m-2 text-sm lg:text-xl font-bold text-primary">
                 Já se candidatou a essa vaga!
               </h2>
@@ -164,22 +165,21 @@ export default function JobPage({ student, resumeId, applied }: JobProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
-  try {
-    const student = await apiClient.get<Student>("/students/profile");
+export const getServerSideProps = withStudentAuth(
+  async (context, student, apiClient) => {
     const jobApplications = await apiClient.get<JobApplication[]>(
       "job-applications/student",
       {
         params: {
-          studentId: student.data.id,
+          studentId: student.id,
         },
       }
     );
     let applied = false;
+
     if (
       jobApplications.data.some(
-        (jobApplication) => jobApplication.job.id === Number(ctx.query.id)
+        (jobApplication) => jobApplication.job.id === Number(context.query.id)
       )
     ) {
       applied = true;
@@ -187,17 +187,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
       props: {
-        student: student.data,
-        resumeId: student.data.resume.id,
+        studentId: student.id,
+        resumeId: student.resume.id,
         applied,
       },
     };
-  } catch (error: any) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
   }
-};
+);

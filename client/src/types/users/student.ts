@@ -23,4 +23,5 @@ export type Student = {
     state: string;
   };
   resume: Resume;
+  resumeId: number;
 };

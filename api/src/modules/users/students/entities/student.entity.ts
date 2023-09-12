@@ -22,7 +22,7 @@ export class Student extends User {
   @Column({ nullable: true })
   resumeId: number;
 
-  @OneToOne(() => Resume, (resume) => resume.student)
+  @OneToOne(() => Resume)
   @JoinColumn()
   resume: Resume;
 }

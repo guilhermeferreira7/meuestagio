@@ -20,6 +20,7 @@ export class AuthAdminService {
     email: string,
     password: string,
   ): Promise<UserAuth | null> {
+    if (!email || !password) return null;
     const admin = await this.usersRepository.findOne({ where: { email } });
     if (!admin) return null;
 

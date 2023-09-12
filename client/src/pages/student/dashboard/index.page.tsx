@@ -10,6 +10,7 @@ import { isAxiosError } from "axios";
 import { useJobsListing } from "../../../hooks/useJobListing";
 import SearchBar from "./_search-bar";
 import JobCardStudent from "./_job-card-student";
+import withStudentAuth from "../../../services/auth/withStudentAuth";
 
 interface StudentPageProps {
   jobsData: Job[];
@@ -78,37 +79,20 @@ export default function StudentJobs({ jobsData, student }: StudentPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    const student = await apiClient.get<Student>("/students/profile");
+export const getServerSideProps = withStudentAuth(
+  async (_context, student, apiClient) => {
     const jobs = await apiClient.get<Job[]>("/jobs", {
       params: {
         limit: VACANCIES_STUDENT_LIMIT,
-        city: student.data.city.id,
+        city: student.city.id,
       },
     });
 
     return {
       props: {
         jobsData: jobs.data,
-        student: student.data,
+        student,
       },
     };
-  } catch (error) {
-    if (isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        return {
-          redirect: {
-            destination: "/",
-            permanent: false,
-          },
-        };
-      }
-    }
   }
-
-  return {
-    props: {},
-  };
-};
+);

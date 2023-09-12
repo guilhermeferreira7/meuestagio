@@ -1,13 +1,11 @@
-import { GetServerSideProps } from "next";
-import img from "@public/avatar.png";
-
-import { Student } from "@customTypes/users/student";
-import { Resume } from "@customTypes/resume";
-import { getAPIClient } from "@services/api/clientApi";
-
-import Image from "next/image";
-import AppCard from "../../../components/AppCard";
 import { Book } from "lucide-react";
+import Image from "next/image";
+import img from "../../../../public/avatar.png";
+
+import AppCard from "../../../components/AppCard";
+import withStudentAuth from "../../../services/auth/withStudentAuth";
+import { Student } from "../../../types/users/student";
+import { Resume } from "../../../types/resume";
 
 interface PageProps {
   student: Student;
@@ -15,11 +13,13 @@ interface PageProps {
 }
 
 export default function ResumePage({ student, resume }: PageProps) {
-  type ResumeItemProps = {
+  const ResumeItem = ({
+    title,
+    children,
+  }: {
     title: string;
     children: React.ReactNode;
-  };
-  const ResumeItem = ({ title, children }: ResumeItemProps) => {
+  }) => {
     return (
       <>
         <div className="divider"></div>
@@ -63,9 +63,6 @@ export default function ResumePage({ student, resume }: PageProps) {
             </div>
           </div>
           <div className="flex flex-col gap-1 items-center">
-            <p className="flex items-center gap-1 my-2 text-lg">
-              {resume.title}
-            </p>
             <div className="flex gap-1 text-center">{student.about}</div>
           </div>
 
@@ -143,22 +140,15 @@ export default function ResumePage({ student, resume }: PageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    const student = await apiClient.get<Student>("/students/profile");
+export const getServerSideProps = withStudentAuth(
+  async (_context, student, apiClient) => {
+    const resume = await apiClient.get<Resume>("/resumes/me");
+    console.log(resume.data.skills);
     return {
       props: {
-        student: student.data,
-        resume: student.data.resume,
-      },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
+        student,
+        resume: resume.data,
       },
     };
   }
-};
+);

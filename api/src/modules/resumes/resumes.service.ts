@@ -21,4 +21,23 @@ export class ResumesService {
 
     return resume;
   }
+
+  async getResume(studentId: number): Promise<Resume> {
+    if (!studentId) {
+      return null;
+    }
+
+    const resume = await this.repository.findOne({
+      where: { studentId },
+      relations: [
+        'educations',
+        'experiences',
+        'skills',
+        'languages',
+        'projects',
+      ],
+    });
+
+    return resume;
+  }
 }

@@ -15,10 +15,8 @@ import { api } from "../../../../services/api/api";
 import { notify } from "../../../../components/toasts/toast";
 import { isAxiosError } from "axios";
 import { ToastContainer } from "react-toastify";
-import { GetServerSideProps } from "next";
-import { getAPIClient } from "../../../../services/api/clientApi";
-import { Student } from "../../../../types/users/student";
 import { Trash } from "lucide-react";
+import withStudentAuth from "../../../../services/auth/withStudentAuth";
 
 type PageAddEducationProps = {
   resumeId: number;
@@ -29,9 +27,7 @@ export default function PageAddEducation({
   resumeId,
   educations,
 }: PageAddEducationProps) {
-  const [educationsUpdated, setEducations] = useState<Education[]>(
-    educations || []
-  );
+  const [educationsUpdated, setEducations] = useState<Education[]>(educations);
   const createEducationForm = useForm<FormAddEducation>({
     mode: "all",
     resolver: zodResolver(createEducationSchema),
@@ -224,22 +220,14 @@ export default function PageAddEducation({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    const student = await apiClient.get<Student>("/students/profile");
+export const getServerSideProps = withStudentAuth(
+  async (_context, student, serverApi) => {
+    const resume = await serverApi.get<Resume>("/resumes/me");
     return {
       props: {
-        resumeId: student.data.resume.id,
-        educations: student.data.resume.educations || [],
-      },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
+        resumeId: student.resumeId,
+        educations: resume.data.educations,
       },
     };
   }
-};
+);

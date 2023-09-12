@@ -49,7 +49,7 @@ export default function JobCardStudent({ job }: JobCardStudentProps) {
           </div>
           <Link
             className="w-full btn btn-sm btn-info md:btn-md"
-            href={`job/${job.id}`}
+            href={`job-details/${job.id}`}
           >
             Ver mais detalhes
           </Link>

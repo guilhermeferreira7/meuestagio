@@ -42,6 +42,7 @@ export class InstitutionsService {
   }
 
   async findOne(id: number): Promise<Institution> {
+    if (!id) return null;
     const institution = await this.repository.findOne({
       where: { id },
       relations: ['city'],

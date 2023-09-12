@@ -102,6 +102,7 @@ export class JobsService {
   }
 
   async findOne(id: number) {
+    if (!id) return null;
     const job = await this.repository.findOne({
       where: { id: id },
       relations: ['company', 'area', 'city', 'region'],

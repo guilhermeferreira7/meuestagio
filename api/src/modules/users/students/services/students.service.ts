@@ -39,7 +39,8 @@ export class StudentsService {
     });
 
     const newResume = this.resumeRepository.create({
-      student: studentSave,
+      // student: studentSave,
+      studentId: studentSave.id,
     });
 
     await this.resumeRepository.save(newResume);
@@ -49,8 +50,9 @@ export class StudentsService {
   }
 
   async findOne(email: string): Promise<Student> {
+    if (!email) return null;
     return await this.repository.findOne({
-      relations: ['course', 'institution', 'city', 'resume'],
+      relations: ['course', 'institution', 'city'],
       where: { email },
     });
   }

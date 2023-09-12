@@ -4,8 +4,6 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 import { ToastContainer } from "react-toastify";
-import { GetServerSideProps } from "next";
-import axios from "axios";
 
 import { Resume, Skill, SkillLevel } from "@customTypes/resume";
 import { notify } from "@components/toasts/toast";
@@ -13,8 +11,8 @@ import { Form } from "@components/Form";
 import { api } from "@services/api/api";
 import { createSkillSchema } from "@utils/validators/edit-resume-schema";
 import AppCard from "../../../../components/AppCard";
-import { getAPIClient } from "../../../../services/api/clientApi";
-import { Student } from "../../../../types/users/student";
+import withStudentAuth from "../../../../services/auth/withStudentAuth";
+import { errorToString } from "../../../../utils/helpers/error-to-string";
 
 type FormAddSkill = z.infer<typeof createSkillSchema>;
 
@@ -40,11 +38,7 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
       setSkills([response.data, ...skillsUpdated]);
       notify.success("Habilidade adicionada com sucesso");
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        notify.error(error.response?.data?.message || error.message);
-      } else {
-        notify.error("Erro ao adicionar habilidade");
-      }
+      notify.error(errorToString(error));
     }
   };
 
@@ -133,23 +127,14 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    const student = await apiClient.get<Student>("/students/profile");
-
+export const getServerSideProps = withStudentAuth(
+  async (_context, student, serverApi) => {
+    const resume = await serverApi.get<Resume>("resumes/me");
     return {
       props: {
-        resumeId: student.data.resume.id,
-        skills: student.data.resume.skills || [],
-      },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
+        resumeId: student.resumeId,
+        skills: resume.data.skills,
       },
     };
   }
-};
+);

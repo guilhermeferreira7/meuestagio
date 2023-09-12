@@ -45,6 +45,7 @@ export class CompaniesService {
   }
 
   async findOne(email: string): Promise<Company> {
+    if (!email) return null;
     return await this.companiesRepository.findOne({
       relations: ['city'],
       where: { email },

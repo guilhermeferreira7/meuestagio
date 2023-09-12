@@ -26,6 +26,9 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
+    if (!req.user) {
+      throw new UnauthorizedException();
+    }
     const admin = await this.usersRepository.findOne({
       where: { email: req.user.email },
     });

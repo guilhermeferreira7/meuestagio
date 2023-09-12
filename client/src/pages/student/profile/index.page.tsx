@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import React from "react";
 
 import { Student } from "@customTypes/users/student";
@@ -11,6 +11,7 @@ import { Pencil, User } from "lucide-react";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
 import AddressForm from "./_address-form";
+import withStudentAuth from "../../../services/auth/withStudentAuth";
 
 interface StudentProfileProps {
   student: Student;
@@ -86,34 +87,25 @@ export default function StudentProfile({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    const student = await apiClient.get<Student>("/students/profile");
+export const getServerSideProps = withStudentAuth(
+  async (_context, student, apiClient) => {
     const cities = await apiClient.get<City[]>("/cities");
     const institutions = await apiClient.get<Institution[]>("/institutions", {
       params: {
-        cityId: student.data.city.id,
+        cityId: student.city.id,
       },
     });
     const courses = await apiClient.get<Course[]>(
-      `/institutions/${student.data.institution.id}/courses`
+      `/institutions/${student.institution.id}/courses`
     );
 
     return {
       props: {
-        student: student.data,
+        student: student,
         cities: cities.data,
         institutions: institutions.data,
         courses: courses.data,
       },
     };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
   }
-};
+);
