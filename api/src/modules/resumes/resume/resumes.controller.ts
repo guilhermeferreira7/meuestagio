@@ -2,11 +2,11 @@ import { Controller, Get, Body, UseGuards, Request, Put } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { ResumesService } from './resumes.service';
-import { HasRoles } from '../auth/roles/roles.decorator';
-import { Role } from '../auth/roles/roles';
-import { RolesGuard } from '../auth/roles/roles.guard';
 import { UpdateResumeDto } from './update-resume.dto';
-import { ReqAuth } from '../../types/auth/request';
+import { RolesGuard } from '../../auth/roles/roles.guard';
+import { Role } from '../../auth/roles/roles';
+import { HasRoles } from '../../auth/roles/roles.decorator';
+import { ReqAuth } from '../../../types/auth/request';
 
 @Controller('resumes')
 export class ResumesController {

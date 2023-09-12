@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -9,8 +8,7 @@ import {
 import { Student } from '../../users/students/entities/student.entity';
 import { Education } from '../educations/educations.entity';
 import { Skill } from '../skills/skill.entity';
-import { Project } from './project.entity';
-import { Language } from './language.entity';
+import { Language } from '../languages/language.entity';
 import { Experience } from '../experiences/experiences.entity';
 
 @Entity()
@@ -45,9 +43,4 @@ export class Resume {
     nullable: true,
   })
   skills: Skill[];
-
-  @OneToMany(() => Project, (project) => project.resume, {
-    nullable: true,
-  })
-  projects: Project[];
 }

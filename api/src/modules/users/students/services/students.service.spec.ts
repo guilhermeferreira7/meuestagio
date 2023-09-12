@@ -8,7 +8,7 @@ import { Student } from '../entities/student.entity';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from '../dtos/create-student.dto';
 import { ResumesService } from '../../../resumes/resumes.service';
-import { Resume } from '../../../resumes/entities/resume.entity';
+import { Resume } from '../../../resumes/resume/resume.entity';
 
 const oneStudent: CreateStudentDto = {
   name: 'student one',

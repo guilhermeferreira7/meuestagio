@@ -8,7 +8,7 @@ import {
 import { JobApplicationStatus } from './status';
 import { Student } from '../../users/students/entities/student.entity';
 import { Job } from '../../jobs/entities/job.entity';
-import { Resume } from '../../resumes/entities/resume.entity';
+import { Resume } from '../../resumes/resume/resume.entity';
 
 @Entity()
 export class JobApplication {

@@ -13,7 +13,7 @@ import { StudentsController } from './students/controllers/students.controller';
 import { CompaniesService } from './companies/services/companies.service';
 import { CompaniesController } from './companies/controllers/companies.controller';
 import { AdminController } from './admin/controllers/admin.controller';
-import { Resume } from '../resumes/entities/resume.entity';
+import { Resume } from '../resumes/resume/resume.entity';
 import { User } from './user/user.entity';
 
 @Module({

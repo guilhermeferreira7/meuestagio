@@ -10,7 +10,7 @@ import { CreateStudentDto } from '../dtos/create-student.dto';
 import { Student } from '../entities/student.entity';
 import bcryptService from '../../../../utils/bcriptUtils';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
-import { Resume } from '../../../resumes/entities/resume.entity';
+import { Resume } from '../../../resumes/resume/resume.entity';
 
 @Injectable()
 export class StudentsService {

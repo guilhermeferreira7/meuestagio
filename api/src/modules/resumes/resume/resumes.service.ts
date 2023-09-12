@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UpdateResumeDto } from './update-resume.dto';
-import { Resume } from './entities/resume.entity';
+import { Resume } from './resume.entity';
 
 @Injectable()
 export class ResumesService {
