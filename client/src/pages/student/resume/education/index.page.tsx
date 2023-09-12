@@ -13,7 +13,7 @@ import { Form } from "../../../../components/Form";
 import AppCard from "../../../../components/AppCard";
 import { api } from "../../../../services/api/api";
 import { notify } from "../../../../components/toasts/toast";
-import axios, { isAxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { ToastContainer } from "react-toastify";
 import { GetServerSideProps } from "next";
 import { getAPIClient } from "../../../../services/api/clientApi";
@@ -29,7 +29,9 @@ export default function PageAddEducation({
   resumeId,
   educations,
 }: PageAddEducationProps) {
-  const [educationsUpdated, setEducations] = useState<Education[]>(educations);
+  const [educationsUpdated, setEducations] = useState<Education[]>(
+    educations || []
+  );
   const createEducationForm = useForm<FormAddEducation>({
     mode: "all",
     resolver: zodResolver(createEducationSchema),
@@ -226,16 +228,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
   try {
     const apiClient = getAPIClient(ctx);
     const student = await apiClient.get<Student>("/students/profile");
-    const resume = await apiClient.get<Resume>("/resumes/me", {
-      params: {
-        studentId: student.data.id,
-      },
-    });
-
     return {
       props: {
-        resumeId: resume.data.id,
-        educations: resume.data.educations,
+        resumeId: student.data.resume.id,
+        educations: student.data.resume.educations || [],
       },
     };
   } catch (error) {

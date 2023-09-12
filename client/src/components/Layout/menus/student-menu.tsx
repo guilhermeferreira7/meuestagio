@@ -57,7 +57,7 @@ const studentMenu = [
   },
   {
     icon: <Briefcase />,
-    href: "/",
+    href: "/student/dashboard",
     label: "Vagas",
   },
   {

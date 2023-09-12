@@ -1,11 +1,10 @@
+import React, { useEffect, useState } from "react";
+
 import { City } from "@customTypes/city";
 import { Region } from "@customTypes/region";
-import { Student } from "@customTypes/users/student";
-import React from "react";
+import { api } from "../../../services/api/api";
 
 type SearchBarProps = {
-  student: Student;
-  states: string[];
   regions: Region[];
   cities: City[];
   search: (search: string) => void;
@@ -17,8 +16,6 @@ type SearchBarProps = {
 };
 
 export default function SearchBar({
-  student,
-  states,
   regions,
   cities,
   search,
@@ -28,6 +25,26 @@ export default function SearchBar({
   setIsRemote,
   cleanFilters,
 }: SearchBarProps) {
+  const [states, setStates] = useState<string[]>([]);
+
+  useEffect(() => {
+    api
+      .get<Region[]>("/cities/regions", {
+        params: {
+          orderBy: "nome",
+        },
+      })
+      .then((response) => {
+        const states: string[] = [];
+        response.data.forEach((region) => {
+          if (!states.includes(region.state)) {
+            states.push(region.state);
+          }
+        });
+        setStates(states);
+      });
+  }, []);
+
   return (
     <>
       <form
@@ -51,7 +68,6 @@ export default function SearchBar({
           <div className="flex flex-col md:flex-row items-center gap-1">
             <select
               className="select select-primary w-full md:w-1/3"
-              defaultValue={student.city.state}
               onChange={(e) => onStateChange(e.target.value)}
             >
               <option value="">Qualquer estado</option>
@@ -76,7 +92,6 @@ export default function SearchBar({
             </select>
             <select
               className="select select-primary w-full md:w-1/3"
-              defaultValue={JSON.stringify(student.city)}
               onChange={(e) => onCityChange(e.target.value)}
             >
               <option value="">Qualquer cidade</option>

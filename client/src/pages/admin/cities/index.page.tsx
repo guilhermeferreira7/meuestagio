@@ -7,6 +7,7 @@ import { User } from "@customTypes/users/user";
 import { api } from "../../../services/api/api";
 import { ToastContainer } from "react-toastify";
 import { notifyError, notifySuccess } from "@components/toasts/toast";
+import { isAxiosError } from "axios";
 
 interface RegisterCityProps {
   states: any;
@@ -32,12 +33,15 @@ export default function RegisterCity({ states }: RegisterCityProps) {
       setRegionName(getRegionalCities.data[0].microrregiao.nome);
       setRegionalCities([...getRegionalCities.data]);
     } catch (error) {
-      console.log(error);
+      if (isAxiosError(error)) {
+        notifyError(error.response?.data?.message);
+      } else {
+        notifyError("Erro ao buscar cidades!");
+      }
     }
   }
 
   async function handleRegister() {
-    console.log(regionalCities);
     const regionId = microregion;
     const regionName = regionalCities[0].microrregiao.nome;
 

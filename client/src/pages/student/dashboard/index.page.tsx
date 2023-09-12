@@ -1,45 +1,31 @@
 import { GetServerSideProps } from "next";
+import { ToastContainer } from "react-toastify";
 
 import { VACANCIES_STUDENT_LIMIT } from "@constants/request";
 import { Student } from "@customTypes/users/student";
 import { Job } from "@customTypes/job";
-import { City } from "@customTypes/city";
 import { getAPIClient } from "@services/api/clientApi";
 
-import axios from "axios";
+import { isAxiosError } from "axios";
 import { useJobsListing } from "../../../hooks/useJobListing";
-import { ToastContainer } from "react-toastify";
-import SearchBar from "@pages/student/dashboard/_search-bar";
-import { Region } from "@customTypes/region";
+import SearchBar from "./_search-bar";
 import JobCardStudent from "./_job-card-student";
 
 interface StudentPageProps {
   jobsData: Job[];
   student: Student;
   states: string[];
-  initialCities: City[];
-  initialRegions: Region[];
 }
 
-export default function StudentJobs({
-  jobsData,
-  student,
-  states,
-  initialCities,
-  initialRegions,
-}: StudentPageProps) {
+export default function StudentJobs({ jobsData, student }: StudentPageProps) {
   const { pageData, pageFunctions } = useJobsListing({
     jobs: jobsData,
     student,
-    cities: initialCities,
-    regions: initialRegions,
   });
 
   return (
     <>
       <SearchBar
-        student={student}
-        states={states}
         cities={pageData.cities}
         regions={pageData.regions}
         search={pageFunctions.search}
@@ -96,21 +82,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const apiClient = getAPIClient(ctx);
     const student = await apiClient.get<Student>("/students/profile");
-    const cities = await apiClient.get<City[]>("/cities", {
-      params: {
-        orderBy: "name",
-      },
-    });
-    const states: any = [];
-    cities.data.forEach((city) => {
-      if (!states.includes(city.state)) {
-        states.push(city.state);
-      }
-    });
-    const initialCities = cities.data.filter(
-      (city) => city.state === student.data.city.state
-    );
-
     const jobs = await apiClient.get<Job[]>("/jobs", {
       params: {
         limit: VACANCIES_STUDENT_LIMIT,
@@ -118,24 +89,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     });
 
-    const regions = await apiClient.get<Region[]>("cities/regions", {
-      params: {
-        state: student.data.city.state,
-        orderBy: "name",
-      },
-    });
-
     return {
       props: {
         jobsData: jobs.data,
-        initialCities,
-        initialRegions: regions.data,
-        states,
         student: student.data,
       },
     };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
+    if (isAxiosError(error)) {
       if (error.response?.status === 401) {
         return {
           redirect: {
