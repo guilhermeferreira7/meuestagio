@@ -34,16 +34,23 @@ export class StudentsService {
       password,
     });
 
-    const studentSave = await this.repository.save(newStudent);
-    const resume = this.resumeRepository.create({ studentId: newStudent.id });
-    await this.resumeRepository.save(resume);
+    const studentSave = await this.repository.save({
+      ...newStudent,
+    });
+
+    const newResume = this.resumeRepository.create({
+      student: studentSave,
+    });
+
+    await this.resumeRepository.save(newResume);
+    await this.repository.update(studentSave.id, { resumeId: newResume.id });
 
     return studentSave;
   }
 
   async findOne(email: string): Promise<Student> {
     return await this.repository.findOne({
-      relations: ['course', 'institution', 'city'],
+      relations: ['course', 'institution', 'city', 'resume'],
       where: { email },
     });
   }

@@ -10,6 +10,17 @@ export type Resume = {
   educations: Education[];
   experiences: Experience[];
   languages: Language[];
+  projects: Project[];
+};
+
+export type Project = {
+  id: number;
+  resumeId: number;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  currentProject: boolean;
 };
 
 export type Skill = {

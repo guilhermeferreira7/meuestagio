@@ -12,13 +12,6 @@ export class ResumesService {
     private readonly repository: Repository<Resume>,
   ) {}
 
-  async findByStudentId(id: number): Promise<Resume> {
-    return await this.repository.findOne({
-      where: { studentId: id },
-      relations: ['educations', 'experiences', 'skills'],
-    });
-  }
-
   async update(id: number, body: UpdateResumeDto): Promise<Resume> {
     await this.repository.update(id, body);
     const resume = await this.repository.findOne({

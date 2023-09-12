@@ -1,3 +1,5 @@
+import { Resume } from "../resume";
+
 export type Student = {
   id: number;
   name: string;
@@ -20,4 +22,5 @@ export type Student = {
     name: string;
     state: string;
   };
+  resume: Resume;
 };

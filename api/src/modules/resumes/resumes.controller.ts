@@ -13,14 +13,6 @@ export class ResumesController {
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Get('/me')
-  async find(@Request() req: any) {
-    const id = req.query.studentId;
-    return await this.resumesService.findByStudentId(+id);
-  }
-
-  @HasRoles(Role.STUDENT)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Put('/me')
   async update(@Body() body: UpdateResumeDto) {
     return await this.resumesService.update(body.id, body);

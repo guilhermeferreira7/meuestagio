@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
 import { Institution } from '../../../institutions/entities/institution.entity';
 import { User } from '../../user/user.entity';
@@ -22,6 +22,7 @@ export class Student extends User {
   @Column({ nullable: true })
   resumeId: number;
 
-  @ManyToOne(() => Resume)
+  @OneToOne(() => Resume, (resume) => resume.student)
+  @JoinColumn()
   resume: Resume;
 }

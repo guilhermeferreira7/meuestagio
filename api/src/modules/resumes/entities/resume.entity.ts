@@ -3,6 +3,7 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Student } from '../../users/students/entities/student.entity';
@@ -17,23 +18,13 @@ export class Resume {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    unique: true,
-  })
-  studentId: number;
-
-  @ManyToOne(() => Student)
+  @OneToOne(() => Student, (student) => student.resume)
   student: Student;
 
   @Column({
     nullable: true,
   })
-  title: string;
-
-  @Column({
-    nullable: true,
-  })
-  about: string;
+  studentId: number;
 
   @OneToMany(() => Education, (education) => education.resume, {
     nullable: true,
