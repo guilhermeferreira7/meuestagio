@@ -1,17 +1,19 @@
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import React from "react";
-
-import { Student } from "@customTypes/users/student";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { City } from "@customTypes/city";
-import { Institution } from "@customTypes/institution";
-import { Course } from "@customTypes/course";
-import AppCard from "@components/AppCard";
 import { Pencil, User } from "lucide-react";
+import { ToastContainer } from "react-toastify";
+
+import AppCard from "../../../components/AppCard";
+import { notify } from "../../../components/toasts/toast";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
 import AddressForm from "./_address-form";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
+import { api } from "../../../services/api/api";
+import { Student } from "../../../types/users/student";
+import { City } from "../../../types/city";
+import { Institution } from "../../../types/institution";
+import { Course } from "../../../types/course";
+import { errorToString } from "../../../utils/helpers/error-to-string";
 
 interface StudentProfileProps {
   student: Student;
@@ -26,6 +28,19 @@ export default function StudentProfile({
   institutions,
   courses,
 }: StudentProfileProps) {
+  const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const about = event.currentTarget.about.value;
+
+    try {
+      await api.patch("/students/profile", {
+        about,
+      });
+      notify.success("Dados atualizados com sucesso");
+    } catch (error) {
+      notify.error(errorToString(error));
+    }
+  };
   return (
     <>
       <div className="flex flex-col gap-2 w-11/12 mb-4">
@@ -40,7 +55,7 @@ export default function StudentProfile({
               <Pencil />
               Sobre mim
             </span>
-            <div className="flex gap-1">
+            <form className="flex gap-1" onSubmit={handleUpdate}>
               <textarea
                 name="about"
                 id="about"
@@ -50,7 +65,7 @@ export default function StudentProfile({
                 {student?.about}
               </textarea>
               <button className="btn btn-primary self-end">Salvar</button>
-            </div>
+            </form>
           </div>
 
           <div className="divider"></div>
@@ -83,6 +98,8 @@ export default function StudentProfile({
           />
         </AppCard>
       </div>
+
+      <ToastContainer />
     </>
   );
 }

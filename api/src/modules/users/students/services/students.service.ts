@@ -1,7 +1,7 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -39,7 +39,6 @@ export class StudentsService {
     });
 
     const newResume = this.resumeRepository.create({
-      // student: studentSave,
       studentId: studentSave.id,
     });
 
@@ -50,7 +49,7 @@ export class StudentsService {
   }
 
   async findOne(email: string): Promise<Student> {
-    if (!email) return null;
+    if (!email) throw new UnauthorizedException();
     return await this.repository.findOne({
       relations: ['course', 'institution', 'city'],
       where: { email },
@@ -62,7 +61,17 @@ export class StudentsService {
   }
 
   async updateStudent(email: string, student: UpdateStudentDto) {
-    const studentUpdated = await this.repository.update(email, student);
+    if (!email) throw new UnauthorizedException();
+
+    await this.repository.update(
+      {
+        email: email,
+      },
+      {
+        ...student,
+      },
+    );
+    const studentUpdated = await this.findOne(email);
     return studentUpdated;
   }
 }

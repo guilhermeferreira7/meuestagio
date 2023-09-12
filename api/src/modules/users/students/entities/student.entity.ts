@@ -7,6 +7,9 @@ import { Resume } from '../../../resumes/entities/resume.entity';
 
 @Entity()
 export class Student extends User {
+  @Column({ nullable: true })
+  about: string;
+
   @ManyToOne(() => Institution)
   institution: Institution;
 
