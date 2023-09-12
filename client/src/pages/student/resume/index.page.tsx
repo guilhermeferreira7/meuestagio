@@ -122,18 +122,6 @@ export default function ResumePage({ student, resume }: PageProps) {
               <p>Nada cadastrado</p>
             )}
           </ResumeItem>
-
-          <ResumeItem title="Projetos">
-            {resume.projects?.length > 0 ? (
-              resume.projects.map((project, index) => (
-                <div className="flex items-center gap-1" key={index}>
-                  {project.name} - {project.description}
-                </div>
-              ))
-            ) : (
-              <p>Nada cadastrado</p>
-            )}
-          </ResumeItem>
         </AppCard>
       </div>
     </>

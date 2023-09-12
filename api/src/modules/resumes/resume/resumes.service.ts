@@ -29,13 +29,7 @@ export class ResumesService {
 
     const resume = await this.repository.findOne({
       where: { studentId },
-      relations: [
-        'educations',
-        'experiences',
-        'skills',
-        'languages',
-        'projects',
-      ],
+      relations: ['educations', 'experiences', 'skills', 'languages'],
     });
 
     return resume;
