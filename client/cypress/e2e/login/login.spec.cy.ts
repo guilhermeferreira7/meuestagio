@@ -1,3 +1,5 @@
+import { STUDENT_LOGIN } from "../../support/constants";
+
 beforeEach(() => {
   // enten home page
   cy.visit("/");
@@ -12,8 +14,8 @@ beforeEach(() => {
 describe("Login", () => {
   it("should login as student", () => {
     // fill the form
-    cy.get('input[name="email"]').type("alunoum@email.com");
-    cy.get('input[name="password"]').type("123123");
+    cy.get('input[name="email"]').type(STUDENT_LOGIN.email);
+    cy.get('input[name="password"]').type(STUDENT_LOGIN.password);
 
     // submit the form
     cy.get("button").contains("Login").click();
@@ -41,8 +43,8 @@ describe("Login", () => {
 describe("Logout", () => {
   it("should logout", () => {
     // fill the form
-    cy.get('input[name="email"]').type("alunoum@email.com");
-    cy.get('input[name="password"]').type("123123");
+    cy.get('input[name="email"]').type(STUDENT_LOGIN.email);
+    cy.get('input[name="password"]').type(STUDENT_LOGIN.password);
 
     // submit the form
     cy.get("button").contains("Login").click();
