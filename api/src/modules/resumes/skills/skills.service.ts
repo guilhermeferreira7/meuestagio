@@ -19,7 +19,10 @@ export class SkillsService {
 
   async add(body: CreateSkillDto): Promise<Skill> {
     const skillExists = await this.repository.findOne({
-      where: { name: body.name },
+      where: {
+        resumeId: body.resumeId,
+        name: body.name,
+      },
     });
     if (skillExists) {
       throw new ConflictException('Habilidade já cadastrada');

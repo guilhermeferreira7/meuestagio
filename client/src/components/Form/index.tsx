@@ -6,8 +6,10 @@ import { InputText } from "./InputText";
 import { InputTextarea } from "./InputTextarea";
 import { InputSelect } from "./InputSelect";
 import { InputCheckbox } from "./InputCheckbox";
+import { Date } from "./Date";
 
 export const Form = {
+  Date,
   Label,
   InputText,
   InputRadio,

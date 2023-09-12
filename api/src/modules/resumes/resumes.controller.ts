@@ -5,7 +5,7 @@ import { ResumesService } from './resumes.service';
 import { HasRoles } from '../auth/roles/roles.decorator';
 import { Role } from '../auth/roles/roles';
 import { RolesGuard } from '../auth/roles/roles.guard';
-import { UpdateResumeDto } from './dto/update-resume.dto';
+import { UpdateResumeDto } from './update-resume.dto';
 import { ReqAuth } from '../../types/auth/request';
 
 @Controller('resumes')

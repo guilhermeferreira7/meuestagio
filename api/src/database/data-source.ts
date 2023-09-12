@@ -15,8 +15,8 @@ import { Resume } from '../modules/resumes/entities/resume.entity';
 import { Education } from '../modules/resumes/educations/educations.entity';
 import { Skill } from '../modules/resumes/skills/skill.entity';
 import { Language } from '../modules/resumes/entities/language.entity';
-import { Experience } from '../modules/resumes/entities/experiences.entity';
 import { Project } from '../modules/resumes/entities/project.entity';
+import { Experience } from '../modules/resumes/experiences/experiences.entity';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',

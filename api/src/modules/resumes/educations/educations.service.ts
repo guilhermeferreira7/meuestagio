@@ -17,7 +17,10 @@ export class EducationsService {
 
   async add(body: CreateEducationDto): Promise<Education> {
     const educationExists = await this.repository.findOne({
-      where: { school: body.school },
+      where: {
+        resumeId: body.resumeId,
+        school: body.school,
+      },
     });
     if (educationExists) {
       throw new ConflictException('Formação já cadastrada');

@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Resume } from './resume.entity';
+import { Resume } from '../entities/resume.entity';
 
 @Entity()
 export class Experience {
