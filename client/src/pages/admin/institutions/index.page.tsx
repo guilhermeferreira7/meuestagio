@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { GetServerSideProps } from "next";
-import { ToastContainer } from "react-toastify";
 
 import AppCard from "@components/AppCard";
 import { getAPIClient } from "@services/api/clientApi";
@@ -56,7 +55,6 @@ export default function RegisterInstitutions({
           </AppCard>
         )}
       </div>
-      <ToastContainer />
     </>
   );
 }

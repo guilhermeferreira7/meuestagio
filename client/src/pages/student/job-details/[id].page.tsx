@@ -159,8 +159,6 @@ export default function JobDetailsPage({
           </div>
         </div>
       </div>
-
-      <ToastContainer />
     </>
   );
 }

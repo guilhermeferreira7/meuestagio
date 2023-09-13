@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Resume } from '../resume/resume.entity';
 
-enum LanguageLevel {
+export enum LanguageLevel {
   Basic = 'Básico',
   Intermediate = 'Intermediário',
   Advanced = 'Avançado',

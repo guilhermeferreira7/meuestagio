@@ -1,12 +1,7 @@
-import { GetServerSideProps } from "next";
-import { ToastContainer } from "react-toastify";
-
 import { VACANCIES_STUDENT_LIMIT } from "@constants/request";
 import { Student } from "@customTypes/users/student";
 import { Job } from "@customTypes/job";
-import { getAPIClient } from "@services/api/clientApi";
 
-import { isAxiosError } from "axios";
 import { useJobsListing } from "../../../hooks/useJobListing";
 import SearchBar from "./_search-bar";
 import JobCardStudent from "./_job-card-student";
@@ -73,8 +68,6 @@ export default function StudentJobs({ jobsData, student }: StudentPageProps) {
           </button>
         )}
       </div>
-
-      <ToastContainer />
     </>
   );
 }

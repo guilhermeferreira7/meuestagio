@@ -1,6 +1,5 @@
 import React from "react";
 import { Pencil, User } from "lucide-react";
-import { ToastContainer } from "react-toastify";
 
 import AppCard from "../../../components/AppCard";
 import { notify } from "../../../components/toasts/toast";
@@ -61,9 +60,8 @@ export default function StudentProfile({
                 id="about"
                 placeholder="Escreva algo sobre você"
                 className="textarea textarea-primary w-full"
-              >
-                {student?.about}
-              </textarea>
+                defaultValue={student?.about}
+              />
               <button className="btn btn-primary self-end">Salvar</button>
             </form>
           </div>
@@ -98,8 +96,6 @@ export default function StudentProfile({
           />
         </AppCard>
       </div>
-
-      <ToastContainer />
     </>
   );
 }

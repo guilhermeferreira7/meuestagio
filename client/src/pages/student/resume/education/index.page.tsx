@@ -14,7 +14,6 @@ import AppCard from "../../../../components/AppCard";
 import { api } from "../../../../services/api/api";
 import { notify } from "../../../../components/toasts/toast";
 import { isAxiosError } from "axios";
-import { ToastContainer } from "react-toastify";
 import { Trash } from "lucide-react";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";
 
@@ -215,7 +214,6 @@ export default function PageAddEducation({
           ))
         )}
       </div>
-      <ToastContainer />
     </>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { GetServerSideProps } from "next";
 import { Plus, X } from "lucide-react";
-import { ToastContainer } from "react-toastify";
 
 import { User } from "@customTypes/users/user";
 import { City } from "@customTypes/city";
@@ -65,7 +64,6 @@ export default function RegisterCourses({
           </AppCard>
         )}
       </div>
-      <ToastContainer />
     </>
   );
 }

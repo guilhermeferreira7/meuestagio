@@ -3,7 +3,6 @@ import { z } from "zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
-import { ToastContainer } from "react-toastify";
 
 import { Resume, Skill, SkillLevel } from "@customTypes/resume";
 import { notify } from "@components/toasts/toast";
@@ -122,7 +121,6 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
           ))
         )}
       </div>
-      <ToastContainer />
     </>
   );
 }

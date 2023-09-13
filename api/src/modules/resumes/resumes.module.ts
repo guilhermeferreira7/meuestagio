@@ -14,6 +14,8 @@ import { Experience } from './experiences/experiences.entity';
 import { ExperiencesController } from './experiences/experiences.controller';
 import { Resume } from './resume/resume.entity';
 import { Language } from './languages/language.entity';
+import { LanguagesController } from './languages/languages.controller';
+import { LanguagesService } from './languages/languages.service';
 
 @Module({
   imports: [
@@ -24,12 +26,14 @@ import { Language } from './languages/language.entity';
     SkillsController,
     EducationsController,
     ExperiencesController,
+    LanguagesController,
   ],
   providers: [
     ResumesService,
     SkillsService,
     EducationsService,
     ExperiencesService,
+    LanguagesService,
   ],
 })
 export class ResumesModule {}

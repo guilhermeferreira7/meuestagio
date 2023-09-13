@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { ToastContainer } from "react-toastify";
 import { Trash } from "lucide-react";
 
 import { Experience, Resume } from "../../../../types/resume";
@@ -35,7 +34,6 @@ export default function ExperiencePage({
   const { handleSubmit } = createExperienceForm;
 
   const createExperience = async (data: FormAddExperience) => {
-    console.log(data);
     try {
       const experience = await api.post<Experience>("/resumes/me/experiences", {
         resumeId,
@@ -123,13 +121,14 @@ export default function ExperiencePage({
                 <Form.InputCheckbox name="currentJob" label="Trabalho atual?" />
                 <Form.ErrorMessage field="currentJob" />
               </Form.Field>
-              {createExperienceForm.watch("currentJob") === false && (
-                <Form.Field>
-                  <Form.Label htmlFor="endDate">Data de término</Form.Label>
-                  <Form.Date name="endDate" />
-                  <Form.ErrorMessage field="endDate" />
-                </Form.Field>
-              )}
+              <Form.Field>
+                <Form.Label htmlFor="endDate">Data de término</Form.Label>
+                <Form.Date
+                  disabled={createExperienceForm.watch("currentJob")}
+                  name="endDate"
+                />
+                <Form.ErrorMessage field="endDate" />
+              </Form.Field>
 
               <button
                 type="submit"
@@ -153,7 +152,6 @@ export default function ExperiencePage({
           ))
         )}
       </div>
-      <ToastContainer />
     </>
   );
 }

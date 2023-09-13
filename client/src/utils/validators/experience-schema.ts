@@ -45,11 +45,11 @@ export const createExperienceSchema = z
   )
   .transform((data) => ({
     ...data,
-    startDate: `01-${data.startDate.split("/")[0]}-${
-      data.startDate.split("/")[1]
-    }`,
+    startDate: `${data.startDate.split("/")[1]}-${
+      data.startDate.split("/")[0]
+    }-01`,
     endDate: data.endDate
-      ? `01-${data.endDate.split("/")[0]}-${data.endDate.split("/")[1]}`
+      ? `${data.endDate.split("/")[1]}-${data.endDate.split("/")[0]}-01`
       : "",
   }));
 
