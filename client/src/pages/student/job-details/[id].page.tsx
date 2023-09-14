@@ -1,23 +1,20 @@
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
 import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
 
-import { getAPIClient } from "../../../services/api/clientApi";
-import { api } from "../../../services/api/api";
-import { errorToString } from "../../../utils/helpers/error-to-string";
-import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { notify } from "../../../components/toasts/toast";
+import { api } from "../../../services/api/api";
+import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { Job } from "../../../types/job";
 import { JobApplication } from "../../../types/job-application";
+import { errorToString } from "../../../utils/helpers/error-to-string";
 
-interface JobDetailsPageProps {
+type JobDetailsPageProps = {
   studentId: number;
   resumeId: number;
   applied: boolean;
-}
+};
 
 export default function JobDetailsPage({
   studentId,
@@ -43,6 +40,7 @@ export default function JobDetailsPage({
   if (!job) {
     return <h1>Carregando...</h1>;
   }
+
   const apply = async () => {
     try {
       await api.post("job-applications/apply", {
@@ -186,7 +184,7 @@ export const getServerSideProps = withStudentAuth(
     return {
       props: {
         studentId: student.id,
-        resumeId: student.resume.id,
+        resumeId: student.resumeId,
         applied,
       },
     };
