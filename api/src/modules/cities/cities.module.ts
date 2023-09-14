@@ -7,6 +7,7 @@ import { Region } from './entities/region.entity';
 import { Institution } from '../institutions/entities/institution.entity';
 import { CitiesService } from './services/cities.service';
 import { CitiesController } from './controllers/cities.controller';
+import { Region } from './entities/region.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([City, Student, Institution, Region])],

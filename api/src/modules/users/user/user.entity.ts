@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { City } from '../../cities/entities/city.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export abstract class User {

@@ -143,7 +143,7 @@ describe('CityService', () => {
 
   describe('findAll()', () => {
     it('should return all cities', async () => {
-      const cities = await service.findAll();
+      const cities = await service.findAll({ limit: 10, page: 1 });
       expect(cities).toEqual(citiesArray);
       expect(repository.find).toHaveBeenCalled();
     });
