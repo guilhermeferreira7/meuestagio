@@ -35,3 +35,23 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add("loginAsStudent", (email: string, password) => {
+  // enter home page
+  cy.visit("/");
+
+  // click on login button
+  cy.get('a[href="/login"]').first().click();
+
+  // check if the url is correct
+  cy.url().should("include", "/login");
+  // fill the form
+  cy.get('input[name="email"]').type(email);
+  cy.get('input[name="password"]').type(password);
+
+  // submit the form
+  cy.get("button").contains("Login").click();
+
+  // check if the url is correct
+  cy.url().should("include", "/student/dashboard");
+});

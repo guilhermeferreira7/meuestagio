@@ -1,7 +1,5 @@
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
-import { User } from '../../../modules/users/user/user.entity';
-import bcryptService from '../../../utils/bcriptUtils';
 import { Area } from '../../../modules/areas/entities/area.entity';
 import axios from 'axios';
 
@@ -33,9 +31,7 @@ export class AreasSeeder implements Seeder {
     console.log('Gerando áreas de conhecimento...');
 
     try {
-      const areas = await areasRepository.upsert(knowledgeAreasFilter, [
-        'cnpqId',
-      ]);
+      await areasRepository.upsert(knowledgeAreasFilter, ['cnpqId']);
     } catch (error) {
       console.log(error);
     }

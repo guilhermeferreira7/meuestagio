@@ -9,17 +9,10 @@ import { useState } from "react";
 
 type UseJobsProps = {
   jobs: Job[];
-  cities: City[];
-  regions: Region[];
   student: Student;
 };
 
-export function useJobsListing({
-  jobs: initialJobs,
-  cities: initialCities,
-  regions: initialRegions,
-  student,
-}: UseJobsProps) {
+export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
   const [state, setState] = useState<string | undefined>(student?.city.state);
   const [cityName, setCityName] = useState<string | undefined>(
     student?.city.name
@@ -27,8 +20,8 @@ export function useJobsListing({
   const [regionName, setRegionName] = useState<string>("");
   const [filters, setFilters] = useState<any>({ city: student?.city.id + "" });
 
-  const [cities, setCities] = useState<City[]>(initialCities);
-  const [regions, setRegions] = useState<Region[]>(initialRegions);
+  const [cities, setCities] = useState<City[]>([]);
+  const [regions, setRegions] = useState<Region[]>([]);
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
 
   const [isRemote, setIsRemote] = useState<boolean>(false);
@@ -95,10 +88,24 @@ export function useJobsListing({
 
   async function onRegionChange(region: string) {
     if (region) {
+      const cities = await api.get<City[]>("/cities", {
+        params: {
+          region: JSON.parse(region).id,
+          orderBy: "name",
+        },
+      });
+      setCities(cities.data);
+
       setFilters({ region: JSON.parse(region).id });
       updateFilters({ region: JSON.parse(region).id, search: currentSearch });
       setRegionName(JSON.parse(region).name);
     } else {
+      const cities = await api.get<City[]>("/cities", {
+        params: {
+          orderBy: "name",
+        },
+      });
+      setCities(cities.data);
       updateFilters({ state });
       setFilters({ state });
     }
@@ -116,7 +123,6 @@ export function useJobsListing({
   }
 
   async function updateFilters(filter: any) {
-    console.log(filter);
     try {
       const jobs = await api.get<Job[]>("/jobs", {
         params: {

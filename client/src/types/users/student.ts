@@ -1,6 +1,9 @@
+import { Resume } from "../resume";
+
 export type Student = {
   id: number;
   name: string;
+  about?: string;
   email: string;
   institution: {
     id: number;
@@ -19,4 +22,6 @@ export type Student = {
     name: string;
     state: string;
   };
+  resume: Resume;
+  resumeId: number;
 };

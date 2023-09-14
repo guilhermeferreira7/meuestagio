@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { GetServerSideProps } from "next";
-import { ToastContainer } from "react-toastify";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -134,8 +133,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
           </button>
         </form>
       </FormProvider>
-
-      <ToastContainer />
     </div>
   );
 }

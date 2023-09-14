@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -14,7 +18,10 @@ export class SkillsService {
 
   async add(body: CreateSkillDto): Promise<Skill> {
     const skillExists = await this.repository.findOne({
-      where: { name: body.name },
+      where: {
+        resumeId: body.resumeId,
+        name: body.name,
+      },
     });
     if (skillExists) {
       throw new ConflictException('Habilidade já cadastrada');
@@ -35,7 +42,7 @@ export class SkillsService {
       where: { id },
     });
     if (!skill) {
-      throw new Error('Skill not found');
+      throw new NotFoundException('Habilidade não encontrada');
     }
 
     await this.repository.delete(id);

@@ -1,9 +1,8 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Education } from '../entities/education.entity';
-import { Experience } from '../entities/experiences.entity';
+import { Language } from '../languages/language.entity';
+import { Experience } from '../experiences/experiences.entity';
+import { Education } from '../educations/educations.entity';
 import { Skill } from '../skills/skill.entity';
-import { Language } from '../entities/language.entity';
-import { Project } from '../entities/project.entity';
 
 export class UpdateResumeDto {
   @IsNotEmpty()
@@ -23,8 +22,6 @@ export class UpdateResumeDto {
   educations?: Education[];
 
   experiences?: Experience[];
-
-  projects?: Project[];
 
   languages?: Language[];
 }

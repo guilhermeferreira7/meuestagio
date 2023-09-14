@@ -43,7 +43,6 @@ export class InstitutionsController {
   async create(
     @Body() createInstitutionDto: CreateInstitutionDto,
   ): Promise<Institution> {
-    console.log(createInstitutionDto);
     return await this.institutionsService.createInstitution(
       createInstitutionDto,
     );

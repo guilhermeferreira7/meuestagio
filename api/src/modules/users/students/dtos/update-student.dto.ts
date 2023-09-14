@@ -2,6 +2,12 @@ import { IsEmail, IsOptional } from 'class-validator';
 
 export class UpdateStudentDto {
   @IsOptional()
+  about: string;
+
+  @IsOptional()
+  password: string;
+
+  @IsOptional()
   name: string;
 
   @IsOptional()

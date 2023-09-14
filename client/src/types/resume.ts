@@ -2,10 +2,8 @@ import { Student } from "./users/student";
 
 export type Resume = {
   id: number;
-  studentId: number;
   student: Student;
-  title: string;
-  about: string;
+  studentId: number;
   skills: Skill[];
   educations: Education[];
   experiences: Experience[];

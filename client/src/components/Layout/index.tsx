@@ -11,6 +11,7 @@ import Header from "./header";
 import PageMenu from "./page-menu";
 import Footer from "./footer";
 import MenuItem from "./_menu-item";
+import { ToastContainer } from "react-toastify";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -63,6 +64,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
           </ul>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Resume } from '../entities/resume.entity';
+import { Resume } from '../resume/resume.entity';
 
 export enum SkillLevel {
   Basic = 'Básico',

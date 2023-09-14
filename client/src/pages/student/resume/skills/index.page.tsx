@@ -3,9 +3,6 @@ import { z } from "zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
-import { ToastContainer } from "react-toastify";
-import { GetServerSideProps } from "next";
-import axios from "axios";
 
 import { Resume, Skill, SkillLevel } from "@customTypes/resume";
 import { notify } from "@components/toasts/toast";
@@ -13,8 +10,8 @@ import { Form } from "@components/Form";
 import { api } from "@services/api/api";
 import { createSkillSchema } from "@utils/validators/edit-resume-schema";
 import AppCard from "../../../../components/AppCard";
-import { getAPIClient } from "../../../../services/api/clientApi";
-import { Student } from "../../../../types/users/student";
+import withStudentAuth from "../../../../services/auth/withStudentAuth";
+import { errorToString } from "../../../../utils/helpers/error-to-string";
 
 type FormAddSkill = z.infer<typeof createSkillSchema>;
 
@@ -32,7 +29,6 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
   const { handleSubmit } = createSkillForm;
 
   const createSkill = async (data: FormAddSkill) => {
-    console.log(resumeId);
     try {
       const response = await api.post("resumes/me/skills", {
         ...data,
@@ -41,11 +37,7 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
       setSkills([response.data, ...skillsUpdated]);
       notify.success("Habilidade adicionada com sucesso");
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        notify.error(error.response?.data?.message || error.message);
-      } else {
-        notify.error("Erro ao adicionar habilidade");
-      }
+      notify.error(errorToString(error));
     }
   };
 
@@ -120,6 +112,7 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
         </AppCard>
       </div>
       <div className="w-11/12 my-3 flex flex-col gap-2 border-l border-l-gray-300">
+        {skillsUpdated.length < 1 && <span>Nenhuma habilidade cadastrada</span>}
         {!skillsUpdated ? (
           <p className="text-center">Nenhuma habilidade cadastrada</p>
         ) : (
@@ -128,38 +121,18 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
           ))
         )}
       </div>
-      <ToastContainer />
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    const student = await apiClient.get<Student>("/students/profile");
-    const resume = await apiClient.get<Resume>("/resumes/me", {
-      params: {
-        studentId: student.data.id,
-      },
-    });
-    const skills = await apiClient.get<Skill[]>("/resumes/me/skills", {
-      params: {
-        resumeId: resume.data.id,
-      },
-    });
-
+export const getServerSideProps = withStudentAuth(
+  async (_context, student, serverApi) => {
+    const resume = await serverApi.get<Resume>("resumes/me");
     return {
       props: {
-        resumeId: resume.data.id,
-        skills: skills.data,
-      },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
+        resumeId: student.resumeId,
+        skills: resume.data.skills,
       },
     };
   }
-};
+);

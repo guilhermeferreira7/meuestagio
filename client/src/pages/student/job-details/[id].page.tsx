@@ -1,60 +1,43 @@
-import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { useState } from "react";
 import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
 
-import { getAPIClient } from "../../../services/api/clientApi";
+import { notify } from "../../../components/toasts/toast";
 import { api } from "../../../services/api/api";
-import { Job } from "@customTypes/job";
-import { Student } from "@customTypes/users/student";
-import { Resume } from "@customTypes/resume";
-import { JobApplication } from "@customTypes/job-application";
-import { notifyError, notifySuccess } from "@components/toasts/toast";
+import withStudentAuth from "../../../services/auth/withStudentAuth";
+import { Job } from "../../../types/job";
+import { JobApplication } from "../../../types/job-application";
+import { errorToString } from "../../../utils/helpers/error-to-string";
 
-interface JobProps {
-  student: Student;
+type JobDetailsPageProps = {
+  studentId: number;
   resumeId: number;
+  job: Job;
   applied: boolean;
-}
+};
 
-export default function JobPage({ student, resumeId, applied }: JobProps) {
-  const router = useRouter();
-  const { id } = router.query;
-  const [job, setJob] = useState<Job | null>(null);
-
-  useEffect(() => {
-    api
-      .get<Job>(`/jobs/${id}`)
-      .then((response) => {
-        setJob(response.data);
-      })
-      .catch((error) => {
-        notifyError(error.response.data.message);
-      });
-  }, [id]);
+export default function JobDetailsPage({
+  studentId,
+  resumeId,
+  job,
+  applied,
+}: JobDetailsPageProps) {
+  const [jobApplied, setApplied] = useState<boolean>(applied);
 
   const apply = async () => {
     try {
       await api.post("job-applications/apply", {
-        studentId: student.id,
-        jobId: job?.id,
+        studentId: studentId,
+        jobId: job.id,
         resumeId,
       });
       document.getElementById("modal")?.click();
-      setTimeout(() => {
-        router.push("/student/applications");
-      }, 1000);
-      notifySuccess("Candidatura realizada com sucesso!");
-    } catch (error: any) {
-      console.log(error.response?.data?.message);
+      notify.success("Candidatura realizada com sucesso!");
+      setApplied(true);
+    } catch (error) {
+      notify.error(errorToString(error));
     }
   };
-
-  while (!job) {
-    return <h1>Carregando...</h1>;
-  }
 
   return (
     <>
@@ -66,7 +49,7 @@ export default function JobPage({ student, resumeId, applied }: JobProps) {
               vaga: {job.id}
             </h2>
 
-            {applied ? (
+            {jobApplied ? (
               <h2 className="m-2 text-sm lg:text-xl font-bold text-primary">
                 Já se candidatou a essa vaga!
               </h2>
@@ -157,51 +140,37 @@ export default function JobPage({ student, resumeId, applied }: JobProps) {
           </div>
         </div>
       </div>
-
-      <ToastContainer />
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
-  try {
-    const student = await apiClient.get<Student>("/students/profile");
-    const resume = await apiClient.get<Resume>("/resumes/me", {
-      params: {
-        studentId: student.data.id,
-      },
-    });
+export const getServerSideProps = withStudentAuth(
+  async (context, student, apiClient) => {
     const jobApplications = await apiClient.get<JobApplication[]>(
       "job-applications/student",
       {
         params: {
-          studentId: student.data.id,
+          studentId: student.id,
         },
       }
     );
+
+    const job = await apiClient.get<Job>(`jobs/${context.query.id}`);
+
     let applied = false;
-    if (
-      jobApplications.data.some(
-        (jobApplication) => jobApplication.job.id === Number(ctx.query.id)
-      )
-    ) {
-      applied = true;
-    }
+    jobApplications.data.forEach((jobApplication) => {
+      if (jobApplication.job.id === Number(context.query.id)) {
+        applied = true;
+      }
+    });
 
     return {
       props: {
-        student: student.data,
-        resumeId: resume.data.id,
+        studentId: student.id,
+        resumeId: student.resumeId,
+        job: job.data,
         applied,
       },
     };
-  } catch (error: any) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
   }
-};
+);

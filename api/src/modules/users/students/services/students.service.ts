@@ -1,7 +1,7 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,7 +10,7 @@ import { CreateStudentDto } from '../dtos/create-student.dto';
 import { Student } from '../entities/student.entity';
 import bcryptService from '../../../../utils/bcriptUtils';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
-import { Resume } from '../../../resumes/entities/resume.entity';
+import { Resume } from '../../../resumes/resume/resume.entity';
 
 @Injectable()
 export class StudentsService {
@@ -34,14 +34,22 @@ export class StudentsService {
       password,
     });
 
-    const studentSave = await this.repository.save(newStudent);
-    const resume = this.resumeRepository.create({ studentId: newStudent.id });
-    await this.resumeRepository.save(resume);
+    const studentSave = await this.repository.save({
+      ...newStudent,
+    });
+
+    const newResume = this.resumeRepository.create({
+      studentId: studentSave.id,
+    });
+
+    await this.resumeRepository.save(newResume);
+    await this.repository.update(studentSave.id, { resumeId: newResume.id });
 
     return studentSave;
   }
 
   async findOne(email: string): Promise<Student> {
+    if (!email) throw new UnauthorizedException();
     return await this.repository.findOne({
       relations: ['course', 'institution', 'city'],
       where: { email },
@@ -53,7 +61,17 @@ export class StudentsService {
   }
 
   async updateStudent(email: string, student: UpdateStudentDto) {
-    const studentUpdated = await this.repository.update(email, student);
+    if (!email) throw new UnauthorizedException();
+
+    await this.repository.update(
+      {
+        email: email,
+      },
+      {
+        ...student,
+      },
+    );
+    const studentUpdated = await this.findOne(email);
     return studentUpdated;
   }
 }

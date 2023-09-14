@@ -1,39 +1,28 @@
 import {
   Column,
   Entity,
-  ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Student } from '../../users/students/entities/student.entity';
-import { Experience } from './experiences.entity';
-import { Education } from './education.entity';
+import { Education } from '../educations/educations.entity';
 import { Skill } from '../skills/skill.entity';
-import { Project } from './project.entity';
-import { Language } from './language.entity';
+import { Language } from '../languages/language.entity';
+import { Experience } from '../experiences/experiences.entity';
 
 @Entity()
 export class Resume {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    unique: true,
-  })
-  studentId: number;
-
-  @ManyToOne(() => Student)
+  @OneToOne(() => Student, (student) => student.resume)
   student: Student;
 
   @Column({
     nullable: true,
   })
-  title: string;
-
-  @Column({
-    nullable: true,
-  })
-  about: string;
+  studentId: number;
 
   @OneToMany(() => Education, (education) => education.resume, {
     nullable: true,
@@ -54,9 +43,4 @@ export class Resume {
     nullable: true,
   })
   skills: Skill[];
-
-  @OneToMany(() => Project, (project) => project.resume, {
-    nullable: true,
-  })
-  projects: Project[];
 }

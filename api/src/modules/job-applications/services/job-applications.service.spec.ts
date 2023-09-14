@@ -37,7 +37,6 @@ const resume = {
   languages: [],
   experiences: [],
   educations: [],
-  projects: [],
 };
 
 const mockJobApplicationsRepository = {
@@ -116,7 +115,6 @@ describe('JobApplicationsService', () => {
           'resume.languages',
           'resume.experiences',
           'resume.educations',
-          'resume.projects',
           'student',
           'student.city',
           'student.institution',

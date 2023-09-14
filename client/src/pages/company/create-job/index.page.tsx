@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { Loader } from "lucide-react";
@@ -156,8 +155,6 @@ export default function CreateJob({ areas, company }: PageProps) {
           )}
         </form>
       </FormProvider>
-
-      <ToastContainer />
     </>
   );
 }
@@ -168,7 +165,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const company = await apiClient.get<Company>("/companies/profile");
     const areas = await apiClient.get<Area[]>("/areas");
 
-    console.log(apiClient.defaults.headers);
     return {
       props: { areas: areas.data, company: company.data },
     };

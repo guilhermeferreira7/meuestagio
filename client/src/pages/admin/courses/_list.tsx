@@ -42,7 +42,6 @@ export default function ListCourses({ courses }: ListCoursesProps) {
     e.preventDefault();
 
     setSearch(e.currentTarget.search.value);
-    console.log(e.currentTarget.search.value);
     setPage(0);
     setCounter(0);
     try {

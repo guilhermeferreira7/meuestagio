@@ -1,13 +1,16 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Resume } from './resume.entity';
+import { Resume } from '../resume/resume.entity';
 
 @Entity()
-export class Project {
+export class Experience {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  company: string;
+
+  @Column()
+  position: string;
 
   @Column()
   description: string;
@@ -19,11 +22,11 @@ export class Project {
   endDate: string;
 
   @Column()
-  currentProject: boolean;
+  currentJob: boolean;
+
+  @ManyToOne(() => Resume, (resume) => resume.experiences)
+  resume: Resume;
 
   @Column()
   resumeId: number;
-
-  @ManyToOne(() => Resume, (resume) => resume.projects)
-  resume: Resume;
 }

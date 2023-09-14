@@ -43,11 +43,6 @@ const studentMenu = [
           label: "Experiência",
         },
         {
-          icon: <FolderCog />,
-          href: "/student/resume/projects",
-          label: "Projetos",
-        },
-        {
           icon: <Languages />,
           href: "/student/resume/languages",
           label: "Idiomas",
@@ -57,7 +52,7 @@ const studentMenu = [
   },
   {
     icon: <Briefcase />,
-    href: "/",
+    href: "/student/dashboard",
     label: "Vagas",
   },
   {
