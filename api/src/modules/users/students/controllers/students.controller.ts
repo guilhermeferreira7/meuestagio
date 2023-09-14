@@ -37,34 +37,20 @@ export class StudentsController {
     if (!student) {
       throw new UnauthorizedException();
     }
-    const { password, ...result } = student;
 
-    return result;
+    return student;
   }
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Patch()
+  @Patch('profile')
   async update(
     @Request() req: ReqAuth,
     @Body() updateStudentDto: UpdateStudentDto,
-  ): Promise<any> {
-    const student = await this.studentService.findOne(req.user.email);
-    if (!student) {
-      throw new UnauthorizedException();
-    }
-
-    const updatedStudent = await this.studentService.updateStudent(
-      student.email,
+  ): Promise<Student> {
+    return await this.studentService.updateStudent(
+      req.user.email,
       updateStudentDto,
     );
-
-    return updatedStudent;
-  }
-
-  // remove this later
-  @Get()
-  async getAll(): Promise<Student[]> {
-    return await this.studentService.findAll();
   }
 }

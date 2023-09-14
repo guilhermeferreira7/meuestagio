@@ -3,7 +3,6 @@ import { CreateJobDto } from '../dtos/create-job.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from '../entities/job.entity';
 import { Repository } from 'typeorm';
-import { Company } from '../../users/companies/entities/company.entity';
 
 @Injectable()
 export class JobsService {
@@ -27,7 +26,7 @@ export class JobsService {
         .orWhere('description ILIKE :search', { search: `%${search}%` })
         .orWhere('keywords ILIKE :search', { search: `%${search}%` })
         .orWhere('area.title ILIKE :search', { search: `%${search}%` })
-        .addOrderBy('remote', remote === 'true' ? 'DESC' : 'ASC')
+        .addOrderBy('Job.remote', remote === 'true' ? 'DESC' : 'ASC')
         .leftJoinAndSelect('Job.company', 'company')
         .leftJoinAndSelect('Job.city', 'city')
         .leftJoinAndSelect('Job.region', 'region')
@@ -35,6 +34,16 @@ export class JobsService {
         .skip(page)
         .take(limit)
         .getMany();
+
+      if (city || region || state) {
+        if (city) {
+          return jobs.filter((job) => job.city.id === Number(city));
+        } else if (region) {
+          return jobs.filter((job) => job.region.id === Number(region));
+        } else if (state) {
+          return jobs.filter((job) => job.state === state);
+        }
+      }
 
       return jobs;
     }
@@ -93,6 +102,7 @@ export class JobsService {
   }
 
   async findOne(id: number) {
+    if (!id) return null;
     const job = await this.repository.findOne({
       where: { id: id },
       relations: ['company', 'area', 'city', 'region'],

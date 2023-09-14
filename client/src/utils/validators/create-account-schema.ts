@@ -1,4 +1,3 @@
-import { cnpj } from "cpf-cnpj-validator";
 import { z } from "zod";
 
 export const createUserFormSchema = z

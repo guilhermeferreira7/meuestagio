@@ -1,9 +1,13 @@
 import { IsNotEmpty } from 'class-validator';
 
 export class CreateInstitutionDto {
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'O nome da instituição é obrigatório',
+  })
   name: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'A cidade é obrigatória',
+  })
   cityId: number;
 }

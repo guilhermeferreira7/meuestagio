@@ -1,24 +1,28 @@
-import { GetServerSideProps } from "next";
-import React from "react";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { Student } from "../../../utils/types/users/student";
-import { JobApplication } from "../../../utils/types/job-application";
-import AppCard from "../../../components/AppCard";
 import Link from "next/link";
 
+import withStudentAuth from "../../../services/auth/withStudentAuth";
+import { getAPIClient } from "../../../services/api/clientApi";
+import { JobApplication } from "../../../types/job-application";
+import AppCard from "../../../components/AppCard";
+
 interface JobApplicationsProps {
-  student: Student;
   jobApplications: JobApplication[];
 }
 
 export default function JobApplicationsPage({
-  student,
   jobApplications,
 }: JobApplicationsProps) {
   return (
     <>
-      <h2 className="text-xl">Minhas candidaturas</h2>
+      <h2 className="text-xl mb-4">Minhas candidaturas</h2>
       <div className="flex flex-col gap-1 w-11/12">
+        {jobApplications.length === 0 && (
+          <>
+            <h2 className="text-lg">
+              Você ainda não se candidatou a nenhuma vaga.
+            </h2>
+          </>
+        )}
         {jobApplications.map((jobApplication) => {
           return (
             <AppCard key={jobApplication.id}>
@@ -45,28 +49,17 @@ export default function JobApplicationsPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
-  try {
-    const student = await apiClient.get<Student>("/students/profile");
+export const getServerSideProps = withStudentAuth(
+  async (_context, student, apiClient) => {
     const jobApplications = await apiClient.get("/job-applications/student", {
       params: {
-        studentId: student.data.id,
+        studentId: student.id,
       },
     });
-
     return {
       props: {
-        student: student.data,
         jobApplications: jobApplications.data,
       },
     };
-  } catch (error: any) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
   }
-};
+);

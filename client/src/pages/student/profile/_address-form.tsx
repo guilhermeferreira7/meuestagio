@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Form } from "../../../components/Form";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-import { editAddressSchema } from "../../../utils/validators/edit-profile-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Map, Pencil } from "lucide-react";
-import { api } from "../../../services/api/api";
-import { City } from "../../../utils/types/city";
+
+import { City } from "@customTypes/city";
+import { api } from "@services/api/api";
+import { editAddressSchema } from "@utils/validators/edit-profile-schema";
+
+import { Form } from "@components/Form";
 
 type AddressData = z.infer<typeof editAddressSchema>;
 
@@ -30,7 +32,7 @@ export default function AddressForm({ initialData, cities }: any) {
       }
       setStates(states);
     });
-  }, []);
+  }, [cities]);
 
   const editProfile = async (data: AddressData) => {
     console.log(data);
@@ -98,7 +100,9 @@ export default function AddressForm({ initialData, cities }: any) {
                 {initialData.state}
               </option>
               {states.map((state: any) => (
-                <option value={state}>{state}</option>
+                <option key={state} value={state}>
+                  {state}
+                </option>
               ))}
             </Form.InputSelect>
             <Form.ErrorMessage field="state" />
@@ -114,8 +118,10 @@ export default function AddressForm({ initialData, cities }: any) {
                 {initialData.city}
               </option>
 
-              {citiesFiltered.map((city: any) => (
-                <option value={city.name}>{city.name}</option>
+              {citiesFiltered.map((city: City) => (
+                <option key={city.id} value={city.name}>
+                  {city.name}
+                </option>
               ))}
             </Form.InputSelect>
             <Form.ErrorMessage field="city" />

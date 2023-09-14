@@ -3,17 +3,15 @@ import {
   Post,
   Body,
   Get,
-  Param,
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { CreateCityDto } from '../dtos/create-city.dto';
 import { City } from '../entities/city.entity';
 import { CitiesService } from '../services/cities.service';
-import { InstitutionsService } from '../../institutions/services/institutions.service';
 import { RolesGuard } from '../../auth/roles/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { CreateRegionDto } from '../dtos/create-region.dto';
@@ -21,10 +19,7 @@ import { Region } from '../entities/region.entity';
 
 @Controller('cities')
 export class CitiesController {
-  constructor(
-    private readonly citiesService: CitiesService,
-    private readonly institutionsService: InstitutionsService,
-  ) {}
+  constructor(private readonly citiesService: CitiesService) {}
 
   @HasRoles(Role.ADMIN)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -48,6 +43,7 @@ export class CitiesController {
       page: request.query.page,
       limit: request.query.limit,
       state: request.query.state,
+      region: request.query.region,
       name: request.query.name,
       orderBy: request.query.orderBy,
     });
@@ -59,11 +55,7 @@ export class CitiesController {
       page: request.query.page,
       limit: request.query.limit,
       state: request.query.state,
+      orderBy: request.query.orderBy,
     });
-  }
-
-  @Get(':id/institutions')
-  async getCourses(@Param('id') id: string) {
-    return await this.institutionsService.findByCity(+id);
   }
 }

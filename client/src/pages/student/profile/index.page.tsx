@@ -1,16 +1,18 @@
-import { GetServerSideProps } from "next";
 import React from "react";
+import { Pencil, User } from "lucide-react";
 
-import { Student } from "../../../utils/types/users/student";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { City } from "../../../utils/types/city";
-import { Institution } from "../../../utils/types/institution";
-import { Course } from "../../../utils/types/course";
 import AppCard from "../../../components/AppCard";
-import { User } from "lucide-react";
+import { notify } from "../../../components/toasts/toast";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
 import AddressForm from "./_address-form";
+import withStudentAuth from "../../../services/auth/withStudentAuth";
+import { api } from "../../../services/api/api";
+import { Student } from "../../../types/users/student";
+import { City } from "../../../types/city";
+import { Institution } from "../../../types/institution";
+import { Course } from "../../../types/course";
+import { errorToString } from "../../../utils/helpers/error-to-string";
 
 interface StudentProfileProps {
   student: Student;
@@ -25,6 +27,19 @@ export default function StudentProfile({
   institutions,
   courses,
 }: StudentProfileProps) {
+  const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const about = event.currentTarget.about.value;
+
+    try {
+      await api.patch("/students/profile", {
+        about,
+      });
+      notify.success("Dados atualizados com sucesso");
+    } catch (error) {
+      notify.error(errorToString(error));
+    }
+  };
   return (
     <>
       <div className="flex flex-col gap-2 w-11/12 mb-4">
@@ -33,6 +48,23 @@ export default function StudentProfile({
             <User />
             Dados pessoais
           </h1>
+          <div className="divider"></div>
+          <div>
+            <span className="font-semibold flex gap-1 items-center mb-1">
+              <Pencil />
+              Sobre mim
+            </span>
+            <form className="flex gap-1" onSubmit={handleUpdate}>
+              <textarea
+                name="about"
+                id="about"
+                placeholder="Escreva algo sobre você"
+                className="textarea textarea-primary w-full"
+                defaultValue={student?.about}
+              />
+              <button className="btn btn-primary self-end">Salvar</button>
+            </form>
+          </div>
 
           <div className="divider"></div>
           <ContactInfoForm
@@ -68,34 +100,25 @@ export default function StudentProfile({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    const student = await apiClient.get<Student>("/students/profile");
+export const getServerSideProps = withStudentAuth(
+  async (_context, student, apiClient) => {
     const cities = await apiClient.get<City[]>("/cities");
     const institutions = await apiClient.get<Institution[]>("/institutions", {
       params: {
-        cityId: student.data.city.id,
+        cityId: student.city.id,
       },
     });
     const courses = await apiClient.get<Course[]>(
-      `/institutions/${student.data.institution.id}/courses`
+      `/institutions/${student.institution.id}/courses`
     );
 
     return {
       props: {
-        student: student.data,
+        student: student,
         cities: cities.data,
         institutions: institutions.data,
         courses: courses.data,
       },
     };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
   }
-};
+);

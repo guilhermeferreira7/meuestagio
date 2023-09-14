@@ -1,9 +1,13 @@
-import React, { useState } from "react";
-import { Form } from "../../components/Form";
-import { Institution } from "../../utils/types/institution";
-import { Course } from "../../utils/types/course";
-import { api } from "../../services/api/api";
+import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
+
+import { Institution } from "@customTypes/institution";
+import { Course } from "@customTypes/course";
+import { api } from "@services/api/api";
+
+import { Form } from "@components/Form";
+import { notify } from "../../components/toasts/toast";
+import { errorToString } from "../../utils/helpers/error-to-string";
 
 interface CreateStudentFormProps {
   institutions: Institution[];
@@ -41,7 +45,7 @@ export default function CreateStudentForm({
       const response = await api.get<Course[]>(`/institutions/${id}/courses`);
       setCourses(response.data);
     } catch (error) {
-      console.log(error);
+      notify.error(errorToString(error));
     }
   };
 

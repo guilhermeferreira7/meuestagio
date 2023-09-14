@@ -1,25 +1,19 @@
-import React, { useContext, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { useContext, useState } from "react";
+import { GetServerSideProps } from "next";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AuthContext } from "../../contexts/AuthContext";
-import { GetServerSideProps } from "next";
-import { getAPIClient } from "../../services/api/clientApi";
-import {
-  notifyError,
-  notifySuccess,
-  notifyWarning,
-} from "../../components/Toasts/toast";
-import { createUserFormSchema } from "../../utils/validators/create-account-schema";
+import { AuthContext } from "@contexts/AuthContext";
+import { Role } from "@customTypes/auth/user-auth";
+import { Institution } from "@customTypes/institution";
+import { City } from "@customTypes/city";
+import { api } from "@services/api/api";
+import { getAPIClient } from "@services/api/clientApi";
+import { createUserFormSchema } from "@utils/validators/create-account-schema";
 
-import { Form } from "../../components/Form";
-import { Role } from "../../utils/types/auth/user-auth";
-import { api } from "../../services/api/api";
-import { Course } from "../../utils/types/course";
-import { Institution } from "../../utils/types/institution";
-import { City } from "../../utils/types/city";
+import { Form } from "@components/Form";
+import { notify } from "@components/toasts/toast";
 import CreateStudentForm from "./_student-form";
 import CreateCompanyForm from "./_company-form";
 
@@ -32,7 +26,7 @@ interface PageProps {
 
 export default function CreateAccount({ institutions, cities }: PageProps) {
   const createAccountForm = useForm<CreateAccountFormData>({
-    mode: "onTouched",
+    mode: "all",
     resolver: zodResolver(createUserFormSchema),
   });
   const { handleSubmit } = createAccountForm;
@@ -47,26 +41,25 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
         await api.post("/students", {
           ...data,
         });
-        notifySuccess("Aluno cadastrado com sucesso!");
+        notify.success("Aluno cadastrado com sucesso!");
         setTimeout(() => {
           signIn(data.email, data.password, data.userRole);
         }, 2000);
       } catch (error: any) {
-        notifyError(error.response?.data?.message);
-        notifyWarning(data.courseId);
+        notify.error(error.response?.data?.message || error.message);
       }
     } else if (data.userRole === Role.Company) {
       try {
         await api.post("/companies", { ...data });
-        notifySuccess("Empresa cadastrada com sucesso!");
+        notify.success("Empresa cadastrada com sucesso!");
         setTimeout(() => {
           signIn(data.email, data.password, data.userRole);
         }, 2000);
       } catch (error: any) {
-        notifyError("" + error.response?.data?.message);
+        notify.error("" + error.response?.data?.message || error.message);
       }
     } else {
-      notifyWarning();
+      notify.warning();
     }
   }
 
@@ -140,8 +133,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
           </button>
         </form>
       </FormProvider>
-
-      <ToastContainer />
     </div>
   );
 }

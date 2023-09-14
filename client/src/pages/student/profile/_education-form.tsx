@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, School } from "lucide-react";
-import { editEducationSchema } from "../../../utils/validators/edit-profile-schema";
-import { Course } from "../../../utils/types/course";
-import { api } from "../../../services/api/api";
-import { Form } from "../../../components/Form";
+
+import { Course } from "@customTypes/course";
+import { api } from "@services/api/api";
+import { editEducationSchema } from "@utils/validators/edit-profile-schema";
+
+import { Form } from "@components/Form";
+import { notify } from "../../../components/toasts/toast";
+import { errorToString } from "../../../utils/helpers/error-to-string";
+import { errorUtil } from "zod/lib/helpers/errorUtil";
 
 type EducationData = z.infer<typeof editEducationSchema>;
 
@@ -30,7 +35,7 @@ export default function EducationForm({
       );
       setCoursesList(courses.data);
     } catch (error) {
-      console.log(error);
+      notify.error(errorToString(error));
     }
   };
   const editProfile = async (data: EducationData) => {

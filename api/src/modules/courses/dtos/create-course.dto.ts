@@ -6,4 +6,7 @@ export class CreateCourseDto {
 
   @IsNotEmpty()
   institutionId: number;
+
+  @IsNotEmpty()
+  areaId: number;
 }

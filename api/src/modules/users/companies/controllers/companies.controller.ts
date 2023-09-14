@@ -38,8 +38,7 @@ export class CompaniesController {
     if (!company) {
       throw new UnauthorizedException();
     }
-    const { password, ...result } = company;
 
-    return result;
+    return company;
   }
 }

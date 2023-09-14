@@ -6,17 +6,24 @@ const toastDefaultConfig: ToastOptions = {
 };
 
 export function notifySuccess(message: string = "Sucesso!") {
-  toast.success(message, toastDefaultConfig);
+  toast.success(message + "", toastDefaultConfig);
 }
 
 export function notifyError(message: string = "Erro!") {
-  toast.error(message, toastDefaultConfig);
+  toast.error(message + "", toastDefaultConfig);
 }
 
 export function notifyInfo(message: string = "Info!") {
-  toast.info(message, toastDefaultConfig);
+  toast.info(message + "", toastDefaultConfig);
 }
 
 export function notifyWarning(message: string = "Atenção!") {
-  toast.warn(message, toastDefaultConfig);
+  toast.warn(message + "", toastDefaultConfig);
 }
+
+export const notify = {
+  success: notifySuccess,
+  error: notifyError,
+  info: notifyInfo,
+  warning: notifyWarning,
+};

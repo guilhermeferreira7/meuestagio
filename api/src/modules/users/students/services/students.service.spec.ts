@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException, BadRequestException, Res } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -7,8 +7,7 @@ import bcryptService from '../../../../utils/bcriptUtils';
 import { Student } from '../entities/student.entity';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from '../dtos/create-student.dto';
-import { ResumesService } from '../../../resumes/resumes.service';
-import { Resume } from '../../../resumes/entities/resume.entity';
+import { Resume } from '../../../resumes/resume/resume.entity';
 
 const oneStudent: CreateStudentDto = {
   name: 'student one',

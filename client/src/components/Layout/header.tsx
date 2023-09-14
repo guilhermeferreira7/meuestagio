@@ -5,6 +5,8 @@ import Link from "next/link";
 
 export default function Header() {
   const { user, isAuthenticated, signOut } = useContext(AuthContext);
+  const route = !!user ? `/${user.role}/dashboard` : `/`;
+
   const handleLogout = () => {
     signOut();
   };
@@ -17,7 +19,7 @@ export default function Header() {
       </div>
       <div className="flex-1 px-2 mx-2">
         <Link
-          href="/"
+          href={route}
           className="pl-2 text-2xl text-primary self-center font-bold"
         >
           MeuEstagio

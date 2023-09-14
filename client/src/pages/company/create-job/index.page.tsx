@@ -3,18 +3,18 @@ import { GetServerSideProps } from "next";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { Loader } from "lucide-react";
 
-import { createJobFormSchema } from "../../../utils/validators/create-vancancy-schema";
-import { Form } from "../../../components/Form";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { Area } from "../../../utils/types/area";
-import { api } from "../../../services/api/api";
-import { notifyError, notifySuccess } from "../../../components/Toasts/toast";
-import { Company } from "../../../utils/types/users/company";
+import { Area } from "@customTypes/area";
+import { Company } from "@customTypes/users/company";
+import { api } from "@services/api/api";
+import { getAPIClient } from "@services/api/clientApi";
+import { createJobFormSchema } from "@utils/validators/create-vancancy-schema";
+
+import { notifyError, notifySuccess } from "@components/toasts/toast";
+import { Form } from "@components/Form";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
@@ -49,9 +49,7 @@ export default function CreateJob({ areas, company }: PageProps) {
         regionId: company.city.regionId,
         state: company.city.state,
       });
-      setTimeout(() => {
-        router.push("jobs");
-      }, 2000);
+      router.push("dashboard");
       notifySuccess("Vaga criada com sucesso!");
     } catch (error: any) {
       notifyError(`Erro ao criar vaga! ${error.response?.data?.message}`);
@@ -157,8 +155,6 @@ export default function CreateJob({ areas, company }: PageProps) {
           )}
         </form>
       </FormProvider>
-
-      <ToastContainer />
     </>
   );
 }
@@ -169,7 +165,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const company = await apiClient.get<Company>("/companies/profile");
     const areas = await apiClient.get<Area[]>("/areas");
 
-    console.log(apiClient.defaults.headers);
     return {
       props: { areas: areas.data, company: company.data },
     };
