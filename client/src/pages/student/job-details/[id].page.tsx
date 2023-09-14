@@ -1,6 +1,5 @@
-import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
 
 import { notify } from "../../../components/toasts/toast";
@@ -13,33 +12,17 @@ import { errorToString } from "../../../utils/helpers/error-to-string";
 type JobDetailsPageProps = {
   studentId: number;
   resumeId: number;
+  job: Job;
   applied: boolean;
 };
 
 export default function JobDetailsPage({
   studentId,
   resumeId,
+  job,
   applied,
 }: JobDetailsPageProps) {
-  const router = useRouter();
-  const { id } = router.query;
-  const [job, setJob] = useState<Job | null>(null);
   const [jobApplied, setApplied] = useState<boolean>(applied);
-
-  useEffect(() => {
-    api
-      .get<Job>(`/jobs/${id}`)
-      .then((response) => {
-        setJob(response.data);
-      })
-      .catch((error) => {
-        notify.error(errorToString(error));
-      });
-  }, [id]);
-
-  if (!job) {
-    return <h1>Carregando...</h1>;
-  }
 
   const apply = async () => {
     try {
@@ -171,20 +154,21 @@ export const getServerSideProps = withStudentAuth(
         },
       }
     );
-    let applied = false;
 
-    if (
-      jobApplications.data.some(
-        (jobApplication) => jobApplication.job.id === Number(context.query.id)
-      )
-    ) {
-      applied = true;
-    }
+    const job = await apiClient.get<Job>(`jobs/${context.query.id}`);
+
+    let applied = false;
+    jobApplications.data.forEach((jobApplication) => {
+      if (jobApplication.job.id === Number(context.query.id)) {
+        applied = true;
+      }
+    });
 
     return {
       props: {
         studentId: student.id,
         resumeId: student.resumeId,
+        job: job.data,
         applied,
       },
     };
