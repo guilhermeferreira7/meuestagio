@@ -1,4 +1,4 @@
-import { VACANCIES_STUDENT_LIMIT } from "@constants/request";
+import { JOBS_LIST_STUDENT_LIMIT } from "@constants/request";
 import { Student } from "@customTypes/users/student";
 import { Job } from "@customTypes/job";
 
@@ -76,7 +76,7 @@ export const getServerSideProps = withStudentAuth(
   async (_context, student, apiClient) => {
     const jobs = await apiClient.get<Job[]>("/jobs", {
       params: {
-        limit: VACANCIES_STUDENT_LIMIT,
+        limit: JOBS_LIST_STUDENT_LIMIT,
         city: student.city.id,
       },
     });

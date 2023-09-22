@@ -1,1 +1,1 @@
-export const VACANCIES_STUDENT_LIMIT = 10;
+export const JOBS_LIST_STUDENT_LIMIT = 10;

@@ -16,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles/roles.guard';
 import { UpdateResumeDto } from './dto/update-resume.dto';
 import { CreateSkillDto } from './dto/create-skill.dto';
+import { UserAuth } from '../../types/auth/user-auth';
 
 @Controller('resumes')
 export class ResumesController {
@@ -24,9 +25,10 @@ export class ResumesController {
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('/me')
-  async find(@Request() req: any) {
-    const id = req.query.studentId;
-    return await this.resumesService.findByStudentId(+id);
+  async find(@Request() user: UserAuth) {
+    const id = user.sub;
+    console.log('??');
+    return await this.resumesService.findByStudentId(id);
   }
 
   @HasRoles(Role.STUDENT)

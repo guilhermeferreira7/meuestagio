@@ -29,13 +29,7 @@ export class JobsController {
   @Get()
   async findAll(@Request() request) {
     return await this.jobsService.findAll({
-      page: request.query.page,
-      limit: request.query.limit,
-      state: request.query.state,
-      region: request.query.region,
-      city: request.query.city,
-      search: request.query.search,
-      remote: request.query.remote,
+      ...request.query,
     });
   }
 

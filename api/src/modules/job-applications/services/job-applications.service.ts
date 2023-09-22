@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JobApplication } from '../entities/job-applications.entity';
 import { CreateJobApplicationDto } from '../dtos/create-jobApplication.dto';
+import { JobApplicationStatus } from '../entities/status';
 
 @Injectable()
 export class JobApplicationsService {
@@ -17,6 +18,23 @@ export class JobApplicationsService {
     const jobApplication = this.jobApplicationRepository.create(
       createJobApplicationDto,
     );
+
+    return await this.jobApplicationRepository.save(jobApplication);
+  }
+
+  async setStatus(
+    jobApplicationId: number,
+    status: JobApplicationStatus,
+  ): Promise<JobApplication> {
+    const jobApplication = await this.jobApplicationRepository.findOne({
+      where: { id: jobApplicationId },
+    });
+
+    if (!jobApplication) {
+      throw new BadRequestException('Candidatura não encontrada');
+    }
+
+    jobApplication.status = status;
 
     return await this.jobApplicationRepository.save(jobApplication);
   }
@@ -38,16 +56,9 @@ export class JobApplicationsService {
     });
 
     const response = jobApplications.map((jobApplication) => {
+      delete jobApplication.student.password;
       return {
         ...jobApplication,
-        student: {
-          name: jobApplication.student.name,
-          email: jobApplication.student.email,
-          phone: jobApplication.student.phone,
-          city: jobApplication.student.city.name,
-          institution: jobApplication.student.institution.name,
-          course: jobApplication.student.course.name,
-        },
       };
     });
 

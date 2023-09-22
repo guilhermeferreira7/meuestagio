@@ -1,5 +1,5 @@
 import { notify } from "@components/toasts/toast";
-import { VACANCIES_STUDENT_LIMIT } from "@constants/request";
+import { JOBS_LIST_STUDENT_LIMIT } from "@constants/request";
 import { City } from "@customTypes/city";
 import { Job } from "@customTypes/job";
 import { Region } from "@customTypes/region";
@@ -47,12 +47,12 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
         params: {
           search: searchTerm,
           remote: isRemote,
-          limit: VACANCIES_STUDENT_LIMIT,
+          limit: JOBS_LIST_STUDENT_LIMIT,
         },
       });
       setJobs(jobs.data);
       setFilters({ search: searchTerm });
-      setHasMoreJobs(jobs.data.length > VACANCIES_STUDENT_LIMIT - 1);
+      setHasMoreJobs(jobs.data.length > JOBS_LIST_STUDENT_LIMIT - 1);
     } catch (error: any) {
       notify.error(error.response?.data?.message);
     }
@@ -127,11 +127,11 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
       const jobs = await api.get<Job[]>("/jobs", {
         params: {
           ...filter,
-          limit: VACANCIES_STUDENT_LIMIT,
+          limit: JOBS_LIST_STUDENT_LIMIT,
         },
       });
       setJobs(jobs.data);
-      setHasMoreJobs(jobs.data.length > VACANCIES_STUDENT_LIMIT - 1);
+      setHasMoreJobs(jobs.data.length > JOBS_LIST_STUDENT_LIMIT - 1);
     } catch (error: any) {
       notify.error(error.response?.data?.message);
     }
@@ -142,11 +142,11 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
       const response = await api.get("/jobs", {
         params: {
           page: jobs.length,
-          limit: VACANCIES_STUDENT_LIMIT,
+          limit: JOBS_LIST_STUDENT_LIMIT,
           ...filters,
         },
       });
-      setHasMoreJobs(response.data.length > VACANCIES_STUDENT_LIMIT - 1);
+      setHasMoreJobs(response.data.length > JOBS_LIST_STUDENT_LIMIT - 1);
       setJobs([...jobs, ...response.data]);
     } catch (error: any) {
       notify.error(error.response?.data?.message);

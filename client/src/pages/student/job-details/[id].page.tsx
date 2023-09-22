@@ -8,6 +8,7 @@ import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { Job } from "../../../types/job";
 import { JobApplication } from "../../../types/job-application";
 import { errorToString } from "../../../utils/helpers/error-to-string";
+import { Modal } from "../../../components/AppModal/Modal";
 
 type JobDetailsPageProps = {
   studentId: number;
@@ -23,11 +24,13 @@ export default function JobDetailsPage({
   applied,
 }: JobDetailsPageProps) {
   const [jobApplied, setApplied] = useState<boolean>(applied);
+  const [message, setMessage] = useState<string>("");
 
   const apply = async () => {
     try {
       await api.post("job-applications/apply", {
         studentId: studentId,
+        message: message,
         jobId: job.id,
         resumeId,
       });
@@ -54,12 +57,7 @@ export default function JobDetailsPage({
                 Já se candidatou a essa vaga!
               </h2>
             ) : (
-              <label
-                htmlFor="modal"
-                className="btn btn-sm h-12 btn-primary text-sm lg:text-xl m-2 normal-case"
-              >
-                Quero me candidatar
-              </label>
+              <Modal.Button id="modal">Quero me candidatar</Modal.Button>
             )}
           </div>
           <div className="lg:flex flex-row">
@@ -115,31 +113,24 @@ export default function JobDetailsPage({
         </div>
       </div>
 
-      <input type="checkbox" id="modal" className="modal-toggle" />
-      <div className="modal">
-        <div className="modal-box">
-          <p className="text-lg font-bold">
-            Tem certeza que deseja se candidatar a vaga?
-          </p>
-          <p>
-            Ou{" "}
-            <Link
-              href={`/student/resume?job=${job.id}`}
-              className="text-blue-500 underline"
-            >
-              Atualize seu currículo
-            </Link>
-          </p>
-          <div className="modal-action">
-            <label htmlFor="modal" className="btn btn-warning">
-              Cancelar
-            </label>
-            <button className="btn btn-info" onClick={apply}>
-              Confirmar
-            </button>
-          </div>
-        </div>
-      </div>
+      <Modal.Content
+        id="modal"
+        confirmText="Candidate-se"
+        confirmAction={apply}
+        cancelText="Cancelar"
+      >
+        <p>
+          Se quiser, também envie uma mensagem para o recrutador junto com seu
+          currículo:
+        </p>
+        <textarea
+          className="textarea textarea-primary h-24 w-full"
+          placeholder="Escreva aqui sua mensagem"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <div className="modal-action"></div>
+      </Modal.Content>
     </>
   );
 }
