@@ -38,6 +38,8 @@ export class StudentsController {
       throw new UnauthorizedException();
     }
 
+    delete student.password;
+
     return student;
   }
 
