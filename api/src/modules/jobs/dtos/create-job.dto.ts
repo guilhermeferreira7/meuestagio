@@ -14,7 +14,7 @@ export class CreateJobDto {
   cityId: number;
 
   @IsNotEmpty()
-  regionId: string;
+  regionId: number;
 
   @IsNotEmpty()
   state: string;

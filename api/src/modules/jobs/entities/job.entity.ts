@@ -35,7 +35,7 @@ export class Job {
   region: Region;
 
   @Column()
-  regionId: string;
+  regionId: number;
 
   @Column()
   state: string;

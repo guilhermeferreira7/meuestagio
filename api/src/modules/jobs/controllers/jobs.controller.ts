@@ -6,6 +6,7 @@ import {
   UseGuards,
   Request,
   Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -41,7 +42,7 @@ export class JobsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.jobsService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.jobsService.findOne(id);
   }
 }
