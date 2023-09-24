@@ -40,7 +40,7 @@ export class JobApplicationsService {
   }
 
   async findByJobId(jobId: number): Promise<any[]> {
-    const jobApplications = await this.jobApplicationRepository.find({
+    return await this.jobApplicationRepository.find({
       where: { jobId },
       relations: [
         'resume',
@@ -53,16 +53,15 @@ export class JobApplicationsService {
         'student.institution',
         'student.course',
       ],
+      select: {
+        student: {
+          id: true,
+          about: true,
+          name: true,
+          email: true,
+        },
+      },
     });
-
-    const response = jobApplications.map((jobApplication) => {
-      delete jobApplication.student.password;
-      return {
-        ...jobApplication,
-      };
-    });
-
-    return response;
   }
 
   async findByStudentId(studentId: number): Promise<JobApplication[]> {

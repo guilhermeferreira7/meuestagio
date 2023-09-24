@@ -7,8 +7,8 @@ export const editContactSchema = z.object({
 });
 
 export const editEducationSchema = z.object({
-  institution: z.number(),
-  course: z.number(),
+  institution: z.string(),
+  course: z.string().min(1, { message: "Selecione um curso" }),
 });
 
 export const editAddressSchema = z.object({

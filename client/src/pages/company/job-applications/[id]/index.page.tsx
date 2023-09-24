@@ -31,6 +31,14 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
     defaultTab: JobApplicationStatus.IN_PROGRESS,
   });
 
+  if (jobApplications.length < 1) {
+    return (
+      <h2 className="text-xl font-semibold">
+        Você não possui candidaturas nessa vaga
+      </h2>
+    );
+  }
+
   if (currentCandidate) {
     return (
       <div className="w-11/12">

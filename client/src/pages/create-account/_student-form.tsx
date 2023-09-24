@@ -42,7 +42,11 @@ export default function CreateStudentForm({
       );
       if (institution) form.setValue("cityId", institution.cityId + "");
 
-      const response = await api.get<Course[]>(`/institutions/${id}/courses`);
+      const response = await api.get<Course[]>("/courses", {
+        params: {
+          institutionId: id,
+        },
+      });
       setCourses(response.data);
     } catch (error) {
       notify.error(errorToString(error));

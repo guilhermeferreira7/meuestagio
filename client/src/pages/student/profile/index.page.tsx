@@ -83,7 +83,6 @@ export default function StudentProfile({
               },
             }}
             courses={courses}
-            institutions={institutions}
           />
 
           <div className="divider"></div>
@@ -108,9 +107,13 @@ export const getServerSideProps = withStudentAuth(
         cityId: student.city.id,
       },
     });
-    const courses = await apiClient.get<Course[]>(
-      `/institutions/${student.institution.id}/courses`
-    );
+    const courses = await apiClient.get<Course[]>("/courses", {
+      params: {
+        institutionId: student.institution.id,
+      },
+    });
+
+    console.log("student", student);
 
     return {
       props: {
