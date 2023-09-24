@@ -154,7 +154,7 @@ export const getServerSideProps = withStudentAuth(
     return {
       props: {
         resumeId: student.resumeId,
-        languages: resume.data.languages,
+        languages: resume.data.languages || [],
       },
     };
   }

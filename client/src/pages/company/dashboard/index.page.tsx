@@ -13,6 +13,12 @@ export default function CompanyJobs({ jobs }: CompanyJobsProps) {
   return (
     <>
       <div className="w-full p-4 flex flex-col gap-2">
+        {jobs?.length === 0 && (
+          <h1 className="text-2xl text-center">
+            Você ainda não cadastrou nenhuma vaga
+          </h1>
+        )}
+
         {jobs?.map((job: Job) => (
           <JobCompanyCard key={job.id} job={job} />
         ))}

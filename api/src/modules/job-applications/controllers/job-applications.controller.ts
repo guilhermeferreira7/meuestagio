@@ -13,6 +13,7 @@ import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { CreateJobApplicationDto } from '../dtos/create-jobApplication.dto';
 import { JobApplicationsService } from '../services/job-applications.service';
+import { JobApplicationStatus } from '../entities/status';
 
 @Controller('job-applications')
 export class JobApplicationsController {
@@ -39,5 +40,35 @@ export class JobApplicationsController {
   @Get('student')
   async findByStudentId(@Request() req: any) {
     return this.jobApplicationsService.findByStudentId(req.query.studentId);
+  }
+
+  @HasRoles(Role.COMPANY)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('approve')
+  async approve(@Request() req: any) {
+    return this.jobApplicationsService.setStatus(
+      req.body.jobApplicationId,
+      JobApplicationStatus.APPROVED,
+    );
+  }
+
+  @HasRoles(Role.COMPANY)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('reject')
+  async reject(@Request() req: any) {
+    return this.jobApplicationsService.setStatus(
+      req.body.jobApplicationId,
+      JobApplicationStatus.REJECTED,
+    );
+  }
+
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('withdraw')
+  async withdraw(@Request() req: any) {
+    return this.jobApplicationsService.setStatus(
+      req.body.jobApplicationId,
+      JobApplicationStatus.CANCELED_BY_STUDENT,
+    );
   }
 }

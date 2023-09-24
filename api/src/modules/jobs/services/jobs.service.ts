@@ -4,6 +4,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from '../entities/job.entity';
 import { Repository } from 'typeorm';
 
+type JobsQuery = {
+  page?: number;
+  limit?: number;
+  state?: string;
+  region?: number;
+  city?: number;
+  search?: string;
+  remote?: boolean;
+};
+
 @Injectable()
 export class JobsService {
   constructor(
@@ -17,23 +27,17 @@ export class JobsService {
     return job;
   }
 
-  async findAll({ page, limit, state, region, city, search, remote }) {
+  async findAll({
+    page,
+    limit,
+    state,
+    region,
+    city,
+    search,
+    remote,
+  }: JobsQuery) {
     if (search) {
-      const jobs = await this.repository
-        .createQueryBuilder()
-        .select()
-        .where('Job.title ILIKE :search', { search: `%${search}%` })
-        .orWhere('description ILIKE :search', { search: `%${search}%` })
-        .orWhere('keywords ILIKE :search', { search: `%${search}%` })
-        .orWhere('area.title ILIKE :search', { search: `%${search}%` })
-        .addOrderBy('Job.remote', remote === 'true' ? 'DESC' : 'ASC')
-        .leftJoinAndSelect('Job.company', 'company')
-        .leftJoinAndSelect('Job.city', 'city')
-        .leftJoinAndSelect('Job.region', 'region')
-        .leftJoinAndSelect('Job.area', 'area')
-        .skip(page)
-        .take(limit)
-        .getMany();
+      const jobs = await this.queryBuilder(search, remote, page, limit);
 
       if (city || region || state) {
         if (city) {
@@ -102,7 +106,6 @@ export class JobsService {
   }
 
   async findOne(id: number) {
-    if (!id) return null;
     const job = await this.repository.findOne({
       where: { id: id },
       relations: ['company', 'area', 'city', 'region'],
@@ -113,5 +116,28 @@ export class JobsService {
         name: job.company.name,
       },
     };
+  }
+
+  private async queryBuilder(
+    search: string,
+    remote: boolean,
+    page: number,
+    limit: number,
+  ) {
+    return await this.repository
+      .createQueryBuilder()
+      .select()
+      .where('Job.title ILIKE :search', { search: `%${search}%` })
+      .orWhere('description ILIKE :search', { search: `%${search}%` })
+      .orWhere('keywords ILIKE :search', { search: `%${search}%` })
+      .orWhere('area.title ILIKE :search', { search: `%${search}%` })
+      .addOrderBy('Job.remote', remote ? 'DESC' : 'ASC')
+      .leftJoinAndSelect('Job.company', 'company')
+      .leftJoinAndSelect('Job.city', 'city')
+      .leftJoinAndSelect('Job.region', 'region')
+      .leftJoinAndSelect('Job.area', 'area')
+      .skip(page)
+      .take(limit)
+      .getMany();
   }
 }

@@ -15,6 +15,9 @@ export class JobApplication {
   @Column()
   studentId: number;
 
+  @Column({ nullable: true })
+  message: string;
+
   @ManyToOne(() => Resume)
   resume: Resume;
 

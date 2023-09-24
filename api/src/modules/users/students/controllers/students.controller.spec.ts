@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { UnauthorizedException } from '@nestjs/common';
 
 import { CreateStudentDto } from '../dtos/create-student.dto';
 import { StudentsService } from '../services/students.service';
 import { StudentsController } from './students.controller';
+import { UserAuth } from '../../../../types/auth/user-auth';
 import { Role } from '../../../auth/roles/roles';
 
 const createStudentDto: CreateStudentDto = {
@@ -47,106 +49,64 @@ describe('StudentController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   describe('create()', () => {
     it('should create a Student', async () => {
-      const createStudent = await controller.create(createStudentDto);
-      expect(createStudent).toEqual({ id: 1, ...createStudentDto });
+      const student = await controller.create(createStudentDto);
+      expect(student).toEqual({ id: 1, ...createStudentDto });
       expect(service.createStudent).toHaveBeenCalledWith(createStudentDto);
     });
   });
 
   describe('getProfile()', () => {
-    it('should call service.findOne', async () => {
-      const student = await controller.getProfile({
-        user: {
-          name: 'student one',
-          email: 'email@example.com',
-          role: Role.STUDENT,
-          sub: 1,
-        },
-      });
-
-      expect(student).toEqual({
+    it('should throw error if student not found', async () => {
+      const user: UserAuth = {
+        email: 'notfound',
+        role: Role.STUDENT,
         name: 'student one',
-        email: 'email@example.com',
-        institutionId: 1,
-        courseId: 1,
-        cityId: 1,
-      });
-      expect(service.findOne).toHaveBeenCalledWith('email@example.com');
+        sub: 1,
+      };
+      try {
+        await controller.getProfile({ user });
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnauthorizedException);
+      }
     });
 
-    it('should throw UnauthorizedException', async () => {
-      try {
-        await controller.getProfile({
-          user: {
-            name: 'student one',
-            email: 'invalid@email.com',
-            role: Role.STUDENT,
-            sub: 1,
-          },
-        });
-      } catch (error) {
-        expect(error.message).toEqual('Unauthorized');
-      }
+    it('should return student without password', async () => {
+      const user = {
+        email: createStudentDto.email,
+        role: Role.STUDENT,
+        name: 'student one',
+        sub: 1,
+      };
+      const profile = await controller.getProfile({ user });
+      expect(service.findOne).toHaveBeenCalledWith(user.email);
+      expect(profile).toEqual({
+        ...createStudentDto,
+        email: user.email,
+        password: undefined,
+      });
     });
   });
 
   describe('update()', () => {
-    it('should call service.findOne', async () => {
-      const student = await controller.update(
-        {
-          user: {
-            name: 'student one',
-            email: 'email@example.com',
-            role: Role.STUDENT,
-            sub: 1,
-          },
-        },
-        {
-          name: 'student one',
-          email: 'email@example.com',
-          institutionId: 1,
-          courseId: 1,
-          cityId: 1,
-        },
-      );
-
-      expect(student).toEqual({
-        id: 1,
+    it('should call service with correct params', async () => {
+      const user = {
+        email: createStudentDto.email,
+        role: Role.STUDENT,
         name: 'student one',
-        email: 'email@example.com',
-        institutionId: 1,
-        courseId: 1,
-        cityId: 1,
-      });
-      expect(service.findOne).toHaveBeenCalledWith('email@example.com');
-    });
+        sub: 1,
+      };
+      const student = await controller.update({ user }, createStudentDto);
 
-    it('should throw UnauthorizedException', async () => {
-      try {
-        await controller.update(
-          {
-            user: {
-              name: 'student one',
-              email: 'invalid@example.com',
-              role: Role.STUDENT,
-              sub: 1,
-            },
-          },
-          {
-            name: 'student one',
-            email: 'email@example.com',
-            institutionId: 1,
-            courseId: 1,
-            cityId: 1,
-          },
-        );
-      } catch (error) {
-        expect(error.message).toEqual('Unauthorized');
-      }
+      expect(service.updateStudent).toHaveBeenCalledWith(
+        user.email,
+        createStudentDto,
+      );
+      expect(student).toEqual({ id: 1, ...createStudentDto });
     });
   });
 });

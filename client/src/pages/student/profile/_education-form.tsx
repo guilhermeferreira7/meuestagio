@@ -1,26 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, School } from "lucide-react";
 
-import { Course } from "@customTypes/course";
-import { api } from "@services/api/api";
-import { editEducationSchema } from "@utils/validators/edit-profile-schema";
-
-import { Form } from "@components/Form";
 import { notify } from "../../../components/toasts/toast";
+import { Form } from "../../../components/Form";
+import { api } from "../../../services/api/api";
+import { Institution } from "../../../types/institution";
+import { Course } from "../../../types/course";
 import { errorToString } from "../../../utils/helpers/error-to-string";
-import { errorUtil } from "zod/lib/helpers/errorUtil";
+import { editEducationSchema } from "../../../utils/validators/edit-profile-schema";
 
 type EducationData = z.infer<typeof editEducationSchema>;
 
-export default function EducationForm({
-  initialData,
-  courses,
-  institutions,
-}: any) {
+export default function EducationForm({ initialData, courses }: any) {
   const [coursesList, setCoursesList] = useState<Course[]>(courses);
+  const [institutions, setInstitutions] = useState<Institution[]>([]);
+  useEffect(() => {
+    api
+      .get<Institution[]>("/institutions")
+      .then((response) => setInstitutions(response.data))
+      .catch((error) => notify.error(errorToString(error)));
+  }, [institutions]);
+
   const [formDisabled, setFormDisabled] = useState(true);
   const editEducationForm = useForm<EducationData>({
     resolver: zodResolver(editEducationSchema),
@@ -29,10 +32,13 @@ export default function EducationForm({
   const { handleSubmit } = editEducationForm;
 
   const setCourses = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    editEducationForm.setValue("course", "");
     try {
-      const courses = await api.get<Course[]>(
-        `/institutions/${e.target.value}/courses`
-      );
+      const courses = await api.get<Course[]>("/courses", {
+        params: {
+          institutionId: e.target.value,
+        },
+      });
       setCoursesList(courses.data);
     } catch (error) {
       notify.error(errorToString(error));
@@ -109,7 +115,7 @@ export default function EducationForm({
               disabled={formDisabled}
               defaultValue={initialData.course.id}
             >
-              <option disabled value={initialData.course.id}>
+              <option value={initialData.course.id}>
                 {initialData.course.name}
               </option>
               {coursesList.map((course) => (

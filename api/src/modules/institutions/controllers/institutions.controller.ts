@@ -12,7 +12,6 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { Institution } from '../entities/institution.entity';
 import { InstitutionsService } from '../services/institutions.service';
-import { CoursesService } from '../../courses/services/courses.service';
 import { CreateInstitutionDto } from '../dtos/create-institution.dto';
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
@@ -20,10 +19,7 @@ import { RolesGuard } from '../../auth/roles/roles.guard';
 
 @Controller('institutions')
 export class InstitutionsController {
-  constructor(
-    private readonly institutionsService: InstitutionsService,
-    private readonly coursesService: CoursesService,
-  ) {}
+  constructor(private readonly institutionsService: InstitutionsService) {}
 
   @Get()
   async getAll(@Request() req): Promise<Institution[]> {
@@ -53,10 +49,5 @@ export class InstitutionsController {
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Institution> {
     return await this.institutionsService.delete(+id);
-  }
-
-  @Get(':id/courses')
-  async getCourses(@Param('id') id: string) {
-    return await this.coursesService.findByInstitution(+id);
   }
 }

@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JobApplication } from '../entities/job-applications.entity';
 import { CreateJobApplicationDto } from '../dtos/create-jobApplication.dto';
+import { JobApplicationStatus } from '../entities/status';
 
 @Injectable()
 export class JobApplicationsService {
@@ -21,8 +22,25 @@ export class JobApplicationsService {
     return await this.jobApplicationRepository.save(jobApplication);
   }
 
+  async setStatus(
+    jobApplicationId: number,
+    status: JobApplicationStatus,
+  ): Promise<JobApplication> {
+    const jobApplication = await this.jobApplicationRepository.findOne({
+      where: { id: jobApplicationId },
+    });
+
+    if (!jobApplication) {
+      throw new BadRequestException('Candidatura não encontrada');
+    }
+
+    jobApplication.status = status;
+
+    return await this.jobApplicationRepository.save(jobApplication);
+  }
+
   async findByJobId(jobId: number): Promise<any[]> {
-    const jobApplications = await this.jobApplicationRepository.find({
+    return await this.jobApplicationRepository.find({
       where: { jobId },
       relations: [
         'resume',
@@ -35,23 +53,15 @@ export class JobApplicationsService {
         'student.institution',
         'student.course',
       ],
-    });
-
-    const response = jobApplications.map((jobApplication) => {
-      return {
-        ...jobApplication,
+      select: {
         student: {
-          name: jobApplication.student.name,
-          email: jobApplication.student.email,
-          phone: jobApplication.student.phone,
-          city: jobApplication.student.city.name,
-          institution: jobApplication.student.institution.name,
-          course: jobApplication.student.course.name,
+          id: true,
+          about: true,
+          name: true,
+          email: true,
         },
-      };
+      },
     });
-
-    return response;
   }
 
   async findByStudentId(studentId: number): Promise<JobApplication[]> {

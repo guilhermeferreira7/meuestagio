@@ -9,11 +9,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { ReqAuth } from '../../../../types/auth/request';
-import { User } from '../../user/user.entity';
-import { HasRoles } from '../../../auth/roles/roles.decorator';
-import { Role } from '../../../auth/roles/roles';
-import { RolesGuard } from '../../../auth/roles/roles.guard';
+import { ReqAuth } from '../../../types/auth/request';
+import { User } from '../user/user.entity';
+import { HasRoles } from '../../auth/roles/roles.decorator';
+import { Role } from '../../auth/roles/roles';
+import { RolesGuard } from '../../auth/roles/roles.guard';
 
 @Controller('admin')
 export class AdminController {

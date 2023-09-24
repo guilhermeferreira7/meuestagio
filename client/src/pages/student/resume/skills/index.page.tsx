@@ -131,7 +131,7 @@ export const getServerSideProps = withStudentAuth(
     return {
       props: {
         resumeId: student.resumeId,
-        skills: resume.data.skills,
+        skills: resume.data.skills || [],
       },
     };
   }

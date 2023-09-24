@@ -14,48 +14,57 @@ const job: CreateJobDto = {
   companyId: 1,
   areaId: 1,
   keywords: 'test, job',
-  regionId: '1',
+  regionId: 1,
   state: 'Paraná',
 };
 
 const jobs = [
   {
-    id: 1,
     title: 'Test job',
-    description: 'Test description',
-    salary: 1000,
-    cityId: 1,
-    remote: false,
-    companyId: 1,
-    areaId: 1,
-    keywords: 'test, job',
-    regionId: '1',
-    state: 'Paraná',
     company: {
       name: 'Test company',
     },
     city: {
-      name: 'City Name',
+      name: 'Test city',
     },
   },
   {
-    id: 2,
     title: 'Test job 2',
-    description: 'Test description',
-    salary: 1000,
-    cityId: 1,
-    remote: false,
-    companyId: 1,
-    areaId: 1,
-    keywords: 'test, job',
-    regionId: '1',
-    state: 'Paraná',
     company: {
-      name: 'Test company',
+      name: 'Test company 2',
     },
     city: {
-      name: 'City Name',
+      name: 'Test city 2',
     },
+  },
+];
+
+const jobsSearch = [
+  {
+    title: 'job1',
+    company: { name: 'company1' },
+    city: {
+      id: 1,
+      name: 'City 1',
+    },
+    region: {
+      id: 1,
+      name: 'Region 1',
+    },
+    state: 'Paraná',
+  },
+  {
+    title: 'job2',
+    company: { name: 'company2' },
+    city: {
+      id: 2,
+      name: 'City 2',
+    },
+    region: {
+      id: 2,
+      name: 'Region 2',
+    },
+    state: 'Paraná',
   },
 ];
 
@@ -83,7 +92,7 @@ const mockJobsRepository = {
     leftJoinAndSelect: jest.fn().mockReturnThis(),
     skip: jest.fn().mockReturnThis(),
     take: jest.fn().mockReturnThis(),
-    getMany: jest.fn().mockReturnThis(),
+    getMany: jest.fn().mockReturnValue(jobsSearch),
   })),
 };
 
@@ -117,7 +126,7 @@ describe('JobsService', () => {
     expect(repository).toBeDefined();
   });
 
-  describe('createVancancy()', () => {
+  describe('createJob()', () => {
     it('should call repository.create', async () => {
       await service.create(job);
       expect(repository.create).toBeCalledWith(job);
@@ -131,44 +140,43 @@ describe('JobsService', () => {
 
   describe('findAll()', () => {
     it('should call repository.find', async () => {
-      await service.findAll({
-        page: 0,
-        limit: 10,
-        state: 'Paraná',
-        region: 1,
-        city: 1,
-        search: '',
-        remote: false,
-      });
+      const jobsTest = await service.findAll({});
       expect(repository.find).toBeCalled();
+      expect(jobsTest).toEqual(jobs);
     });
 
     it('should call repository.find with search', async () => {
-      await service.findAll({
-        page: 0,
-        limit: 10,
-        state: 'Paraná',
-        region: 1,
-        city: 1,
+      const jobsTest = await service.findAll({ search: 'test' });
+      expect(repository.createQueryBuilder).toBeCalled();
+      expect(jobsTest).toEqual(jobsSearch);
+    });
+
+    it('should call repository.find with city', async () => {
+      const jobsTest = await service.findAll({ search: 'test', city: 1 });
+      expect(repository.createQueryBuilder).toBeCalled();
+      expect(jobsTest).toEqual(jobsSearch.filter((job) => job.city.id === 1));
+    });
+
+    it('should call repository.find with region', async () => {
+      const jobsTest = await service.findAll({ search: 'test', region: 1 });
+      expect(repository.createQueryBuilder).toBeCalled();
+      expect(jobsTest).toEqual(jobsSearch.filter((job) => job.region.id === 1));
+    });
+
+    it('should call repository.find with state', async () => {
+      const jobsTest = await service.findAll({
         search: 'test',
-        remote: false,
+        state: 'Paraná',
       });
       expect(repository.createQueryBuilder).toBeCalled();
-      expect(repository.find).toBeCalled();
+      expect(jobsTest).toEqual(
+        jobsSearch.filter((job) => job.state === 'Paraná'),
+      );
     });
 
     it('should call repository.find with remote', async () => {
-      await service.findAll({
-        page: 0,
-        limit: 10,
-        state: 'Paraná',
-        region: 1,
-        city: 1,
-        search: '',
-        remote: true,
-      });
+      await service.findAll({ search: 'test', remote: true });
       expect(repository.createQueryBuilder).toBeCalled();
-      expect(repository.find).toBeCalled();
     });
   });
 

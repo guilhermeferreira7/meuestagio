@@ -23,7 +23,10 @@ export default function JobCompanyCard({ job }: JobCompanyCardProps) {
             </p>
             <p>Palavras chave: {job.keywords}</p>
           </div>
-          <Link href={`job-applications/${job.id}`} className="btn btn-primary">
+          <Link
+            href={`job-applications/${job.id}?job=${job.title}`}
+            className="btn btn-primary"
+          >
             Ver Candidatos
           </Link>
         </div>
