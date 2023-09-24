@@ -38,7 +38,7 @@ export default function Header() {
             className="w-full menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box mt-1"
           >
             <li>
-              <Link href="student/profile">
+              <Link href={`/${user?.role}/profile`}>
                 <User />
                 Perfil
               </Link>
