@@ -36,8 +36,6 @@ export class StudentsService {
       studentId: studentSave.id,
     });
     await this.repository.update(studentSave.id, { resumeId: newResume.id });
-
-    delete studentSave.password;
     return studentSave;
   }
 
@@ -54,8 +52,6 @@ export class StudentsService {
   }
 
   async updateStudent(email: string, student: UpdateStudentDto) {
-    if (!email) throw new UnauthorizedException();
-
     await this.repository.update(
       {
         email,
@@ -64,7 +60,6 @@ export class StudentsService {
         ...student,
       },
     );
-    const studentUpdated = await this.findOne(email);
-    return studentUpdated;
+    return await this.findOne(email);
   }
 }

@@ -38,9 +38,8 @@ export class StudentsController {
       throw new UnauthorizedException();
     }
 
-    delete student.password;
-
-    return student;
+    const { password, ...result } = student;
+    return result;
   }
 
   @HasRoles(Role.STUDENT)
