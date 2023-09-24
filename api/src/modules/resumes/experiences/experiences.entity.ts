@@ -16,7 +16,7 @@ export class Experience {
   description: string;
 
   @Column()
-  startDate: string;
+  startDate: Date;
 
   @Column()
   endDate: string;

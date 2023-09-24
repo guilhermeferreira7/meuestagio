@@ -14,7 +14,7 @@ export class CreateExperienceDto {
   description: string;
 
   @IsNotEmpty()
-  startDate: string;
+  startDate: Date;
 
   @IsOptional()
   endDate?: string;
