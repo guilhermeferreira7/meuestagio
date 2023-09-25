@@ -1,100 +1,86 @@
-import { LogIn, LogOut, Menu, User } from "lucide-react";
-import React, { useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import { LogIn, Menu, User, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Header() {
   const { user, isAuthenticated, signOut } = useContext(AuthContext);
   const route = !!user ? `/${user.role}/dashboard` : `/`;
 
-  const handleLogout = () => {
-    signOut();
-  };
+  const [visible, setVisible] = useState(false);
+  const menuSize = "8rem";
+
   return (
-    <div className="bg-base-100 w-full navbar drop-shadow-lg flex items-center justify-between px-4">
-      <div className="flex-none lg:hidden">
-        <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
-          <Menu />
-        </label>
-      </div>
-      <div className="flex-1 px-2">
-        <Link
-          href={route}
-          className="pl-2 text-2xl text-primary self-center font-bold"
-        >
-          MeuEstagio
-        </Link>
-      </div>
-      {isAuthenticated ? (
-        <div className="dropdown dropdown-end w-1/3 max-w-xs">
-          <label
-            tabIndex={0}
-            className="w-full btn btn-ghost border-gray-300 rounded-btn"
-          >
-            {user?.name}
+    <>
+      <div className="bg-base-100 w-full navbar drop-shadow-lg flex items-center justify-between px-4">
+        <div className="flex-none lg:hidden">
+          <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
+            <Menu />
           </label>
-          <ul
-            tabIndex={0}
-            className="w-full menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box mt-1"
-          >
-            <li>
-              <Link href={`/${user?.role}/profile`}>
-                <User />
-                Perfil
-              </Link>
-            </li>
-            <li>
-              <a
-                className="hover:bg-error-content text-error"
-                onClick={handleLogout}
-              >
-                <LogOut />
-                Sair
-              </a>
-            </li>
-          </ul>
         </div>
-      ) : (
-        // <div className="dropdown dropdown-hover">
-        //   <label
-        //     tabIndex={0}
-        //     className="w-40 text-primary text-center font-semibold"
-        //   >
-        //     <span className="block sm:hidden">
-        //       <User />
-        //     </span>
-        //     <span className="hidden sm:block border border-primary rounded-md p-2">
-        //       {user?.name}
-        //     </span>
-        //   </label>
-        //   <ul
-        //     tabIndex={0}
-        //     className="w-40 bg-base-200 dropdown-content z-[1] p-2 shadow text-primary font-semibold"
-        //   >
-        //     <li>
-        //       <button>
-        //         <User />
-        //         Perfil
-        //       </button>
-        //     </li>
-        //     <li>
-        //       <button
-        //         className="flex items-center gap-1 hover:bg-error-content text-error"
-        //         onClick={handleLogout}
-        //       >
-        //         <LogOut />
-        //         Sair
-        //       </button>
-        //     </li>
-        //   </ul>
-        // </div>
+        <div className="flex-1 px-2">
+          <Link
+            href={route}
+            className="pl-2 text-2xl text-primary self-center font-bold"
+          >
+            MeuEstagio
+          </Link>
+        </div>
+        {isAuthenticated ? (
+          <button
+            style={{
+              width: menuSize,
+            }}
+            onClick={() => setVisible(!visible)}
+            className={`w-24 md:w-${menuSize} justify-between border border-gray-300 p-2 rounded-md hover:bg-base-200`}
+          >
+            {user?.avatarURL ? (
+              <Image
+                src={user?.avatarURL}
+                alt="Avatar"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            ) : (
+              <User />
+            )}
+            <span className="truncate">{user?.name}</span>
+            <span>{visible ? <ChevronUp /> : <ChevronDown />}</span>
+          </button>
+        ) : (
+          <Link
+            className="border-0 btn hover:bg-info-content text-info flex flex-row gap-2"
+            href="/login"
+          >
+            Login <LogIn />
+          </Link>
+        )}
+      </div>
+      <div
+        style={{
+          width: menuSize,
+        }}
+        className={`${
+          visible ? "flex" : "hidden"
+        } flex-col gap-2 absolute top-14 right-5 z-50 rounded-md bg-base-100 border border-gray-200 p-2`}
+      >
         <Link
-          className="border-0 btn hover:bg-info-content text-info flex flex-row gap-2"
-          href="/login"
+          href={`/${user?.role}/profile`}
+          className="hover:bg-blue-200 text-primary flex items-center gap-1 rounded-sm h-8 justify-center"
         >
-          Login <LogIn />
+          Ver perfil
         </Link>
-      )}
-    </div>
+        <div className="border border-gray-200"></div>
+        <button
+          className="hover:bg-error-content text-error flex items-center gap-1 rounded-sm h-8 justify-center"
+          onClick={signOut}
+        >
+          Sair da conta
+        </button>
+      </div>
+    </>
   );
 }

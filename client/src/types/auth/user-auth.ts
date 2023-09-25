@@ -3,6 +3,7 @@ export type UserAuth = {
   name: string;
   password: string;
   role: Role;
+  avatarURL?: string;
 };
 
 export enum Role {
