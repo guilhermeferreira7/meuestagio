@@ -17,7 +17,7 @@ specifiers:
   eslint: 8.32.0
   eslint-config-next: ^13.5.1
   eslint-config-prettier: ^8.8.0
-  lucide-react: ^0.180.0
+  lucide-react: ^0.279.0
   next: ^13.5.1
   nookies: ^2.5.2
   postcss: ^8.4.23
@@ -42,7 +42,7 @@ dependencies:
   eslint: 8.32.0
   eslint-config-next: 13.5.2_eslint@8.32.0+typescript@5.0.4
   eslint-config-prettier: 8.10.0_eslint@8.32.0
-  lucide-react: 0.180.0_react@18.2.0
+  lucide-react: 0.279.0_react@18.2.0
   next: 13.5.2_react-dom@18.2.0+react@18.2.0
   nookies: 2.5.2
   postcss: 8.4.30
@@ -2989,8 +2989,8 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /lucide-react/0.180.0_react@18.2.0:
-    resolution: {integrity: sha512-QGGawkbqAPnT2xAqM/+RN046/Khbpp2LNMLiEYOdW601OV4tOhLvDgU4Uva5jyJ5Vumoyv4uqJeF93QTBGuMtQ==}
+  /lucide-react/0.279.0_react@18.2.0:
+    resolution: {integrity: sha512-LJ8g66+Bxc3t3x9vKTeK3wn3xucrOQGfJ9ou9GsBwCt2offsrT2BB90XrTrIzE1noYYDe2O8jZaRHi6sAHXNxw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
