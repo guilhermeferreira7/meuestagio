@@ -15,6 +15,11 @@ import { getAPIClient } from "@services/api/clientApi";
 import { notifyError, notifySuccess } from "@components/toasts/toast";
 import { Form } from "@components/Form";
 import { createJobFormSchema } from "../../../utils/validators/create-job-schema";
+import {
+  AREAS_PATH,
+  JOBS_PATH,
+  PROFILE_COMPANY_PATH,
+} from "../../../constants/api-routes";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
@@ -41,7 +46,7 @@ export default function CreateJob({ areas, company }: PageProps) {
   const createJob = async (data: CreateJobFormData) => {
     setIsLoading(true);
     try {
-      await api.post("/jobs", {
+      await api.post(JOBS_PATH, {
         ...data,
         cityId: company.cityId,
         companyId: company.id,
@@ -162,8 +167,8 @@ export default function CreateJob({ areas, company }: PageProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const apiClient = getAPIClient(ctx);
-    const company = await apiClient.get<Company>("/companies/profile");
-    const areas = await apiClient.get<Area[]>("/areas");
+    const company = await apiClient.get<Company>(PROFILE_COMPANY_PATH);
+    const areas = await apiClient.get<Area[]>(AREAS_PATH);
 
     return {
       props: { areas: areas.data, company: company.data },
