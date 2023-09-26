@@ -4,12 +4,12 @@ import { Company } from "@customTypes/users/company";
 import { Job, JobStatus } from "@customTypes/job";
 import { getAPIClient } from "@services/api/clientApi";
 import JobCompanyCard from "./_job-card";
-import AppTabs from "../../../components/AppTabs";
 import { useEffect, useState } from "react";
 import {
   JOBS_BY_COMPANY_PATH,
   PROFILE_COMPANY_PATH,
 } from "../../../constants/api-routes";
+import { AppTabs } from "../../../components";
 
 interface CompanyJobsProps {
   jobs: Job[];
@@ -25,7 +25,7 @@ export default function CompanyJobs({ jobs }: CompanyJobsProps) {
     } else {
       setFilteredJobs(jobs.filter((job) => job.status === JobStatus.CLOSED));
     }
-  }, [tab]);
+  }, [tab, jobs]);
 
   return (
     <>

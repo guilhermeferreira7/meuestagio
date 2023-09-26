@@ -1,14 +1,13 @@
-import Link from "next/link";
 import { useState } from "react";
 import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
 
 import { notify } from "../../../components/toasts/toast";
+import { Modal } from "../../../components";
 import { api } from "../../../services/api/api";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { Job } from "../../../types/job";
 import { JobApplication } from "../../../types/job-application";
 import { errorToString } from "../../../utils/helpers/error-to-string";
-import { Modal } from "../../../components/AppModal/Modal";
 import {
   JOB_APPLICATIONS_APPLY,
   JOB_APPLICATIONS_STUDENT_PATH,

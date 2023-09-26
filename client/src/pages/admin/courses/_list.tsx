@@ -2,12 +2,11 @@ import { Search, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { notify } from "../../../components/toasts/toast";
-import Table from "../../../components/AppTable";
-import TableRow from "../../../components/AppTable/TableRow";
 import { COURSES_PATH, COURSE_PATH } from "../../../constants/api-routes";
 import { usePagination } from "../../../hooks/usePagination";
 import { api } from "../../../services/api/api";
 import { Course } from "../../../types/course";
+import { Table, TableRow } from "../../../components";
 
 interface ListCoursesProps {
   courses: Course[];

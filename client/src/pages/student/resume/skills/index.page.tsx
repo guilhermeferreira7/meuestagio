@@ -4,12 +4,6 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 
-import { Resume, Skill, SkillLevel } from "@customTypes/resume";
-import { notify } from "@components/toasts/toast";
-import { Form } from "@components/Form";
-import { api } from "@services/api/api";
-import { createSkillSchema } from "@utils/validators/edit-resume-schema";
-import AppCard from "../../../../components/AppCard";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";
 import { errorToString } from "../../../../utils/helpers/error-to-string";
 import {
@@ -17,6 +11,11 @@ import {
   STUDENT_RESUME_PATH,
   STUDENT_RESUME_SKILLS_PATH,
 } from "../../../../constants/api-routes";
+import { AppCard, Form } from "../../../../components";
+import { createSkillSchema } from "../../../../utils/validators/edit-resume-schema";
+import { Resume, Skill, SkillLevel } from "../../../../types/resume";
+import { api } from "../../../../services/api/api";
+import { notify } from "../../../../components/toasts/toast";
 
 type FormAddSkill = z.infer<typeof createSkillSchema>;
 

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { GetServerSideProps } from "next";
 
-import AppCard from "@components/AppCard";
 import { getAPIClient } from "@services/api/clientApi";
 import { Institution } from "@customTypes/institution";
 import { User } from "@customTypes/users/user";
 import { Area } from "@customTypes/area";
 import { City } from "@customTypes/city";
 
+import { AppCard } from "../../../components";
 import CreateInstitutionForm from "./_form-create";
 import ListInstitutions from "./_list-institutions";
 import { Plus, X } from "lucide-react";

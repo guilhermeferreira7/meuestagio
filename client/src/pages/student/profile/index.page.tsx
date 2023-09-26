@@ -4,7 +4,6 @@ import { Pencil, User } from "lucide-react";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
 import AddressForm from "./_address-form";
-import AppCard from "../../../components/AppCard";
 import { notify } from "../../../components/toasts/toast";
 import {
   CITIES_PATH,
@@ -17,6 +16,7 @@ import { Student } from "../../../types/users/student";
 import { City } from "../../../types/city";
 import { Course } from "../../../types/course";
 import { errorToString } from "../../../utils/helpers/error-to-string";
+import { AppCard } from "../../../components";
 
 interface StudentProfileProps {
   student: Student;

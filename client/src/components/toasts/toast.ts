@@ -5,25 +5,20 @@ const toastDefaultConfig: ToastOptions = {
   draggable: false,
 };
 
-export function notifySuccess(message: string = "Sucesso!") {
-  toast.success(message + "", toastDefaultConfig);
-}
-
-export function notifyError(message: string = "Erro!") {
-  toast.error(message + "", toastDefaultConfig);
-}
-
-export function notifyInfo(message: string = "Info!") {
-  toast.info(message + "", toastDefaultConfig);
-}
-
-export function notifyWarning(message: string = "Atenção!") {
-  toast.warn(message + "", toastDefaultConfig);
-}
-
 export const notify = {
-  success: notifySuccess,
-  error: notifyError,
-  info: notifyInfo,
-  warning: notifyWarning,
+  success: (message: string = "Sucesso!") => {
+    toast.success(message, toastDefaultConfig);
+  },
+
+  error: (message: string = "Erro!") => {
+    toast.error(message, toastDefaultConfig);
+  },
+
+  info: (message: string = "Info!") => {
+    toast.info(message, toastDefaultConfig);
+  },
+
+  warning: (message: string = "Atenção!") => {
+    toast.warn(message, toastDefaultConfig);
+  },
 };

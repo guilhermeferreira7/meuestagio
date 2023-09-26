@@ -1,7 +1,7 @@
 import React from "react";
 
-import AppCard from "../../../../components/AppCard";
 import { JobApplication } from "../../../../types/job-application";
+import { AppCard } from "../../../../components";
 
 type CandidateProps = {
   jobApplication: JobApplication;

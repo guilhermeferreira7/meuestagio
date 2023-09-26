@@ -2,12 +2,11 @@ import React from "react";
 import Link from "next/link";
 
 import { Job, JobStatus } from "@customTypes/job";
-import AppCard from "@components/AppCard";
-import { Modal } from "../../../components/AppModal/Modal";
 import { api } from "../../../services/api/api";
 import { notify } from "../../../components/toasts/toast";
 import { errorToString } from "../../../utils/helpers/error-to-string";
 import { JOB_CLOSE_PATH } from "../../../constants/api-routes";
+import { AppCard, Modal } from "../../../components";
 
 interface JobCompanyCardProps {
   job: Job;

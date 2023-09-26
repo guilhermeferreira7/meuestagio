@@ -1,8 +1,16 @@
 import { GetServerSideProps } from "next";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
-import ResumeView from "../../../../components/Resume/resume";
-import AppTabs from "../../../../components/AppTabs";
+import { AppTabs, Modal, ResumeView } from "../../../../components";
+import { notify } from "../../../../components/toasts/toast";
+import {
+  JOB_APPLICATIONS_COMPANY_PATH,
+  JOB_APPLICATIONS_FINISH_PATH,
+  JOB_APPLICATIONS_INTERVIEW_PATH,
+  PROFILE_COMPANY_PATH,
+} from "../../../../constants/api-routes";
 import { useJobApplications } from "../../../../hooks/useFilterJobApplications";
 import { getAPIClient } from "../../../../services/api/clientApi";
 import {
@@ -12,17 +20,7 @@ import {
 import { Company } from "../../../../types/users/company";
 import Candidate from "./_candidate";
 import { api } from "../../../../services/api/api";
-import { notify } from "../../../../components/toasts/toast";
 import { errorToString } from "../../../../utils/helpers/error-to-string";
-import { useRouter } from "next/router";
-import { Modal } from "../../../../components/AppModal/Modal";
-import Link from "next/link";
-import {
-  JOB_APPLICATIONS_COMPANY_PATH,
-  JOB_APPLICATIONS_FINISH_PATH,
-  JOB_APPLICATIONS_INTERVIEW_PATH,
-  PROFILE_COMPANY_PATH,
-} from "../../../../constants/api-routes";
 
 interface ApplicationsProps {
   jobApplications: JobApplication[];

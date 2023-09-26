@@ -4,7 +4,7 @@ import { Plus, X } from "lucide-react";
 
 import CreateCourseForm from "./_form-create";
 import ListCourses from "./_list";
-import AppCard from "../../../components/AppCard";
+import { AppCard } from "../../../components";
 import {
   AREAS_PATH,
   CITIES_PATH,

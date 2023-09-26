@@ -3,8 +3,8 @@ import { Book } from "lucide-react";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { Student } from "../../../types/users/student";
 import { Resume } from "../../../types/resume";
-import ResumeView from "../../../components/Resume/resume";
 import { STUDENT_RESUME_PATH } from "../../../constants/api-routes";
+import { ResumeView } from "../../../components";
 
 interface PageProps {
   student: Student;

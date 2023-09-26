@@ -7,19 +7,14 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { Loader } from "lucide-react";
 
-import { Area } from "@customTypes/area";
-import { Company } from "@customTypes/users/company";
-import { api } from "@services/api/api";
-import { getAPIClient } from "@services/api/clientApi";
-
-import { notifyError, notifySuccess } from "@components/toasts/toast";
-import { Form } from "@components/Form";
 import { createJobFormSchema } from "../../../utils/validators/create-job-schema";
-import {
-  AREAS_PATH,
-  JOBS_PATH,
-  PROFILE_COMPANY_PATH,
-} from "../../../constants/api-routes";
+import { AREAS_PATH, JOBS_PATH } from "../../../constants/api-routes";
+import { notify } from "../../../components/toasts/toast";
+import { Form } from "../../../components";
+import { Area } from "../../../types/area";
+import { Company } from "../../../types/users/company";
+import withCompanyAuth from "../../../services/auth/withCompanyAuth";
+import { api } from "../../../services/api/api";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
@@ -55,9 +50,9 @@ export default function CreateJob({ areas, company }: PageProps) {
         state: company.city.state,
       });
       router.push("dashboard");
-      notifySuccess("Vaga criada com sucesso!");
+      notify.success("Vaga criada com sucesso!");
     } catch (error: any) {
-      notifyError(`Erro ao criar vaga! ${error.response?.data?.message}`);
+      notify.error(`Erro ao criar vaga! ${error.response?.data?.message}`);
       setIsLoading(false);
     }
   };
@@ -164,21 +159,12 @@ export default function CreateJob({ areas, company }: PageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    const company = await apiClient.get<Company>(PROFILE_COMPANY_PATH);
+export const getServerSideProps = withCompanyAuth(
+  async (_context, company, apiClient) => {
     const areas = await apiClient.get<Area[]>(AREAS_PATH);
 
     return {
-      props: { areas: areas.data, company: company.data },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
+      props: { areas: areas.data, company },
     };
   }
-};
+);

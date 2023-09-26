@@ -4,8 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { notify } from "../../../components/toasts/toast";
-import { Form } from "../../../components/Form";
 import { COURSES_PATH } from "../../../constants/api-routes";
+import { Form } from "../../../components";
 import { api } from "../../../services/api/api";
 import { Institution } from "../../../types/institution";
 import { Area } from "../../../types/area";

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Map, Pencil } from "lucide-react";
 
-import { Form } from "../../../components/Form";
+import { Form } from "../../../components";
 import { CITIES_PATH } from "../../../constants/api-routes";
 import { api } from "../../../services/api/api";
 import { City } from "../../../types/city";

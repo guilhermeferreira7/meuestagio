@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import CreateStudentForm from "./_student-form";
 import CreateCompanyForm from "./_company-form";
 import { notify } from "../../components/toasts/toast";
-import { Form } from "../../components/Form";
+import { Form } from "../../components";
 import {
   CITIES_PATH,
   COMPANIES_PATH,

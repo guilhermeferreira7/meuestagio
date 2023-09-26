@@ -6,8 +6,6 @@ import { Trash } from "lucide-react";
 
 import { Language, LanguageLevel, Resume } from "../../../../types/resume";
 
-import { Form } from "../../../../components/Form";
-import AppCard from "../../../../components/AppCard";
 import { notify } from "../../../../components/toasts/toast";
 import { api } from "../../../../services/api/api";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";
@@ -21,6 +19,7 @@ import {
   STUDENT_RESUME_LANGUAGES_PATH,
   STUDENT_RESUME_PATH,
 } from "../../../../constants/api-routes";
+import { AppCard, Form } from "../../../../components";
 
 type LanguagePageProps = {
   resumeId: number;

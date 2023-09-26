@@ -5,11 +5,10 @@ import { z } from "zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AuthContext } from "@contexts/AuthContext";
-import { Role } from "@customTypes/auth/user-auth";
-import { loginSchema } from "@utils/validators/login-schema";
-
-import { Form } from "@components/Form";
+import { loginSchema } from "../../utils/validators/login-schema";
+import { AuthContext } from "../../contexts/AuthContext";
+import { Form } from "../../components";
+import { Role } from "../../types/auth/user-auth";
 
 type LoginData = z.infer<typeof loginSchema>;
 

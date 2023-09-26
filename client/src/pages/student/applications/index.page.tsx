@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import AppCard from "../../../components/AppCard";
-import AppTabs from "../../../components/AppTabs";
 import { notify } from "../../../components/toasts/toast";
 import { useJobApplications } from "../../../hooks/useFilterJobApplications";
 import { api } from "../../../services/api/api";
@@ -16,6 +14,7 @@ import {
   JOB_APPLICATIONS_FINISH_PATH,
   JOB_APPLICATIONS_STUDENT_PATH,
 } from "../../../constants/api-routes";
+import { AppCard, AppTabs } from "../../../components";
 
 interface JobApplicationsProps {
   jobApplications: JobApplication[];

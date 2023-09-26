@@ -6,13 +6,13 @@ import { Pencil, School } from "lucide-react";
 import { Autocomplete, TextField } from "@mui/material";
 
 import { notify } from "../../../components/toasts/toast";
-import { Form } from "../../../components/Form";
 import { COURSES_PATH, INSTITUTIONS_PATH } from "../../../constants/api-routes";
 import { api } from "../../../services/api/api";
 import { Institution } from "../../../types/institution";
 import { Course } from "../../../types/course";
 import { errorToString } from "../../../utils/helpers/error-to-string";
 import { editEducationSchema } from "../../../utils/validators/edit-profile-schema";
+import { Form } from "../../../components";
 
 type EducationData = z.infer<typeof editEducationSchema>;
 

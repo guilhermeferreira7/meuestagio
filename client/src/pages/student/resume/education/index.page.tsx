@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
+import { notify } from "../../../../components/toasts/toast";
+import { AppCard, Form } from "../../../../components";
 import { Degree, Education, Resume } from "../../../../types/resume";
 import {
   FormAddEducation,
@@ -9,10 +11,7 @@ import {
 } from "../../../../utils/validators/edit-resume-schema";
 import { getMonths, getYears } from "../../../../utils/helpers/date-helpers";
 
-import { Form } from "../../../../components/Form";
-import AppCard from "../../../../components/AppCard";
 import { api } from "../../../../services/api/api";
-import { notify } from "../../../../components/toasts/toast";
 import { isAxiosError } from "axios";
 import { Trash } from "lucide-react";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";

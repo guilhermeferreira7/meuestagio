@@ -4,14 +4,14 @@ import { GetServerSideProps } from "next";
 import ibgeApi from "../../../services/api/ibgeApi";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { api } from "../../../services/api/api";
-import { notifyError, notifySuccess } from "@components/toasts/toast";
-import { isAxiosError } from "axios";
 import {
   CITIES_PATH,
   PROFILE_ADMIN_PATH,
   REGIONS_PATH,
 } from "../../../constants/api-routes";
 import { User } from "../../../types/users/user";
+import { notify } from "../../../components/toasts/toast";
+import { errorToString } from "../../../utils/helpers/error-to-string";
 
 interface RegisterCityProps {
   states: any;
@@ -37,11 +37,7 @@ export default function RegisterCity({ states }: RegisterCityProps) {
       setRegionName(getRegionalCities.data[0].microrregiao.nome);
       setRegionalCities([...getRegionalCities.data]);
     } catch (error) {
-      if (isAxiosError(error)) {
-        notifyError(error.response?.data?.message);
-      } else {
-        notifyError("Erro ao buscar cidades!");
-      }
+      notify.error(errorToString(error));
     }
   }
 
@@ -65,10 +61,10 @@ export default function RegisterCity({ states }: RegisterCityProps) {
             regionName,
           });
         });
-        notifySuccess("Cidades cadastradas com sucesso!");
+        notify.success("Cidades cadastradas com sucesso!");
       })
       .catch((error) => {
-        notifyError(
+        notify.error(
           "Erro ao cadastrar cidades! " + error.response?.data?.message
         );
       });
