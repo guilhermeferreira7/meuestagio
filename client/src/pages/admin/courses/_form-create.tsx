@@ -3,13 +3,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Area } from "@customTypes/area";
-import { Institution } from "@customTypes/institution";
-import { api } from "@services/api/api";
-import { createCourseSchema } from "@utils/validators/course-schema";
-
-import { Form } from "@components/Form";
-import { notify } from "@components/toasts/toast";
+import { notify } from "../../../components/toasts/toast";
+import { Form } from "../../../components/Form";
+import { COURSES_PATH } from "../../../constants/api-routes";
+import { api } from "../../../services/api/api";
+import { Institution } from "../../../types/institution";
+import { Area } from "../../../types/area";
+import { createCourseSchema } from "../../../utils/validators/course-schema";
 
 type CreateCourseFormData = z.infer<typeof createCourseSchema>;
 
@@ -31,7 +31,7 @@ export default function CreateCourseForm({
 
   const saveCourse = async (data: CreateCourseFormData) => {
     try {
-      const course = await api.post<Institution>("/courses", {
+      const course = await api.post<Institution>(COURSES_PATH, {
         ...data,
       });
       router.reload();

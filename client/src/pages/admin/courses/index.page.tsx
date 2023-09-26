@@ -2,16 +2,22 @@ import React, { useState } from "react";
 import { GetServerSideProps } from "next";
 import { Plus, X } from "lucide-react";
 
-import { User } from "@customTypes/users/user";
-import { City } from "@customTypes/city";
-import { Institution } from "@customTypes/institution";
-import { Area } from "@customTypes/area";
-import { Course } from "@customTypes/course";
-import { getAPIClient } from "@services/api/clientApi";
-
-import AppCard from "@components/AppCard";
 import CreateCourseForm from "./_form-create";
 import ListCourses from "./_list";
+import AppCard from "../../../components/AppCard";
+import {
+  AREAS_PATH,
+  CITIES_PATH,
+  COURSES_PATH,
+  INSTITUTIONS_PATH,
+  PROFILE_ADMIN_PATH,
+} from "../../../constants/api-routes";
+import { getAPIClient } from "../../../services/api/clientApi";
+import { Institution } from "../../../types/institution";
+import { Area } from "../../../types/area";
+import { Course } from "../../../types/course";
+import { City } from "../../../types/city";
+import { User } from "../../../types/users/user";
 
 interface CreateCourseFormProps {
   institutions: Institution[];
@@ -72,14 +78,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apiClient = getAPIClient(ctx);
 
   try {
-    await apiClient.get<User>("/admin/profile");
+    await apiClient.get<User>(PROFILE_ADMIN_PATH);
 
-    const cities = await apiClient.get<City[]>("/cities", {
+    const cities = await apiClient.get<City[]>(CITIES_PATH, {
       params: { orderBy: "name" },
     });
-    const institutions = await apiClient.get<Institution[]>("/institutions");
-    const areas = await apiClient.get<Area[]>("/areas");
-    const courses = await apiClient.get<Course[]>("/courses", {
+    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
+    const areas = await apiClient.get<Area[]>(AREAS_PATH);
+    const courses = await apiClient.get<Course[]>(COURSES_PATH, {
       params: { orderBy: "id", order: "DESC", limit: 10 },
     });
 

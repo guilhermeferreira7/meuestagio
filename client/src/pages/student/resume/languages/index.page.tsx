@@ -16,6 +16,11 @@ import {
   createLanguageSchema,
 } from "../../../../utils/validators/language-schema";
 import { errorToString } from "../../../../utils/helpers/error-to-string";
+import {
+  LANGUAGE_PATH,
+  STUDENT_RESUME_LANGUAGES_PATH,
+  STUDENT_RESUME_PATH,
+} from "../../../../constants/api-routes";
 
 type LanguagePageProps = {
   resumeId: number;
@@ -35,7 +40,7 @@ export default function LanguagesPage({
 
   const createLanguage = async (data: FormAddLanguage) => {
     try {
-      const language = await api.post<Language>("/resumes/me/languages", {
+      const language = await api.post<Language>(STUDENT_RESUME_LANGUAGES_PATH, {
         resumeId,
         ...data,
       });
@@ -48,7 +53,7 @@ export default function LanguagesPage({
 
   const deleteLanguage = async (language: Language) => {
     try {
-      await api.delete(`resumes/me/languages/${language.id}`);
+      await api.delete(LANGUAGE_PATH(language.id));
       setLanguages(languagesUpdated.filter((exp) => exp.id !== language.id));
       notify.success("Formação excluída com sucesso");
     } catch (error: any) {
@@ -149,8 +154,8 @@ export default function LanguagesPage({
 }
 
 export const getServerSideProps = withStudentAuth(
-  async (_context, student, serverApi) => {
-    const resume = await serverApi.get<Resume>("/resumes/me");
+  async (_context, student, apiClient) => {
+    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
     return {
       props: {
         resumeId: student.resumeId,

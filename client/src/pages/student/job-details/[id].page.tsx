@@ -9,6 +9,11 @@ import { Job } from "../../../types/job";
 import { JobApplication } from "../../../types/job-application";
 import { errorToString } from "../../../utils/helpers/error-to-string";
 import { Modal } from "../../../components/AppModal/Modal";
+import {
+  JOB_APPLICATIONS_APPLY,
+  JOB_APPLICATIONS_STUDENT_PATH,
+  JOB_PATH,
+} from "../../../constants/api-routes";
 
 type JobDetailsPageProps = {
   studentId: number;
@@ -28,7 +33,7 @@ export default function JobDetailsPage({
 
   const apply = async () => {
     try {
-      await api.post("job-applications/apply", {
+      await api.post(JOB_APPLICATIONS_APPLY, {
         studentId: studentId,
         message: message,
         jobId: job.id,
@@ -138,7 +143,7 @@ export default function JobDetailsPage({
 export const getServerSideProps = withStudentAuth(
   async (context, student, apiClient) => {
     const jobApplications = await apiClient.get<JobApplication[]>(
-      "job-applications/student",
+      JOB_APPLICATIONS_STUDENT_PATH,
       {
         params: {
           studentId: student.id,
@@ -146,7 +151,7 @@ export const getServerSideProps = withStudentAuth(
       }
     );
 
-    const job = await apiClient.get<Job>(`jobs/${context.query.id}`);
+    const job = await apiClient.get<Job>(JOB_PATH(Number(context.query.id)));
 
     let applied = false;
     jobApplications.data.forEach((jobApplication) => {

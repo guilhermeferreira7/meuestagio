@@ -3,9 +3,11 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, School } from "lucide-react";
+import { Autocomplete, TextField } from "@mui/material";
 
 import { notify } from "../../../components/toasts/toast";
 import { Form } from "../../../components/Form";
+import { COURSES_PATH, INSTITUTIONS_PATH } from "../../../constants/api-routes";
 import { api } from "../../../services/api/api";
 import { Institution } from "../../../types/institution";
 import { Course } from "../../../types/course";
@@ -19,7 +21,7 @@ export default function EducationForm({ initialData, courses }: any) {
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   useEffect(() => {
     api
-      .get<Institution[]>("/institutions")
+      .get<Institution[]>(INSTITUTIONS_PATH)
       .then((response) => setInstitutions(response.data))
       .catch((error) => notify.error(errorToString(error)));
   }, [institutions]);
@@ -31,12 +33,14 @@ export default function EducationForm({ initialData, courses }: any) {
 
   const { handleSubmit } = editEducationForm;
 
-  const setCourses = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const setCourses = async (institutionId: string) => {
     editEducationForm.setValue("course", "");
+    editEducationForm.setValue("institution", institutionId);
+    if (!institutionId) return setCoursesList([]);
     try {
-      const courses = await api.get<Course[]>("/courses", {
+      const courses = await api.get<Course[]>(COURSES_PATH, {
         params: {
-          institutionId: e.target.value,
+          institutionId: institutionId,
         },
       });
       setCoursesList(courses.data);
@@ -44,6 +48,7 @@ export default function EducationForm({ initialData, courses }: any) {
       notify.error(errorToString(error));
     }
   };
+
   const editProfile = async (data: EducationData) => {
     console.log(data);
   };
@@ -55,7 +60,7 @@ export default function EducationForm({ initialData, courses }: any) {
           <div className="flex justify-between col-span-2">
             <h2 className="text-md font-semibold flex gap-1">
               <School />
-              <span>Educação</span>
+              <span>Instituição</span>
             </h2>
             <div className="flex items-center gap-1">
               {!formDisabled ? (
@@ -64,7 +69,7 @@ export default function EducationForm({ initialData, courses }: any) {
                     className="btn btn-sm btn-warning"
                     onClick={() => {
                       editEducationForm.reset({
-                        institution: initialData.institution,
+                        institution: initialData.institution.id,
                         course: initialData.course.id,
                       });
                       setFormDisabled(!formDisabled);
@@ -93,37 +98,40 @@ export default function EducationForm({ initialData, courses }: any) {
             </div>
           </div>
           <Form.Field>
-            <Form.Label htmlFor="institution">Instituição</Form.Label>
-            <Form.InputSelect
-              name="institution"
+            <Autocomplete
+              className="pt-1"
+              id="institution"
               disabled={formDisabled}
-              defaultValue={initialData.institution}
-              onChange={setCourses}
-            >
-              {institutions.map((institution: any) => (
-                <option key={institution.id} value={institution.id}>
-                  {institution.name}
-                </option>
-              ))}
-            </Form.InputSelect>
+              onChange={(_e, value) => {
+                if (!value) setCourses("");
+                else setCourses(value.split(" - ")[0]);
+              }}
+              options={institutions.map((institution) => {
+                return `${institution.id} - ${institution.name}`;
+              })}
+              renderInput={(params) => (
+                <TextField {...params} label="Instituição" />
+              )}
+            />
             <Form.ErrorMessage field="institution" />
           </Form.Field>
           <Form.Field>
             <Form.Label htmlFor="course">Curso</Form.Label>
-            <Form.InputSelect
-              name="course"
-              disabled={formDisabled}
-              defaultValue={initialData.course.id}
-            >
-              <option value={initialData.course.id}>
-                {initialData.course.name}
-              </option>
-              {coursesList.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.name}
-                </option>
-              ))}
-            </Form.InputSelect>
+            {formDisabled ? (
+              <Form.InputText
+                name="course"
+                disabled
+                defaultValue={initialData.course.name}
+              />
+            ) : (
+              <Form.InputSelect name="course">
+                {coursesList.map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {course.name}
+                  </option>
+                ))}
+              </Form.InputSelect>
+            )}
             <Form.ErrorMessage field="course" />
           </Form.Field>
         </div>

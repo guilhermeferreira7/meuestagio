@@ -12,6 +12,10 @@ import {
   JobApplicationStatus,
 } from "../../../types/job-application";
 import { errorToString } from "../../../utils/helpers/error-to-string";
+import {
+  JOB_APPLICATIONS_FINISH_PATH,
+  JOB_APPLICATIONS_STUDENT_PATH,
+} from "../../../constants/api-routes";
 
 interface JobApplicationsProps {
   jobApplications: JobApplication[];
@@ -27,7 +31,7 @@ export default function JobApplicationsPage({
 
   const router = useRouter();
 
-  const withdraw = (jobApplication: JobApplication) => {
+  const cancel = (jobApplication: JobApplication) => {
     if (
       !confirm(
         "Deseja realmente desistir dessa vaga? \nEsta ação é irreversível!"
@@ -36,7 +40,7 @@ export default function JobApplicationsPage({
       return;
 
     api
-      .post("/job-applications/withdraw", {
+      .post(JOB_APPLICATIONS_FINISH_PATH, {
         jobApplicationId: jobApplication.id,
       })
       .then(() => {
@@ -54,10 +58,8 @@ export default function JobApplicationsPage({
       <AppTabs
         tabs={[
           JobApplicationStatus.IN_PROGRESS,
-          JobApplicationStatus.APPROVED,
-          JobApplicationStatus.REJECTED,
+          JobApplicationStatus.INTERVIEW,
           JobApplicationStatus.FINISHED,
-          JobApplicationStatus.CANCELED_BY_STUDENT,
         ]}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -89,7 +91,7 @@ export default function JobApplicationsPage({
                     JobApplicationStatus.IN_PROGRESS && (
                     <button
                       className="btn btn-sm btn-error"
-                      onClick={() => withdraw(jobApplication)}
+                      onClick={() => cancel(jobApplication)}
                     >
                       Desistir
                     </button>
@@ -106,7 +108,7 @@ export default function JobApplicationsPage({
 
 export const getServerSideProps = withStudentAuth(
   async (_context, student, apiClient) => {
-    const jobApplications = await apiClient.get("/job-applications/student", {
+    const jobApplications = await apiClient.get(JOB_APPLICATIONS_STUDENT_PATH, {
       params: {
         studentId: student.id,
       },

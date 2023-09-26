@@ -1,11 +1,17 @@
 import React from "react";
 import { Pencil, User } from "lucide-react";
 
-import AppCard from "../../../components/AppCard";
-import { notify } from "../../../components/toasts/toast";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
 import AddressForm from "./_address-form";
+import AppCard from "../../../components/AppCard";
+import { notify } from "../../../components/toasts/toast";
+import {
+  CITIES_PATH,
+  COURSES_PATH,
+  INSTITUTIONS_PATH,
+  PROFILE_STUDENT_PATH,
+} from "../../../constants/api-routes";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { api } from "../../../services/api/api";
 import { Student } from "../../../types/users/student";
@@ -32,7 +38,7 @@ export default function StudentProfile({
     const about = event.currentTarget.about.value;
 
     try {
-      await api.patch("/students/profile", {
+      await api.patch(PROFILE_STUDENT_PATH, {
         about,
       });
       notify.success("Dados atualizados com sucesso");
@@ -76,7 +82,7 @@ export default function StudentProfile({
           <div className="divider"></div>
           <EducationForm
             initialData={{
-              institution: student.institution.id,
+              institution: student.institution,
               course: {
                 id: student.course.id,
                 name: student.course.name,
@@ -101,19 +107,17 @@ export default function StudentProfile({
 
 export const getServerSideProps = withStudentAuth(
   async (_context, student, apiClient) => {
-    const cities = await apiClient.get<City[]>("/cities");
-    const institutions = await apiClient.get<Institution[]>("/institutions", {
+    const cities = await apiClient.get<City[]>(CITIES_PATH);
+    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH, {
       params: {
         cityId: student.city.id,
       },
     });
-    const courses = await apiClient.get<Course[]>("/courses", {
+    const courses = await apiClient.get<Course[]>(COURSES_PATH, {
       params: {
         institutionId: student.institution.id,
       },
     });
-
-    console.log("student", student);
 
     return {
       props: {

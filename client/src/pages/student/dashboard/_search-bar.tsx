@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { City } from "@customTypes/city";
-import { Region } from "@customTypes/region";
+import { REGIONS_PATH } from "../../../constants/api-routes";
 import { api } from "../../../services/api/api";
+import { Region } from "../../../types/region";
+import { City } from "../../../types/city";
 
 type SearchBarProps = {
   regions: Region[];
@@ -29,7 +30,7 @@ export default function SearchBar({
 
   useEffect(() => {
     api
-      .get<Region[]>("/cities/regions", {
+      .get<Region[]>(REGIONS_PATH, {
         params: {
           orderBy: "nome",
         },

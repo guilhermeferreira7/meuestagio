@@ -10,6 +10,7 @@ import { createInstitutionFormSchema } from "@utils/validators/institution-schem
 
 import { Form } from "@components/Form";
 import { notify } from "@components/toasts/toast";
+import { INSTITUTIONS_PATH } from "../../../constants/api-routes";
 
 type InstitutionForm = z.infer<typeof createInstitutionFormSchema>;
 
@@ -45,7 +46,7 @@ export default function CreateInstitutionForm({
     }
 
     try {
-      await api.post<Institution>("/institutions", {
+      await api.post<Institution>(INSTITUTIONS_PATH, {
         name: data.institutionName,
         cityId: data.cityId,
       });

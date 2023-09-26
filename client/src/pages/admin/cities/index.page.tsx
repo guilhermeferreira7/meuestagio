@@ -3,10 +3,15 @@ import { GetServerSideProps } from "next";
 
 import ibgeApi from "../../../services/api/ibgeApi";
 import { getAPIClient } from "../../../services/api/clientApi";
-import { User } from "@customTypes/users/user";
 import { api } from "../../../services/api/api";
 import { notifyError, notifySuccess } from "@components/toasts/toast";
 import { isAxiosError } from "axios";
+import {
+  CITIES_PATH,
+  PROFILE_ADMIN_PATH,
+  REGIONS_PATH,
+} from "../../../constants/api-routes";
+import { User } from "../../../types/users/user";
 
 interface RegisterCityProps {
   states: any;
@@ -45,14 +50,14 @@ export default function RegisterCity({ states }: RegisterCityProps) {
     const regionName = regionalCities[0].microrregiao.nome;
 
     api
-      .post("/cities/regions", {
+      .post(REGIONS_PATH, {
         name: regionName,
         IBGECode: regionId,
         state: regionalCities[0].microrregiao.mesorregiao.UF.nome,
       })
       .then((response) => {
         regionalCities.map(async (city: any) => {
-          await api.post("/cities", {
+          await api.post(CITIES_PATH, {
             name: city.nome,
             state: city.microrregiao.mesorregiao.UF.nome,
             IBGECityCode: city.id,
@@ -164,7 +169,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const states = await ibgeApi.get("/estados", {
       params: { orderBy: "nome" },
     });
-    await apiClient.get<User>("/admin/profile");
+    await apiClient.get<User>(PROFILE_ADMIN_PATH);
     return {
       props: {
         states: states.data,
