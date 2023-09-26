@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { JobsService } from './services/jobs.service';
-import { JobsController } from './controllers/jobs.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { JobsController } from './controllers/jobs.controller';
 import { Job } from './entities/job.entity';
-import { City } from '../cities/entities/city.entity';
-import { CompaniesService } from '../users/companies/services/companies.service';
-import { Company } from '../users/companies/entities/company.entity';
+import { JobsService } from './services/jobs.service';
+import { JobApplicationsService } from '../job-applications/services/job-applications.service';
+import { JobApplication } from '../job-applications/entities/job-applications.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Job, City, Company])],
+  imports: [TypeOrmModule.forFeature([Job, JobApplication])],
   controllers: [JobsController],
-  providers: [JobsService, CompaniesService],
+  providers: [JobsService, JobApplicationsService],
 })
 export class JobsModule {}

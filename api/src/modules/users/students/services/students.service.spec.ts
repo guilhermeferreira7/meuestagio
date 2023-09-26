@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import bcryptService from '../../../../utils/bcriptUtils';
-import { Student } from '../entities/student.entity';
-import { StudentsService } from './students.service';
 import { CreateStudentDto } from '../dtos/create-student.dto';
+import { Student } from '../entities/student.entity';
 import { Resume } from '../../../resumes/resume/resume.entity';
+import { StudentsService } from './students.service';
+import bcryptService from '../../../../utils/bcriptUtils';
 
 const oneStudent: CreateStudentDto = {
   name: 'student one',
@@ -40,8 +40,9 @@ const studentsArray: CreateStudentDto[] = [
 const mockStudentsRepository = {
   create: jest.fn((dto) => dto),
   save: jest.fn((student) => Promise.resolve(student)),
-  findOne: jest.fn(),
+  findOne: jest.fn(() => Promise.resolve(null)),
   find: jest.fn(() => studentsArray),
+  update: jest.fn((email, student) => Promise.resolve(student)),
 };
 
 const mockResumesRepository = {
@@ -92,27 +93,13 @@ describe('StudentsService', () => {
 
   describe('createStudent()', () => {
     it('should throw error if email is already in use', async () => {
-      const existingStudent = await service.createStudent(oneStudent);
-      const newStudent = {
-        name: 'student two',
-        email: 'student@email.com',
-        password: 'abc123',
-        cityId: 1,
-        institutionId: 1,
-        courseId: 1,
-      };
-
       jest
         .spyOn(studentsRepository, 'findOne')
-        .mockReturnValueOnce(Promise.resolve(existingStudent));
+        .mockResolvedValueOnce(new Student());
 
-      try {
-        await service.createStudent(newStudent);
-        fail();
-      } catch (error) {
-        expect(error).toBeInstanceOf(ConflictException);
-        expect(error.message).toBe('Email já cadastrado!');
-      }
+      await expect(service.createStudent(oneStudent)).rejects.toThrowError(
+        ConflictException,
+      );
     });
 
     it('should hash password correctly', async () => {
@@ -121,30 +108,70 @@ describe('StudentsService', () => {
       expect(bcryptService.hash).toBeCalledWith('abc123');
     });
 
-    it('should call studentsRepository.create', async () => {
-      await service.createStudent(oneStudent);
-      expect(studentsRepository.create).toBeCalledWith({
-        ...oneStudent,
-        password: HASHED_PASS,
-      });
-    });
-
-    it('should call studentsRepository.save', async () => {
+    it('should create student', async () => {
       await service.createStudent(oneStudent);
       expect(studentsRepository.save).toBeCalledWith({
         ...oneStudent,
         password: HASHED_PASS,
       });
     });
+
+    it('should create resume', async () => {
+      const student = await service.createStudent(oneStudent);
+      expect(resumesRepository.save).toBeCalledWith({
+        studentId: student.id,
+      });
+    });
+
+    it('should update student with resumeId', async () => {
+      const student = await service.createStudent(oneStudent);
+      expect(studentsRepository.update).toBeCalledWith(student.id, {
+        resumeId: student.resumeId,
+      });
+    });
   });
 
   describe('findOne()', () => {
-    it('should return one student by email', async () => {
-      const spyFind = jest.spyOn(studentsRepository, 'findOne');
-      expect(service.findOne('student@email.com'));
-      expect(spyFind).toBeCalledWith({
+    it('should throw error if email is null', async () => {
+      try {
+        await service.findOne(null);
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnauthorizedException);
+      }
+    });
+
+    it('should return student', async () => {
+      jest
+        .spyOn(studentsRepository, 'findOne')
+        .mockResolvedValueOnce(new Student());
+      await service.findOne(oneStudent.email);
+      expect(studentsRepository.findOne).toBeCalled();
+    });
+  });
+
+  describe('findAll()', () => {
+    it('should return students array', async () => {
+      await service.findAll();
+      expect(studentsRepository.find).toBeCalled();
+    });
+  });
+
+  describe('updateStudent()', () => {
+    it('should update student', async () => {
+      await service.updateStudent(oneStudent.email, {
+        name: 'student updated',
+      });
+      expect(studentsRepository.update).toBeCalledWith(
+        {
+          email: oneStudent.email,
+        },
+        {
+          name: 'student updated',
+        },
+      );
+      expect(studentsRepository.findOne).toBeCalledWith({
         relations: ['course', 'institution', 'city'],
-        where: { email: 'student@email.com' },
+        where: { email: oneStudent.email },
       });
     });
   });

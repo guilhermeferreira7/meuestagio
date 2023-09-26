@@ -37,12 +37,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     LocalCompanyStrategy,
     JwtStrategy,
   ],
-  exports: [
-    AuthStudentService,
-    AuthService,
-    AuthCompanyService,
-    AuthAdminService,
-  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

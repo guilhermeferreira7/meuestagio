@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JobsController } from './jobs.controller';
 import { JobsService } from '../services/jobs.service';
+import { JobApplicationsService } from '../../job-applications/services/job-applications.service';
 
 describe('JobsController', () => {
   let controller: JobsController;
@@ -11,6 +12,10 @@ describe('JobsController', () => {
       providers: [
         {
           provide: JobsService,
+          useValue: {},
+        },
+        {
+          provide: JobApplicationsService,
           useValue: {},
         },
       ],

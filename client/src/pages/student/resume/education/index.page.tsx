@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
+import { notify } from "../../../../components/toasts/toast";
+import { AppCard, Form } from "../../../../components";
 import { Degree, Education, Resume } from "../../../../types/resume";
 import {
   FormAddEducation,
@@ -9,13 +11,15 @@ import {
 } from "../../../../utils/validators/edit-resume-schema";
 import { getMonths, getYears } from "../../../../utils/helpers/date-helpers";
 
-import { Form } from "../../../../components/Form";
-import AppCard from "../../../../components/AppCard";
 import { api } from "../../../../services/api/api";
-import { notify } from "../../../../components/toasts/toast";
 import { isAxiosError } from "axios";
 import { Trash } from "lucide-react";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";
+import {
+  EDUCATION_PATH,
+  STUDENT_RESUME_EDUCATIONS_PATH,
+  STUDENT_RESUME_PATH,
+} from "../../../../constants/api-routes";
 
 type PageAddEducationProps = {
   resumeId: number;
@@ -35,10 +39,13 @@ export default function PageAddEducation({
 
   const createEducation = async (data: FormAddEducation) => {
     try {
-      const education = await api.post<Education>("/resumes/me/educations", {
-        resumeId,
-        ...data,
-      });
+      const education = await api.post<Education>(
+        STUDENT_RESUME_EDUCATIONS_PATH,
+        {
+          resumeId,
+          ...data,
+        }
+      );
       notify.success("Formação adicionada com sucesso!");
       setEducations([education.data, ...educationsUpdated]);
     } catch (error) {
@@ -52,7 +59,7 @@ export default function PageAddEducation({
 
   const deleteEducation = async (education: Education) => {
     try {
-      await api.delete(`resumes/me/educations/${education.id}`);
+      await api.delete(EDUCATION_PATH(education.id));
       setEducations(educationsUpdated.filter((s) => s.id !== education.id));
       notify.success("Formação excluída com sucesso");
     } catch (error: any) {
@@ -219,12 +226,12 @@ export default function PageAddEducation({
 }
 
 export const getServerSideProps = withStudentAuth(
-  async (_context, student, serverApi) => {
-    const resume = await serverApi.get<Resume>("/resumes/me");
+  async (_context, student, apiClient) => {
+    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
     return {
       props: {
         resumeId: student.resumeId,
-        educations: resume.data.educations,
+        educations: resume.data.educations || [],
       },
     };
   }

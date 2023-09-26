@@ -2,7 +2,7 @@ import React from "react";
 
 interface ModalProps {
   children: React.ReactNode;
-  confirmAction?: () => void;
+  confirmAction?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   cancelText?: string;
   confirmText?: string;
   id: string;
@@ -23,7 +23,10 @@ export default function Content({
           <h3 className="text-lg">{children}</h3>
           <div className="modal-action">
             {confirmText && (
-              <button className="btn btn-info" onClick={confirmAction}>
+              <button
+                className="btn btn-success text-white"
+                onClick={confirmAction}
+              >
                 {confirmText}
               </button>
             )}

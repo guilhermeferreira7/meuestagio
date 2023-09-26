@@ -1,22 +1,21 @@
 import React from "react";
-import Link from "next/link";
-import { Home, ListOrdered, PlusCircle, User } from "lucide-react";
+import { Add, GroupOutlined, WorkOutline } from "@mui/icons-material";
 
 const companyMenu = [
   {
-    icon: <User />,
-    href: "/company/profile",
-    label: "Perfil da empresa",
-  },
-  {
-    icon: <ListOrdered />,
+    icon: <WorkOutline />,
     href: "/company/dashboard",
     label: "Vagas cadastradas",
   },
   {
-    icon: <PlusCircle />,
+    icon: <Add />,
     href: "/company/create-job",
     label: "Cadastrar vaga",
+  },
+  {
+    icon: <GroupOutlined />,
+    href: "/company/candidates",
+    label: "Candidatos para entrevista",
   },
 ];
 

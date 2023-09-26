@@ -4,6 +4,11 @@ import { Area } from '../../areas/entities/area.entity';
 import { City } from '../../cities/entities/city.entity';
 import { Region } from '../../cities/entities/region.entity';
 
+export enum JobStatus {
+  OPEN = 'open',
+  CLOSED = 'closed',
+}
+
 @Entity()
 export class Job {
   @PrimaryGeneratedColumn()
@@ -11,8 +16,8 @@ export class Job {
 
   @Column({
     type: 'enum',
-    enum: ['active', 'inactive'],
-    default: 'active',
+    enum: JobStatus,
+    default: JobStatus.OPEN,
   })
   status: string;
 
@@ -35,7 +40,7 @@ export class Job {
   region: Region;
 
   @Column()
-  regionId: string;
+  regionId: number;
 
   @Column()
   state: string;

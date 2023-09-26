@@ -20,4 +20,10 @@ export type Job = {
     name: string;
   };
   area: Area;
+  status: JobStatus;
 };
+
+export enum JobStatus {
+  OPEN = "open",
+  CLOSED = "closed",
+}

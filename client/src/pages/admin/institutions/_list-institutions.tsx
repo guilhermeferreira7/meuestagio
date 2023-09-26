@@ -7,6 +7,7 @@ import { api } from "@services/api/api";
 import DeleteInstitutionForm from "./_form-delete";
 import { notify } from "@components/toasts/toast";
 import { usePagination } from "../../../hooks/usePagination";
+import { INSTITUTIONS_PATH } from "../../../constants/api-routes";
 
 interface ListInstitutionsProps {
   institutions: Institution[];
@@ -23,7 +24,7 @@ export default function ListInstitutions({
     updatedData,
   } = usePagination<Institution>({
     data: institutions,
-    route: "/institutions",
+    route: INSTITUTIONS_PATH,
     limit,
   });
 
@@ -47,7 +48,7 @@ export default function ListInstitutions({
     setPage(0);
     setCounter(0);
     try {
-      const res = await api.get<Institution[]>("institutions", {
+      const res = await api.get<Institution[]>(INSTITUTIONS_PATH, {
         params: {
           page: 0,
           limit,

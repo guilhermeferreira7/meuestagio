@@ -13,11 +13,6 @@ import {
 
 const studentMenu = [
   {
-    icon: <User />,
-    href: "/student/profile",
-    label: "Dados Pessoais",
-  },
-  {
     icon: <Scroll />,
     subMenu: {
       title: "Dados profissionais",

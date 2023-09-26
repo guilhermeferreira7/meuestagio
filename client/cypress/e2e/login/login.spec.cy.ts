@@ -52,8 +52,11 @@ describe("Logout", () => {
     // check if the url is correct
     cy.url().should("include", "/student/dashboard");
 
-    // click on logout button
-    cy.get("a").contains("Sair").click();
+    // click dropdown menu
+    cy.get(".border").click();
+
+    // click logout button
+    cy.get("button").contains("Sair").click();
 
     // check if the url is correct
     cy.url().should("include", "/login");

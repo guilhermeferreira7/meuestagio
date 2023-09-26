@@ -1,9 +1,20 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
+import { notify } from "../../../components/toasts/toast";
+import { useJobApplications } from "../../../hooks/useFilterJobApplications";
+import { api } from "../../../services/api/api";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { JobApplication } from "../../../types/job-application";
-import AppCard from "../../../components/AppCard";
+import {
+  JobApplication,
+  JobApplicationStatus,
+} from "../../../types/job-application";
+import { errorToString } from "../../../utils/helpers/error-to-string";
+import {
+  JOB_APPLICATIONS_FINISH_PATH,
+  JOB_APPLICATIONS_STUDENT_PATH,
+} from "../../../constants/api-routes";
+import { AppCard, AppTabs } from "../../../components";
 
 interface JobApplicationsProps {
   jobApplications: JobApplication[];
@@ -12,18 +23,55 @@ interface JobApplicationsProps {
 export default function JobApplicationsPage({
   jobApplications,
 }: JobApplicationsProps) {
+  const { jobs, activeTab, setActiveTab } = useJobApplications({
+    jobApplications,
+    defaultTab: JobApplicationStatus.IN_PROGRESS,
+  });
+
+  const router = useRouter();
+
+  const cancel = (jobApplication: JobApplication) => {
+    if (
+      !confirm(
+        "Deseja realmente desistir dessa vaga? \nEsta ação é irreversível!"
+      )
+    )
+      return;
+
+    api
+      .post(JOB_APPLICATIONS_FINISH_PATH, {
+        jobApplicationId: jobApplication.id,
+      })
+      .then(() => {
+        notify.success("Candidatura desistida com sucesso");
+        router.reload();
+      })
+      .catch((error) => {
+        notify.error(errorToString(error));
+      });
+  };
+
   return (
     <>
       <h2 className="text-xl mb-4">Minhas candidaturas</h2>
+      <AppTabs
+        tabs={[
+          JobApplicationStatus.IN_PROGRESS,
+          JobApplicationStatus.INTERVIEW,
+          JobApplicationStatus.FINISHED,
+        ]}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
       <div className="flex flex-col gap-1 w-11/12">
-        {jobApplications.length === 0 && (
+        {jobs.length === 0 && (
           <>
             <h2 className="text-lg">
-              Você ainda não se candidatou a nenhuma vaga.
+              Você não possui candidaturas nessa categoria.
             </h2>
           </>
         )}
-        {jobApplications.map((jobApplication) => {
+        {jobs.map((jobApplication) => {
           return (
             <AppCard key={jobApplication.id}>
               <div className="flex justify-between items-center">
@@ -33,12 +81,20 @@ export default function JobApplicationsPage({
                 </div>
                 <div className="w-1/2 flex flex-col gap-1 ">
                   <Link
-                    href={`job/${jobApplication.job.id}`}
+                    href={`job-details/${jobApplication.job.id}`}
                     className="btn btn-sm btn-primary"
                   >
                     Detalhes
                   </Link>
-                  <button className="btn btn-sm btn-error">Desistir</button>
+                  {jobApplication.status ===
+                    JobApplicationStatus.IN_PROGRESS && (
+                    <button
+                      className="btn btn-sm btn-error"
+                      onClick={() => cancel(jobApplication)}
+                    >
+                      Desistir
+                    </button>
+                  )}
                 </div>
               </div>
             </AppCard>
@@ -51,7 +107,7 @@ export default function JobApplicationsPage({
 
 export const getServerSideProps = withStudentAuth(
   async (_context, student, apiClient) => {
-    const jobApplications = await apiClient.get("/job-applications/student", {
+    const jobApplications = await apiClient.get(JOB_APPLICATIONS_STUDENT_PATH, {
       params: {
         studentId: student.id,
       },

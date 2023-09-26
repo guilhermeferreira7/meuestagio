@@ -4,6 +4,7 @@ import React from "react";
 import { User } from "@customTypes/users/user";
 import { getAPIClient } from "../../../services/api/clientApi";
 import { City } from "@customTypes/city";
+import { PROFILE_ADMIN_PATH } from "../../../constants/api-routes";
 
 interface AdminDashboardProps {
   cities: City[];
@@ -22,7 +23,7 @@ export default function AdminDashboard({ cities }: AdminDashboardProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apiClient = getAPIClient(ctx);
   try {
-    await apiClient.get<User>("/admin/profile");
+    await apiClient.get<User>(PROFILE_ADMIN_PATH);
     return {
       props: {},
     };

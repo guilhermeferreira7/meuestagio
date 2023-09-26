@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-import { Institution } from "@customTypes/institution";
-import { Course } from "@customTypes/course";
-import { api } from "@services/api/api";
-
-import { Form } from "@components/Form";
 import { notify } from "../../components/toasts/toast";
+import { COURSES_PATH } from "../../constants/api-routes";
+import { api } from "../../services/api/api";
+import { Institution } from "../../types/institution";
+import { Course } from "../../types/course";
 import { errorToString } from "../../utils/helpers/error-to-string";
+import { Form } from "../../components";
 
 interface CreateStudentFormProps {
   institutions: Institution[];
@@ -42,7 +42,11 @@ export default function CreateStudentForm({
       );
       if (institution) form.setValue("cityId", institution.cityId + "");
 
-      const response = await api.get<Course[]>(`/institutions/${id}/courses`);
+      const response = await api.get<Course[]>(COURSES_PATH, {
+        params: {
+          institutionId: id,
+        },
+      });
       setCourses(response.data);
     } catch (error) {
       notify.error(errorToString(error));

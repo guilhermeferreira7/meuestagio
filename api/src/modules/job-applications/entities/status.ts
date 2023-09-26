@@ -1,7 +1,5 @@
 export enum JobApplicationStatus {
-  IN_PROGRESS = 'IN_PROGRESS',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-  FINISHED = 'FINISHED',
-  CANCELED_BY_STUDENT = 'CANCELED_BY_STUDENT',
+  IN_PROGRESS = 'Em andamento',
+  INTERVIEW = 'Entrevista',
+  FINISHED = 'Finalizado',
 }

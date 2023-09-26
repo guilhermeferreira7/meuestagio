@@ -8,9 +8,19 @@ export type JobApplication = {
   studentId: number;
   student: Student;
 
+  status: JobApplicationStatus;
+
   resumeId: number;
   resume: Resume;
+
+  message: string;
 
   jobId: number;
   job: Job;
 };
+
+export enum JobApplicationStatus {
+  IN_PROGRESS = "Em andamento",
+  INTERVIEW = "Entrevista",
+  FINISHED = "Finalizado",
+}

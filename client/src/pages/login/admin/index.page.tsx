@@ -4,11 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AlertCircle } from "lucide-react";
 
-import { AuthContext } from "@contexts/AuthContext";
-import { Role } from "@customTypes/auth/user-auth";
-import { loginSchema } from "@utils/validators/login-schema";
-
-import { Form } from "@components/Form";
+import { loginSchema } from "../../../utils/validators/login-schema";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { Role } from "../../../types/auth/user-auth";
+import { Form } from "../../../components";
 
 type LoginData = z.infer<typeof loginSchema>;
 

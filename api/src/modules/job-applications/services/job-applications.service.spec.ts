@@ -120,6 +120,14 @@ describe('JobApplicationsService', () => {
           'student.institution',
           'student.course',
         ],
+        select: {
+          student: {
+            id: true,
+            about: true,
+            name: true,
+            email: true,
+          },
+        },
       });
     });
   });

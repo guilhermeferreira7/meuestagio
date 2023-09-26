@@ -27,9 +27,7 @@ export class ExperiencesService {
       throw new ConflictException('Experiência já cadastrada');
     }
 
-    const exp = this.repository.create(body);
-    await this.repository.save(exp);
-    return exp;
+    return await this.repository.save(body);
   }
 
   async getAll(resumeId: number): Promise<Experience[]> {

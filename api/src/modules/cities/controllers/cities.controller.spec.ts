@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { CitiesService } from '../services/cities.service';
 import { CitiesController } from './cities.controller';
-import { InstitutionsService } from '../../institutions/services/institutions.service';
 
 const city = {
   name: 'Guarapuava',
@@ -24,7 +23,6 @@ describe('CitiesController', () => {
           provide: CitiesService,
           useValue: { createCity: jest.fn(), findAll: jest.fn() },
         },
-        { provide: InstitutionsService, useValue: {} },
       ],
     }).compile();
 
