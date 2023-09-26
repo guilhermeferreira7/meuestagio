@@ -15,7 +15,7 @@ export function useJobApplications({ jobApplications, defaultTab }: Props) {
       (jobApplication) => jobApplication.status === activeTab
     );
     setJobs(filteredJobs);
-  }, [activeTab]);
+  }, [activeTab, jobApplications]);
 
   return { jobs, activeTab, setActiveTab };
 }

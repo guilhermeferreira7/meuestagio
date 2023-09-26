@@ -4,6 +4,10 @@ import { Institution } from "@customTypes/institution";
 import { api } from "@services/api/api";
 
 import { notify } from "@components/toasts/toast";
+import {
+  INSTITUTIONS_PATH,
+  INSTITUTION_PATH,
+} from "../../../constants/api-routes";
 
 interface DeleteInstitutionFormProps {
   institution: Institution;
@@ -19,9 +23,9 @@ export default function DeleteInstitutionForm({
       return;
     }
     try {
-      await api.delete<Institution>(`/institutions/${id}`);
+      await api.delete<Institution>(INSTITUTION_PATH(id));
       notify.success(`Instituição ${institution.name} excluída com sucesso!`);
-      const updated = await api.get<Institution[]>("/institutions");
+      const updated = await api.get<Institution[]>(INSTITUTIONS_PATH);
       update(updated.data);
     } catch (error: any) {
       notify.error(error.response?.data?.message || error.message);

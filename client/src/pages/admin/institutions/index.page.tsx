@@ -1,16 +1,22 @@
 import { useState } from "react";
 import { GetServerSideProps } from "next";
 
-import AppCard from "@components/AppCard";
 import { getAPIClient } from "@services/api/clientApi";
 import { Institution } from "@customTypes/institution";
 import { User } from "@customTypes/users/user";
 import { Area } from "@customTypes/area";
 import { City } from "@customTypes/city";
 
+import { AppCard } from "../../../components";
 import CreateInstitutionForm from "./_form-create";
 import ListInstitutions from "./_list-institutions";
 import { Plus, X } from "lucide-react";
+import {
+  AREAS_PATH,
+  CITIES_PATH,
+  INSTITUTIONS_PATH,
+  PROFILE_ADMIN_PATH,
+} from "../../../constants/api-routes";
 
 interface CreateCourseFormProps {
   cities: City[];
@@ -62,11 +68,11 @@ export default function RegisterInstitutions({
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const apiClient = getAPIClient(ctx);
-    await apiClient.get<User>("/admin/profile");
-    const cities = await apiClient.get<City[]>("/cities", {
+    await apiClient.get<User>(PROFILE_ADMIN_PATH);
+    const cities = await apiClient.get<City[]>(CITIES_PATH, {
       params: { orderBy: "name" },
     });
-    const institutions = await apiClient.get<Institution[]>("/institutions", {
+    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH, {
       params: {
         page: 0,
         limit: 10,
@@ -74,7 +80,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         order: "ASC",
       },
     });
-    const areas = await apiClient.get<Area[]>("/areas");
+    const areas = await apiClient.get<Area[]>(AREAS_PATH);
     return {
       props: {
         cities: cities.data,

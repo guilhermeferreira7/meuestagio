@@ -1,13 +1,12 @@
 import { Search, Trash } from "lucide-react";
-
-import { Course } from "@customTypes/course";
-
-import Table from "@components/AppTable";
-import TableRow from "@components/AppTable/TableRow";
-import { api } from "@services/api/api";
-import { notify } from "@components/toasts/toast";
 import { useEffect, useState } from "react";
+
+import { notify } from "../../../components/toasts/toast";
+import { COURSES_PATH, COURSE_PATH } from "../../../constants/api-routes";
 import { usePagination } from "../../../hooks/usePagination";
+import { api } from "../../../services/api/api";
+import { Course } from "../../../types/course";
+import { Table, TableRow } from "../../../components";
 
 interface ListCoursesProps {
   courses: Course[];
@@ -22,7 +21,7 @@ export default function ListCourses({ courses }: ListCoursesProps) {
     updatedData,
   } = usePagination<Course>({
     data: courses,
-    route: "/courses",
+    route: COURSES_PATH,
     limit,
   });
 
@@ -45,7 +44,7 @@ export default function ListCourses({ courses }: ListCoursesProps) {
     setPage(0);
     setCounter(0);
     try {
-      const res = await api.get<Course[]>("/courses", {
+      const res = await api.get<Course[]>(COURSES_PATH, {
         params: {
           page: 0,
           limit,
@@ -66,9 +65,9 @@ export default function ListCourses({ courses }: ListCoursesProps) {
     )
       return;
     try {
-      await api.delete(`/courses/${course.id}`);
+      await api.delete(COURSE_PATH(course.id));
       notify.success(`Curso ${course.name} deletado com sucesso!`);
-      const courses = await api.get<Course[]>("/courses");
+      const courses = await api.get<Course[]>(COURSES_PATH);
       setCoursesUpdated(courses.data);
     } catch (error: any) {
       notify.error(error.response?.data?.message);

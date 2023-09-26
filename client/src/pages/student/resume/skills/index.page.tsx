@@ -4,14 +4,18 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
 
-import { Resume, Skill, SkillLevel } from "@customTypes/resume";
-import { notify } from "@components/toasts/toast";
-import { Form } from "@components/Form";
-import { api } from "@services/api/api";
-import { createSkillSchema } from "@utils/validators/edit-resume-schema";
-import AppCard from "../../../../components/AppCard";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";
 import { errorToString } from "../../../../utils/helpers/error-to-string";
+import {
+  SKILL_PATH,
+  STUDENT_RESUME_PATH,
+  STUDENT_RESUME_SKILLS_PATH,
+} from "../../../../constants/api-routes";
+import { AppCard, Form } from "../../../../components";
+import { createSkillSchema } from "../../../../utils/validators/edit-resume-schema";
+import { Resume, Skill, SkillLevel } from "../../../../types/resume";
+import { api } from "../../../../services/api/api";
+import { notify } from "../../../../components/toasts/toast";
 
 type FormAddSkill = z.infer<typeof createSkillSchema>;
 
@@ -30,7 +34,7 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
 
   const createSkill = async (data: FormAddSkill) => {
     try {
-      const response = await api.post("resumes/me/skills", {
+      const response = await api.post<Skill>(STUDENT_RESUME_SKILLS_PATH, {
         ...data,
         resumeId,
       });
@@ -43,7 +47,7 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
 
   const deleteSkill = async (skill: Skill) => {
     try {
-      await api.delete(`resumes/me/skills/${skill.id}`);
+      await api.delete(SKILL_PATH(skill.id));
       setSkills(skillsUpdated.filter((s) => s.id !== skill.id));
       notify.success("Habilidade excluída com sucesso");
     } catch (error: any) {
@@ -126,8 +130,8 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
 }
 
 export const getServerSideProps = withStudentAuth(
-  async (_context, student, serverApi) => {
-    const resume = await serverApi.get<Resume>("resumes/me");
+  async (_context, student, apiClient) => {
+    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
     return {
       props: {
         resumeId: student.resumeId,

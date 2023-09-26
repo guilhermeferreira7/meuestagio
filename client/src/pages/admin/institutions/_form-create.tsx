@@ -3,13 +3,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { City } from "@customTypes/city";
-import { Institution } from "@customTypes/institution";
-import { api } from "@services/api/api";
-import { createInstitutionFormSchema } from "@utils/validators/institution-schema";
-
-import { Form } from "@components/Form";
-import { notify } from "@components/toasts/toast";
+import { INSTITUTIONS_PATH } from "../../../constants/api-routes";
+import { notify } from "../../../components/toasts/toast";
+import { Form } from "../../../components";
+import { Institution } from "../../../types/institution";
+import { api } from "../../../services/api/api";
+import { City } from "../../../types/city";
+import { createInstitutionFormSchema } from "../../../utils/validators/institution-schema";
 
 type InstitutionForm = z.infer<typeof createInstitutionFormSchema>;
 
@@ -45,7 +45,7 @@ export default function CreateInstitutionForm({
     }
 
     try {
-      await api.post<Institution>("/institutions", {
+      await api.post<Institution>(INSTITUTIONS_PATH, {
         name: data.institutionName,
         cityId: data.cityId,
       });

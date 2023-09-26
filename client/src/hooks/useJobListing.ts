@@ -1,11 +1,13 @@
-import { notify } from "@components/toasts/toast";
-import { JOBS_LIST_STUDENT_LIMIT } from "@constants/request";
-import { City } from "@customTypes/city";
-import { Job } from "@customTypes/job";
-import { Region } from "@customTypes/region";
-import { Student } from "@customTypes/users/student";
-import { api } from "@services/api/api";
 import { useState } from "react";
+
+import { notify } from "../components/toasts/toast";
+import { CITIES_PATH, JOBS_PATH, REGIONS_PATH } from "../constants/api-routes";
+import { JOBS_LIST_STUDENT_LIMIT } from "../constants/request";
+import { api } from "../services/api/api";
+import { Job } from "../types/job";
+import { Student } from "../types/users/student";
+import { City } from "../types/city";
+import { Region } from "../types/region";
 
 type UseJobsProps = {
   jobs: Job[];
@@ -43,7 +45,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
       return;
     }
     try {
-      const jobs = await api.get<Job[]>("/jobs", {
+      const jobs = await api.get<Job[]>(JOBS_PATH, {
         params: {
           search: searchTerm,
           remote: isRemote,
@@ -61,13 +63,13 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
   async function onStateChange(state: string) {
     if (state) {
       updateFilters({ state, search: currentSearch });
-      const cities = await api.get<City[]>("/cities", {
+      const cities = await api.get<City[]>(CITIES_PATH, {
         params: {
           state,
           orderBy: "name",
         },
       });
-      const regions = await api.get<Region[]>("/cities/regions", {
+      const regions = await api.get<Region[]>(REGIONS_PATH, {
         params: {
           state,
           orderBy: "name",
@@ -88,7 +90,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
 
   async function onRegionChange(region: string) {
     if (region) {
-      const cities = await api.get<City[]>("/cities", {
+      const cities = await api.get<City[]>(CITIES_PATH, {
         params: {
           region: JSON.parse(region).id,
           orderBy: "name",
@@ -100,7 +102,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
       updateFilters({ region: JSON.parse(region).id, search: currentSearch });
       setRegionName(JSON.parse(region).name);
     } else {
-      const cities = await api.get<City[]>("/cities", {
+      const cities = await api.get<City[]>(CITIES_PATH, {
         params: {
           orderBy: "name",
         },
@@ -124,7 +126,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
 
   async function updateFilters(filter: any) {
     try {
-      const jobs = await api.get<Job[]>("/jobs", {
+      const jobs = await api.get<Job[]>(JOBS_PATH, {
         params: {
           ...filter,
           limit: JOBS_LIST_STUDENT_LIMIT,
@@ -139,7 +141,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
 
   const moreJobs = async () => {
     try {
-      const response = await api.get("/jobs", {
+      const response = await api.get(JOBS_PATH, {
         params: {
           page: jobs.length,
           limit: JOBS_LIST_STUDENT_LIMIT,

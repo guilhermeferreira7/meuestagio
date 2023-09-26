@@ -6,6 +6,7 @@ import { useJobsListing } from "../../../hooks/useJobListing";
 import SearchBar from "./_search-bar";
 import JobCardStudent from "./_job-card-student";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
+import { JOBS_PATH } from "../../../constants/api-routes";
 
 interface StudentPageProps {
   jobsData: Job[];
@@ -74,7 +75,7 @@ export default function StudentJobs({ jobsData, student }: StudentPageProps) {
 
 export const getServerSideProps = withStudentAuth(
   async (_context, student, apiClient) => {
-    const jobs = await apiClient.get<Job[]>("/jobs", {
+    const jobs = await apiClient.get<Job[]>(JOBS_PATH, {
       params: {
         limit: JOBS_LIST_STUDENT_LIMIT,
         city: student.city.id,

@@ -1,8 +1,16 @@
 import { GetServerSideProps } from "next";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
-import ResumeView from "../../../../components/Resume/resume";
-import AppTabs from "../../../../components/AppTabs";
+import { AppTabs, Modal, ResumeView } from "../../../../components";
+import { notify } from "../../../../components/toasts/toast";
+import {
+  JOB_APPLICATIONS_COMPANY_PATH,
+  JOB_APPLICATIONS_FINISH_PATH,
+  JOB_APPLICATIONS_INTERVIEW_PATH,
+  PROFILE_COMPANY_PATH,
+} from "../../../../constants/api-routes";
 import { useJobApplications } from "../../../../hooks/useFilterJobApplications";
 import { getAPIClient } from "../../../../services/api/clientApi";
 import {
@@ -12,11 +20,7 @@ import {
 import { Company } from "../../../../types/users/company";
 import Candidate from "./_candidate";
 import { api } from "../../../../services/api/api";
-import { notify } from "../../../../components/toasts/toast";
 import { errorToString } from "../../../../utils/helpers/error-to-string";
-import { useRouter } from "next/router";
-import { Modal } from "../../../../components/AppModal/Modal";
-import Link from "next/link";
 
 interface ApplicationsProps {
   jobApplications: JobApplication[];
@@ -55,7 +59,7 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
                 Rejeitar
               </button>
             </>
-          ) : currentCandidate.status === JobApplicationStatus.APPROVED ? (
+          ) : currentCandidate.status === JobApplicationStatus.INTERVIEW ? (
             <>
               <Modal.Button id="modal-contact">Contato</Modal.Button>
               <Modal.Content id="modal-contact">
@@ -102,7 +106,7 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
     )
       return;
     try {
-      api.post("job-applications/approve", {
+      api.post(JOB_APPLICATIONS_INTERVIEW_PATH, {
         jobApplicationId: currentCandidate?.id,
       });
       notify.success("Candidatura aprovada com sucesso!");
@@ -120,7 +124,7 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
     )
       return;
     try {
-      api.post("job-applications/reject", {
+      api.post(JOB_APPLICATIONS_FINISH_PATH, {
         jobApplicationId: currentCandidate?.id,
       });
       notify.success("Candidatura rejeitada com sucesso!");
@@ -134,25 +138,13 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
     <>
       <div className="w-11/12 flex items-center justify-between text-xl font-semibold pl-4 pb-4">
         <h2>Candidatos para a vaga: {router.query.job}</h2>
-        <Modal.Button type="error" id="modal-closeJob">
-          Encerrar vaga
-        </Modal.Button>
-        <Modal.Content
-          id="modal-closeJob"
-          cancelText="Cancelar"
-          confirmAction={() => {}}
-          confirmText="Encerrar Vaga"
-        >
-          <span>Tem certeza que deseja encerrar a vaga?</span>
-        </Modal.Content>
       </div>
       <AppTabs
         activeTab={activeTab}
         tabs={[
           JobApplicationStatus.IN_PROGRESS,
-          JobApplicationStatus.APPROVED,
-          JobApplicationStatus.REJECTED,
-          JobApplicationStatus.CANCELED_BY_STUDENT,
+          JobApplicationStatus.INTERVIEW,
+          JobApplicationStatus.FINISHED,
         ]}
         setActiveTab={setActiveTab}
       />
@@ -178,9 +170,9 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
     const apiClient = getAPIClient(ctx);
-    await apiClient.get<Company>("/companies/profile");
+    await apiClient.get<Company>(PROFILE_COMPANY_PATH);
     const jobApplications = await apiClient.get<JobApplication[]>(
-      "/job-applications/company",
+      JOB_APPLICATIONS_COMPANY_PATH,
       {
         params: {
           jobId: ctx.query.id,

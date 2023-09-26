@@ -3,7 +3,8 @@ import { Book } from "lucide-react";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { Student } from "../../../types/users/student";
 import { Resume } from "../../../types/resume";
-import ResumeView from "../../../components/Resume/resume";
+import { STUDENT_RESUME_PATH } from "../../../constants/api-routes";
+import { ResumeView } from "../../../components";
 
 interface PageProps {
   student: Student;
@@ -31,7 +32,7 @@ export default function ResumePage({ student, resume }: PageProps) {
 
 export const getServerSideProps = withStudentAuth(
   async (_context, student, apiClient) => {
-    const resume = await apiClient.get<Resume>("/resumes/me");
+    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
     return {
       props: {
         student,

@@ -4,11 +4,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Map, Pencil } from "lucide-react";
 
-import { City } from "@customTypes/city";
-import { api } from "@services/api/api";
-import { editAddressSchema } from "@utils/validators/edit-profile-schema";
-
-import { Form } from "@components/Form";
+import { Form } from "../../../components";
+import { CITIES_PATH } from "../../../constants/api-routes";
+import { api } from "../../../services/api/api";
+import { City } from "../../../types/city";
+import { editAddressSchema } from "../../../utils/validators/edit-profile-schema";
 
 type AddressData = z.infer<typeof editAddressSchema>;
 
@@ -39,7 +39,7 @@ export default function AddressForm({ initialData, cities }: any) {
   };
 
   const setCities = async (e: any) => {
-    const response = await api.get<City[]>("/cities", {
+    const response = await api.get<City[]>(CITIES_PATH, {
       params: { state: e.target.value },
     });
     setCitiesFiltered(response.data);

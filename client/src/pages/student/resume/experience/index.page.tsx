@@ -5,8 +5,6 @@ import { Trash } from "lucide-react";
 
 import { Experience, Resume } from "../../../../types/resume";
 
-import { Form } from "../../../../components/Form";
-import AppCard from "../../../../components/AppCard";
 import { notify } from "../../../../components/toasts/toast";
 import { api } from "../../../../services/api/api";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";
@@ -15,6 +13,12 @@ import {
   createExperienceSchema,
 } from "../../../../utils/validators/experience-schema";
 import { errorToString } from "../../../../utils/helpers/error-to-string";
+import {
+  EXPERIENCE_PATH,
+  STUDENT_RESUME_EXPERIENCES_PATH,
+  STUDENT_RESUME_PATH,
+} from "../../../../constants/api-routes";
+import { AppCard, Form } from "../../../../components";
 
 type ExperiencePageProps = {
   resumeId: number;
@@ -35,10 +39,13 @@ export default function ExperiencePage({
 
   const createExperience = async (data: FormAddExperience) => {
     try {
-      const experience = await api.post<Experience>("/resumes/me/experiences", {
-        resumeId,
-        ...data,
-      });
+      const experience = await api.post<Experience>(
+        STUDENT_RESUME_EXPERIENCES_PATH,
+        {
+          resumeId,
+          ...data,
+        }
+      );
       notify.success("Experiência adicionada com sucesso!");
       setExperiences([experience.data, ...experiencesUpdated]);
     } catch (error) {
@@ -48,7 +55,7 @@ export default function ExperiencePage({
 
   const deleteExperience = async (experience: Experience) => {
     try {
-      await api.delete(`resumes/me/experiences/${experience.id}`);
+      await api.delete(EXPERIENCE_PATH(experience.id));
       setExperiences(
         experiencesUpdated.filter((exp) => exp.id !== experience.id)
       );
@@ -157,8 +164,8 @@ export default function ExperiencePage({
 }
 
 export const getServerSideProps = withStudentAuth(
-  async (_context, student, serverApi) => {
-    const resume = await serverApi.get<Resume>("/resumes/me");
+  async (_context, student, apiClient) => {
+    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
     return {
       props: {
         resumeId: student.resumeId,

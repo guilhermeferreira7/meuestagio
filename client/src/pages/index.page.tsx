@@ -9,6 +9,7 @@ import { getAPIClient } from "@services/api/clientApi";
 
 import CompanyCard from "@components/Index/company-card";
 import PublicJobCard from "@components/Index/PublicJobCard";
+import { COMPANIES_PATH, JOBS_PATH } from "../constants/api-routes";
 
 export default function Home() {
   return (
@@ -82,8 +83,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
   }
 
   const apiClient = getAPIClient(ctx);
-  const jobs = await apiClient.get<Job[]>("/jobs");
-  const companies = await apiClient.get<Company[]>("/companies");
+  const jobs = await apiClient.get<Job[]>(JOBS_PATH);
+  const companies = await apiClient.get<Company[]>(COMPANIES_PATH);
 
   return {
     props: {

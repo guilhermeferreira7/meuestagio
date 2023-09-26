@@ -1,4 +1,11 @@
-import { Controller, Get, Body, UseGuards, Request, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  UseGuards,
+  Request,
+  Patch,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { ResumesService } from './resumes.service';
@@ -14,7 +21,7 @@ export class ResumesController {
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Put('/me')
+  @Patch('/me')
   async update(@Body() body: UpdateResumeDto) {
     return await this.resumesService.update(body.id, body);
   }
