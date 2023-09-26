@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateJobDto } from '../dtos/create-job.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Job } from '../entities/job.entity';
+import { Job, JobStatus } from '../entities/job.entity';
 import { Repository } from 'typeorm';
 
 type JobsQuery = {
@@ -23,6 +23,16 @@ export class JobsService {
 
   async create(createJobDto: CreateJobDto): Promise<Job> {
     const job = this.repository.create(createJobDto);
+    await this.repository.save(job);
+    return job;
+  }
+
+  async close(id: number) {
+    const job = await this.repository.findOne({
+      where: { id },
+    });
+    job.status = JobStatus.CLOSED;
+
     await this.repository.save(job);
     return job;
   }

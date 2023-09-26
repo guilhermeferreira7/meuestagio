@@ -44,31 +44,21 @@ export class JobApplicationsController {
 
   @HasRoles(Role.COMPANY)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Post('approve')
-  async approve(@Request() req: any) {
+  @Post('interview')
+  async interview(@Request() req: any) {
     return this.jobApplicationsService.setStatus(
       req.body.jobApplicationId,
-      JobApplicationStatus.APPROVED,
+      JobApplicationStatus.INTERVIEW,
     );
   }
 
-  @HasRoles(Role.COMPANY)
+  @HasRoles(Role.COMPANY, Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Post('reject')
-  async reject(@Request() req: any) {
+  @Post('finish')
+  async finish(@Request() req: any) {
     return this.jobApplicationsService.setStatus(
       req.body.jobApplicationId,
-      JobApplicationStatus.REJECTED,
-    );
-  }
-
-  @HasRoles(Role.STUDENT)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Post('withdraw')
-  async withdraw(@Request() req: any) {
-    return this.jobApplicationsService.setStatus(
-      req.body.jobApplicationId,
-      JobApplicationStatus.CANCELED_BY_STUDENT,
+      JobApplicationStatus.FINISHED,
     );
   }
 }

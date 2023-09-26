@@ -70,4 +70,22 @@ export class JobApplicationsService {
       relations: ['job', 'job.company', 'job.company.city'],
     });
   }
+
+  async closeAllByJobId(jobId: number) {
+    const jobApplications = await this.jobApplicationRepository.find({
+      where: { jobId },
+    });
+
+    await Promise.all(
+      jobApplications.map(async (jobApplication) => {
+        if (jobApplication.status !== JobApplicationStatus.INTERVIEW) {
+          jobApplication.status = JobApplicationStatus.FINISHED;
+          await this.jobApplicationRepository.update(
+            { id: jobApplication.id },
+            jobApplication,
+          );
+        }
+      }),
+    );
+  }
 }
