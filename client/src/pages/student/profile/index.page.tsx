@@ -9,28 +9,24 @@ import { notify } from "../../../components/toasts/toast";
 import {
   CITIES_PATH,
   COURSES_PATH,
-  INSTITUTIONS_PATH,
   PROFILE_STUDENT_PATH,
 } from "../../../constants/api-routes";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { api } from "../../../services/api/api";
 import { Student } from "../../../types/users/student";
 import { City } from "../../../types/city";
-import { Institution } from "../../../types/institution";
 import { Course } from "../../../types/course";
 import { errorToString } from "../../../utils/helpers/error-to-string";
 
 interface StudentProfileProps {
   student: Student;
   cities: City[];
-  institutions: Institution[];
   courses: Course[];
 }
 
 export default function StudentProfile({
   student,
   cities,
-  institutions,
   courses,
 }: StudentProfileProps) {
   const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -108,11 +104,6 @@ export default function StudentProfile({
 export const getServerSideProps = withStudentAuth(
   async (_context, student, apiClient) => {
     const cities = await apiClient.get<City[]>(CITIES_PATH);
-    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH, {
-      params: {
-        cityId: student.city.id,
-      },
-    });
     const courses = await apiClient.get<Course[]>(COURSES_PATH, {
       params: {
         institutionId: student.institution.id,
@@ -123,7 +114,6 @@ export const getServerSideProps = withStudentAuth(
       props: {
         student: student,
         cities: cities.data,
-        institutions: institutions.data,
         courses: courses.data,
       },
     };

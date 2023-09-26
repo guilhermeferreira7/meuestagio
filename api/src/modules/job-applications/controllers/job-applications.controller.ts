@@ -6,14 +6,14 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-
 import { AuthGuard } from '@nestjs/passport';
+
 import { RolesGuard } from '../../auth/roles/roles.guard';
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { CreateJobApplicationDto } from '../dtos/create-jobApplication.dto';
-import { JobApplicationsService } from '../services/job-applications.service';
 import { JobApplicationStatus } from '../entities/status';
+import { JobApplicationsService } from '../services/job-applications.service';
 
 @Controller('job-applications')
 export class JobApplicationsController {
