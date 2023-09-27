@@ -52,14 +52,8 @@ export class StudentsService {
   }
 
   async updateStudent(email: string, student: UpdateStudentDto) {
-    await this.repository.update(
-      {
-        email,
-      },
-      {
-        ...student,
-      },
-    );
+    await this.repository.update({ email }, student);
+
     return await this.findOne(email);
   }
 }
