@@ -23,6 +23,7 @@
     "seed": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js seed"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/common": "^9.0.1",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -38,6 +39,7 @@
     "class-validator": "^0.14.0",
     "cpf-cnpj-validator": "^1.0.3",
     "dotenv": "^16.0.3",
+    "nodemailer": "^6.9.5",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -55,6 +57,7 @@
     "@types/express": "^4.17.13",
     "@types/jest": "29.2.4",
     "@types/node": "18.11.18",
+    "@types/nodemailer": "^6.4.11",
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-local": "^1.0.35",
     "@types/supertest": "^2.0.11",

@@ -26,17 +26,20 @@ export default function Header() {
           </Link>
         </div>
         {isAuthenticated ? (
-          <DropDown
-            title={user?.name || "Usuário"}
-            menuList={[
-              {
-                label: "Ver perfil",
-                href: `/${user?.role}/profile`,
-                btnType: "primary",
-              },
-              { label: "Sair da conta", action: signOut, btnType: "error" },
-            ]}
-          />
+          <>
+            <button className="btn btn-primary mr-1">Ver currículo</button>
+            <DropDown
+              title={user?.name || "Usuário"}
+              menuList={[
+                {
+                  label: "Ver perfil",
+                  href: `/${user?.role}/profile`,
+                  btnType: "primary",
+                },
+                { label: "Sair da conta", action: signOut, btnType: "error" },
+              ]}
+            />
+          </>
         ) : (
           <Link
             className="border-0 btn hover:bg-info-content text-info flex flex-row gap-2"

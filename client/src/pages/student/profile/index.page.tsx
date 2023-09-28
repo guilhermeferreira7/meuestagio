@@ -32,6 +32,7 @@ export default function StudentProfile({
   const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const about = event.currentTarget.about.value;
+    console.log(about);
 
     try {
       await api.patch(PROFILE_STUDENT_PATH, {

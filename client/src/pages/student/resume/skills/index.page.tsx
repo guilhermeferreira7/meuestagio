@@ -81,7 +81,6 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
   return (
     <>
       <div className="w-11/12">
-        <AppCard>
           <h2 className="text-xl text-primary font-bold mb-2 justify-between">
             Cadastrar nova habilidade
           </h2>
@@ -113,7 +112,6 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
               <button className="lg:w-3/12 btn btn-primary">Adicionar</button>
             </form>
           </FormProvider>
-        </AppCard>
       </div>
       <div className="w-11/12 my-3 flex flex-col gap-2 border-l border-l-gray-300">
         {skillsUpdated.length < 1 && <span>Nenhuma habilidade cadastrada</span>}
