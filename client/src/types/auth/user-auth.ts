@@ -1,9 +1,9 @@
 export type UserAuth = {
   email: string;
   name: string;
-  password: string;
   role: Role;
   avatarURL?: string;
+  sub: string;
 };
 
 export enum Role {

@@ -1,23 +1,55 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Contact, Pencil } from "lucide-react";
-import { editContactSchema } from "../../../utils/validators/edit-profile-schema";
-import { Form } from "../../../components";
 
-type ContactData = z.infer<typeof editContactSchema>;
+import { Form } from "../../../components";
+import { notify } from "../../../components/toasts/toast";
+import { PROFILE_STUDENT_PATH } from "../../../constants/api-routes";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { api } from "../../../services/api/api";
+import { LoginResponse } from "../../../types/auth/login";
+import { errorToString } from "../../../utils/helpers/error-to-string";
+import { phoneMask } from "../../../utils/masks/phoneMask";
+import {
+  ContactData,
+  editContactSchema,
+} from "../../../utils/validators/edit-profile-schema";
 
 export default function ContactInfoForm({ initialData }: any) {
   const [formDisabled, setFormDisabled] = useState(true);
   const editContactForm = useForm<ContactData>({
+    mode: "onTouched",
     resolver: zodResolver(editContactSchema),
+    defaultValues: {
+      name: initialData.name,
+      email: initialData.email,
+      phone: initialData.phone,
+    },
   });
 
   const { handleSubmit } = editContactForm;
 
+  const { updateUserData } = useContext(AuthContext);
+
   const editProfile = async (data: ContactData) => {
-    console.log(data);
+    if (!Object.values(data).some((v) => v)) {
+      return;
+    }
+    try {
+      const { access_token, user } = (
+        await api.patch<LoginResponse>(PROFILE_STUDENT_PATH, data)
+      ).data;
+      notify.success("Perfil atualizado com sucesso!");
+      updateUserData(user, access_token);
+    } catch (error) {
+      notify.error(errorToString(error));
+    }
+  };
+
+  const inputPhoneChange = (e: any) => {
+    const { value } = e.target;
+    editContactForm.setValue("phone", value);
   };
 
   return (
@@ -68,6 +100,7 @@ export default function ContactInfoForm({ initialData }: any) {
               name="name"
               disabled={formDisabled}
               placeholder={initialData.name}
+              defaultValue={initialData.name}
             />
             <Form.ErrorMessage field="name" />
           </Form.Field>
@@ -90,6 +123,7 @@ export default function ContactInfoForm({ initialData }: any) {
               name="email"
               disabled={formDisabled}
               placeholder={initialData.email}
+              defaultValue={initialData.email}
             />
             <Form.ErrorMessage field="email" />
           </Form.Field>
@@ -108,12 +142,13 @@ export default function ContactInfoForm({ initialData }: any) {
               )}
             </Form.Label>
             <Form.InputText
-              type="text"
               name="phone"
               disabled={formDisabled}
               placeholder={
                 initialData.phone ? initialData.phone + "" : "(00) 00000-0000"
               }
+              onChange={inputPhoneChange}
+              value={phoneMask(editContactForm.watch("phone") as string)}
             />
             <Form.ErrorMessage field="phone" />
           </Form.Field>

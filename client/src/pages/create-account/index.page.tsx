@@ -47,9 +47,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
           ...data,
         });
         notify.success("Aluno cadastrado com sucesso!");
-        setTimeout(() => {
-          signIn(data.email, data.password, data.userRole);
-        }, 2000);
       } catch (error: any) {
         notify.error(error.response?.data?.message || error.message);
       }
@@ -57,9 +54,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
       try {
         await api.post(COMPANIES_PATH, { ...data });
         notify.success("Empresa cadastrada com sucesso!");
-        setTimeout(() => {
-          signIn(data.email, data.password, data.userRole);
-        }, 2000);
       } catch (error: any) {
         notify.error("" + error.response?.data?.message || error.message);
       }

@@ -15,6 +15,7 @@ type AuthContextType = {
   user: UserAuth | null;
   signIn: (email: string, password: string, userType: string) => Promise<void>;
   signOut: () => void;
+  updateUserData: (user: UserAuth, access_token: string) => void;
 };
 
 export const AuthContext = createContext({} as AuthContextType);
@@ -24,9 +25,11 @@ export function AuthProvider({ children }: Props) {
   const router = useRouter();
   const isAuthenticated = !!user;
 
+  console.log("user auth", user);
+
   useEffect(() => {
-    const { ["next.token"]: token } = parseCookies();
-    const { ["next.user"]: user } = parseCookies();
+    const { ["meuestagio.token"]: token } = parseCookies();
+    const { ["meuestagio.user"]: user } = parseCookies();
     const userObj = user ? JSON.parse(user) : null;
 
     if (token) {
@@ -47,27 +50,50 @@ export function AuthProvider({ children }: Props) {
       "Authorization"
     ] = `Bearer ${response.data.access_token}`;
 
-    setCookie(undefined, "next.token", response.data.access_token, {
+    setCookie(undefined, "meuestagio.token", response.data.access_token, {
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: "/",
     });
-    setCookie(undefined, "next.user", JSON.stringify(response.data.user), {
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: "/",
-    });
+    setCookie(
+      undefined,
+      "meuestagio.user",
+      JSON.stringify(response.data.user),
+      {
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+      }
+    );
 
     router.push(`/${role}/dashboard`);
   }
 
+  function updateUserData(user: UserAuth, access_token: string) {
+    setUser(user);
+
+    setCookie(undefined, "meuestagio.user", JSON.stringify(user), {
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    });
+
+    setCookie(undefined, "meuestagio.token", access_token, {
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    });
+
+    api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+  }
+
   function signOut() {
-    destroyCookie(null, "next.token", { path: "/" });
-    destroyCookie(null, "next.user", { path: "/" });
+    destroyCookie(null, "meuestagio.token", { path: "/" });
+    destroyCookie(null, "meuestagio.user", { path: "/" });
     setUser(null);
     router.push("/login");
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, signIn, signOut, updateUserData }}
+    >
       {children}
     </AuthContext.Provider>
   );

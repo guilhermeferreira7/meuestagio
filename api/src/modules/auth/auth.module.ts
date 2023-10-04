@@ -1,6 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -14,7 +15,6 @@ import { AuthAdminService } from './auth-admin/auth-admin.service';
 import { LocalAdminStrategy } from './strategies/admin.strategy';
 import { jwtConstants } from '../../constants/jwt';
 import { User } from '../users/user/user.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Global()
 @Module({
@@ -38,5 +38,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     JwtStrategy,
   ],
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}

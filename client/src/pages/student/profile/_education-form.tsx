@@ -24,7 +24,7 @@ export default function EducationForm({ initialData, courses }: any) {
       .get<Institution[]>(INSTITUTIONS_PATH)
       .then((response) => setInstitutions(response.data))
       .catch((error) => notify.error(errorToString(error)));
-  }, [institutions]);
+  }, []);
 
   const [formDisabled, setFormDisabled] = useState(true);
   const editEducationForm = useForm<EducationData>({

@@ -3,7 +3,7 @@ import { parseCookies } from "nookies";
 import { API_BASE_URL } from "../../constants/api";
 
 export function getAPIClient(ctx?: any) {
-  const { "next.token": token } = parseCookies(ctx);
+  const { "meuestagio.token": token } = parseCookies(ctx);
 
   const api = axios.create({
     baseURL: API_BASE_URL,

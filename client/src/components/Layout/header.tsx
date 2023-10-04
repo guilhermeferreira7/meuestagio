@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { AuthContext } from "../../contexts/AuthContext";
 import DropDown from "../MUI/DropDown";
+import { Role } from "../../types/auth/user-auth";
 
 export default function Header() {
   const { user, isAuthenticated, signOut } = useContext(AuthContext);
@@ -27,7 +28,11 @@ export default function Header() {
         </div>
         {isAuthenticated ? (
           <>
-            <button className="btn btn-primary mr-1">Ver currículo</button>
+            {user?.role === Role.Student && (
+              <Link href="resume" className="btn btn-primary mr-1">
+                Ver currículo
+              </Link>
+            )}
             <DropDown
               title={user?.name || "Usuário"}
               menuList={[

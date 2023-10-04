@@ -51,9 +51,16 @@ export class StudentsService {
     return await this.repository.find();
   }
 
-  async updateStudent(email: string, student: UpdateStudentDto) {
-    await this.repository.update({ email }, student);
+  async updateStudent(email: string, dto: UpdateStudentDto) {
+    const anotherStudent = await this.repository.findOne({
+      where: { email: dto.email },
+    });
 
-    return await this.findOne(email);
+    if (anotherStudent && anotherStudent.email !== email) {
+      throw new ConflictException('Email já cadastrado!');
+    }
+
+    await this.repository.update({ email }, dto);
+    return await this.findOne(dto.email);
   }
 }

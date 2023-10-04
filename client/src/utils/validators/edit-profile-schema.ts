@@ -1,10 +1,12 @@
 import { z } from "zod";
 
 export const editContactSchema = z.object({
-  name: z.string().min(1).max(255),
-  email: z.string().email({ message: "Email inválido" }).min(1).max(255),
-  phone: z.string().min(1).max(255),
+  name: z.string().nonempty({ message: "Nome é obrigatório" }),
+  email: z.string().nonempty({ message: "Email é obrigatório" }).email(),
+  phone: z.string().optional(),
 });
+
+export type ContactData = z.infer<typeof editContactSchema>;
 
 export const editEducationSchema = z.object({
   institution: z
