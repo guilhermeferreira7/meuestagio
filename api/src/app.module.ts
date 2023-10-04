@@ -13,13 +13,13 @@ import { ResumesModule } from './modules/resumes/resumes.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: process.env.DB_TYPE as any,
+      type: 'postgres',
       host: process.env.PG_HOST,
       port: parseInt(process.env.PG_PORT),
       username: process.env.PG_USER,
       password: process.env.PG_PASSWORD,
       database: process.env.PG_DB,
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
       autoLoadEntities: true,
     }),
     AuthModule,
