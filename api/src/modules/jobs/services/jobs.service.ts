@@ -141,6 +141,7 @@ export class JobsService {
       .orWhere('description ILIKE :search', { search: `%${search}%` })
       .orWhere('keywords ILIKE :search', { search: `%${search}%` })
       .orWhere('area.title ILIKE :search', { search: `%${search}%` })
+      .orWhere('company.name ILIKE :search', { search: `%${search}%` })
       .addOrderBy('Job.remote', remote ? 'DESC' : 'ASC')
       .leftJoinAndSelect('Job.company', 'company')
       .leftJoinAndSelect('Job.city', 'city')

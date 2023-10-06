@@ -53,7 +53,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
         },
       });
       setJobs(jobs.data);
-      setFilters({ search: searchTerm });
+      setFilters({ ...filters, search: searchTerm });
       setHasMoreJobs(jobs.data.length > JOBS_LIST_STUDENT_LIMIT - 1);
     } catch (error: any) {
       notify.error(error.response?.data?.message);
@@ -108,7 +108,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
         },
       });
       setCities(cities.data);
-      updateFilters({ state });
+      updateFilters({ state, search: currentSearch });
       setFilters({ state });
     }
   }
