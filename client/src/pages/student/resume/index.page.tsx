@@ -1,5 +1,4 @@
-import { Book } from "lucide-react";
-import { Share } from "@mui/icons-material";
+import { Download, Share, WorkHistoryOutlined } from "@mui/icons-material";
 import {
   EmailIcon,
   EmailShareButton,
@@ -12,9 +11,12 @@ import {
   WhatsappIcon,
   WhatsappShareButton,
 } from "react-share";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 import { Modal, ResumeView } from "../../../components";
+import ResumePdf from "../../../components/Resume/ResumePdf";
 import { STUDENT_RESUME_PATH } from "../../../constants/api-routes";
+import useClient from "../../../hooks/useClient";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { Student } from "../../../types/users/student";
 import { Resume } from "../../../types/resume";
@@ -25,18 +27,33 @@ interface PageProps {
 }
 
 export default function ResumePage({ student, resume }: PageProps) {
+  const isClient = useClient();
+
   return (
     <>
       <div className="w-11/12 my-2">
         <h2 className="flex justify-between">
           <div className="flex items-center gap-1">
-            <Book />
+            <WorkHistoryOutlined fontSize="large" />
             <span className="text-2xl font-semibold">Meu Currículo</span>
           </div>
-          <Modal.Button id="share-buttons">
-            Compartilhar
-            <Share />
-          </Modal.Button>
+          <div className="flex gap-1">
+            {isClient && (
+              <PDFDownloadLink
+                document={<ResumePdf student={student} resume={resume} />}
+                fileName={`${student.name}-curriculo.pdf`}
+              >
+                <button className="btn btn-info">
+                  Gerar pdf
+                  <Download />
+                </button>
+              </PDFDownloadLink>
+            )}
+            <Modal.Button id="share-buttons">
+              Compartilhar
+              <Share />
+            </Modal.Button>
+          </div>
         </h2>
         <p className="text-gray-500 italic">
           É assim que seu currículo aparecerá para as empresas que você se

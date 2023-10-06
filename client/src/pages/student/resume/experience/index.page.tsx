@@ -118,12 +118,11 @@ export default function ExperiencePage({
               <Form.ErrorMessage field="description" />
             </Form.Field>
 
-            <input type="date" className="input input-primary" />
-            {/* <Form.Field>
-                <Form.Label htmlFor="startDate">Data de início</Form.Label>
-                <Form.Date name="startDate" />
-                <Form.ErrorMessage field="startDate" />
-              </Form.Field> */}
+            <Form.Field>
+              <Form.Label htmlFor="startDate">Data de início</Form.Label>
+              <Form.Date name="startDate" />
+              <Form.ErrorMessage field="startDate" />
+            </Form.Field>
             <Form.Field>
               <Form.InputCheckbox name="currentJob" label="Trabalho atual?" />
               <Form.ErrorMessage field="currentJob" />

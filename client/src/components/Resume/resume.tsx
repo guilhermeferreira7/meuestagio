@@ -1,27 +1,21 @@
 import React from "react";
 import Image from "next/image";
+import {
+  HistoryEdu,
+  InfoOutlined,
+  Language,
+  MailOutline,
+  MapOutlined,
+  PhoneOutlined,
+  SchoolOutlined,
+  TipsAndUpdatesOutlined,
+  WorkOutline,
+} from "@mui/icons-material";
 import img from "../../../public/avatar.png";
 
 import AppCard from "../AppCard";
 import { Student } from "../../types/users/student";
 import { Resume } from "../../types/resume";
-import {
-  HistoryEdu,
-  Info,
-  InfoOutlined,
-  Language,
-  Mail,
-  MailOutline,
-  Map,
-  MapOutlined,
-  Phone,
-  PhoneOutlined,
-  SchoolOutlined,
-  TipsAndUpdates,
-  TipsAndUpdatesOutlined,
-  Work,
-  WorkOutline,
-} from "@mui/icons-material";
 
 type ResumeProps = {
   student: Student;
