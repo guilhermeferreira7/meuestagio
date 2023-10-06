@@ -18,7 +18,7 @@ import {
   STUDENT_RESUME_EXPERIENCES_PATH,
   STUDENT_RESUME_PATH,
 } from "../../../../constants/api-routes";
-import { AppCard, Form } from "../../../../components";
+import { Form } from "../../../../components";
 
 type ExperiencePageProps = {
   resumeId: number;
@@ -94,59 +94,57 @@ export default function ExperiencePage({
   return (
     <>
       <div className="w-11/12">
-        <AppCard>
-          <h2 className="text-xl text-primary font-bold mb-2 justify-between">
-            Cadastrar nova formação
-          </h2>
-          <FormProvider {...createExperienceForm}>
-            <form
-              onSubmit={handleSubmit(createExperience)}
-              className="flex flex-col w-full gap-1"
-            >
-              <Form.Field>
-                <Form.Label htmlFor="company">Nome da empresa</Form.Label>
-                <Form.InputText name="company" placeholder="Nome da empresa" />
-                <Form.ErrorMessage field="company" />
-              </Form.Field>
-              <Form.Field>
-                <Form.Label htmlFor="position">Cargo</Form.Label>
-                <Form.InputText name="position" placeholder="Cargo" />
-                <Form.ErrorMessage field="position" />
-              </Form.Field>
-              <Form.Field>
-                <Form.Label htmlFor="description">Descrição</Form.Label>
-                <Form.InputText name="description" placeholder="Cargo" />
-                <Form.ErrorMessage field="description" />
-              </Form.Field>
+        <h2 className="text-xl text-primary font-bold mb-2 justify-between">
+          Cadastrar nova formação
+        </h2>
+        <FormProvider {...createExperienceForm}>
+          <form
+            onSubmit={handleSubmit(createExperience)}
+            className="flex flex-col w-full gap-1"
+          >
+            <Form.Field>
+              <Form.Label htmlFor="company">Nome da empresa</Form.Label>
+              <Form.InputText name="company" placeholder="Nome da empresa" />
+              <Form.ErrorMessage field="company" />
+            </Form.Field>
+            <Form.Field>
+              <Form.Label htmlFor="position">Cargo</Form.Label>
+              <Form.InputText name="position" placeholder="Cargo" />
+              <Form.ErrorMessage field="position" />
+            </Form.Field>
+            <Form.Field>
+              <Form.Label htmlFor="description">Descrição</Form.Label>
+              <Form.InputText name="description" placeholder="Cargo" />
+              <Form.ErrorMessage field="description" />
+            </Form.Field>
 
-              <input type="date" className="input input-primary" />
-              {/* <Form.Field>
+            <input type="date" className="input input-primary" />
+            {/* <Form.Field>
                 <Form.Label htmlFor="startDate">Data de início</Form.Label>
                 <Form.Date name="startDate" />
                 <Form.ErrorMessage field="startDate" />
               </Form.Field> */}
-              <Form.Field>
-                <Form.InputCheckbox name="currentJob" label="Trabalho atual?" />
-                <Form.ErrorMessage field="currentJob" />
-              </Form.Field>
-              <Form.Field>
-                <Form.Label htmlFor="endDate">Data de término</Form.Label>
-                <Form.Date
-                  disabled={createExperienceForm.watch("currentJob")}
-                  name="endDate"
-                />
-                <Form.ErrorMessage field="endDate" />
-              </Form.Field>
+            <Form.Field>
+              <Form.InputCheckbox name="currentJob" label="Trabalho atual?" />
+              <Form.ErrorMessage field="currentJob" />
+            </Form.Field>
+            <Form.Field>
+              <Form.Label htmlFor="endDate">Data de término</Form.Label>
+              <Form.Date
+                disabled={createExperienceForm.watch("currentJob")}
+                name="endDate"
+              />
+              <Form.ErrorMessage field="endDate" />
+            </Form.Field>
 
-              <button
-                type="submit"
-                className="btn btn-primary w-2/3 my-2 self-center"
-              >
-                Salvar
-              </button>
-            </form>
-          </FormProvider>
-        </AppCard>
+            <button
+              type="submit"
+              className="btn btn-primary w-2/3 my-2 self-center"
+            >
+              Salvar
+            </button>
+          </form>
+        </FormProvider>
       </div>
       <div className="w-11/12 my-3 flex flex-col gap-2 border-l border-l-gray-300">
         {experiencesUpdated.length < 1 && (

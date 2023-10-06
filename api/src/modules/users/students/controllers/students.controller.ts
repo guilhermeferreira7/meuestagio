@@ -57,9 +57,6 @@ export class StudentsController {
     access_token: string;
     user: UserAuth;
   }> {
-    console.log('req ', req);
-    console.log('req user', req.user);
-    console.log('req authorization', req.headers.authorization);
     const student = await this.studentService.updateStudent(
       req.user.email,
       updateStudentDto,

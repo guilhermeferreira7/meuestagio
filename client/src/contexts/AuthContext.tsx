@@ -25,8 +25,6 @@ export function AuthProvider({ children }: Props) {
   const router = useRouter();
   const isAuthenticated = !!user;
 
-  console.log("user auth", user);
-
   useEffect(() => {
     const { ["meuestagio.token"]: token } = parseCookies();
     const { ["meuestagio.user"]: user } = parseCookies();

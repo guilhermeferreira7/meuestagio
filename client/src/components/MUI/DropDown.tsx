@@ -1,8 +1,8 @@
-import Button from "@mui/material/Button";
+import { useState } from "react";
+import Link from "next/link";
+import { Person } from "@mui/icons-material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Link from "next/link";
-import { ReactNode, useState } from "react";
 
 type MenuListItem = {
   label: string;
@@ -30,9 +30,10 @@ export default function DropDown({ menuList, title }: DropDownProps) {
     <>
       <button
         onClick={handleClick}
-        className="border rounded border-primary text-primary p-2"
+        className="border rounded border-primary text-primary p-2 flex gap-1"
       >
-        {title}
+        <Person />
+        <span className="hidden md:flex ">{title}</span>
       </button>
       <Menu
         id="basic-menu"

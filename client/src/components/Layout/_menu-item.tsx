@@ -1,5 +1,4 @@
-import React, { ReactNode, useState } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 
 interface MenuProps {
@@ -16,11 +15,11 @@ export default function MenuItem({ icon, href, label, subMenu }: MenuProps) {
   const SubMenu = ({ title, items }: { title: string; items: MenuProps[] }) => {
     return (
       <div className="hover:bg-base-100 flex flex-col items-start">
-        <div className="flex items-center gap-2 justify-between hover:bg-gray-200">
+        <div className="w-full  flex items-center gap-2 hover:cursor-default">
           {icon}
           {title}
         </div>
-        <ul className="flex flex-col gap-1 pl-3">
+        <ul className="flex flex-col gap-1 w-full">
           <li>
             {items.map((item: any, key: any) => (
               <MenuItem {...item} key={key} />
