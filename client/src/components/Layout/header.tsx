@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Link from "next/link";
-import { Home, Login, Menu, School } from "@mui/icons-material";
+import { Add, Home, Login, Menu, School } from "@mui/icons-material";
 
 import { AuthContext } from "../../contexts/AuthContext";
 import DropDown from "../MUI/DropDown";
@@ -27,17 +27,17 @@ export default function Header() {
             <span className="hidden sm:flex">MeuEstagio</span>
           </Link>
         </div>
+        <Link
+          href={route}
+          className="flex items-center gap-1 p-2 text-primary font-semibold hover:bg-base-200"
+        >
+          <Home />
+          <span className="hidden md:flex">Início</span>
+        </Link>
         {isAuthenticated ? (
           <div className="flex items-center gap-1">
-            <Link
-              href={route}
-              className="flex items-center gap-1 p-2 text-primary font-semibold"
-            >
-              <Home />
-              <span className="hidden md:flex">Início</span>
-            </Link>
             {user?.role === Role.Student && (
-              <Link href="/student/resume" className="btn btn-primary mr-1">
+              <Link href="/student/resume" className="btn btn-primary mx-1">
                 Ver currículo
               </Link>
             )}
@@ -54,12 +54,22 @@ export default function Header() {
             />
           </div>
         ) : (
-          <Link
-            className="border-0 btn hover:bg-info-content text-info flex flex-row gap-2"
-            href="/login"
-          >
-            Login <Login />
-          </Link>
+          <div className="gap-2">
+            <Link
+              className="text-primary text-lg flex items-center gap-1 font-semibold hover:bg-base-200"
+              href="/create-account"
+            >
+              <Add />
+              <span>Criar conta</span>
+            </Link>
+            <Link
+              className="text-primary text-lg flex items-center gap-1 font-semibold hover:bg-base-200"
+              href="/login"
+            >
+              <Login />
+              <span>Login</span>
+            </Link>
+          </div>
         )}
       </div>
     </>

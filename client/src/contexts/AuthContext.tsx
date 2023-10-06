@@ -2,9 +2,9 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { useRouter } from "next/router";
 
-import { UserAuth } from "@customTypes/auth/user-auth";
-import { LoginResponse } from "@customTypes/auth/login";
-import { api } from "@services/api/api";
+import { UserAuth } from "../types/auth/user-auth";
+import { LoginResponse } from "../types/auth/login";
+import { api } from "../services/api/api";
 
 interface Props {
   children?: ReactNode;
@@ -13,7 +13,12 @@ interface Props {
 type AuthContextType = {
   isAuthenticated: boolean;
   user: UserAuth | null;
-  signIn: (email: string, password: string, userType: string) => Promise<void>;
+  signIn: (
+    email: string,
+    password: string,
+    userType: string,
+    rememberMe?: boolean
+  ) => Promise<void>;
   signOut: () => void;
   updateUserData: (user: UserAuth, access_token: string) => void;
 };
@@ -38,12 +43,16 @@ export function AuthProvider({ children }: Props) {
   async function signIn(
     email: string,
     password: string,
-    role: string
+    role: string,
+    rememberMe?: boolean
   ): Promise<void> {
     const path = `/auth/login/${role}`;
 
     const response = await api.post<LoginResponse>(path, { email, password });
-    setUser(response.data.user);
+    setUser({
+      ...response.data.user,
+      rememberMe: rememberMe || false,
+    });
     api.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${response.data.access_token}`;
@@ -82,8 +91,10 @@ export function AuthProvider({ children }: Props) {
   }
 
   function signOut() {
+    if (!user?.rememberMe) {
+      destroyCookie(null, "meuestagio.user", { path: "/" });
+    }
     destroyCookie(null, "meuestagio.token", { path: "/" });
-    destroyCookie(null, "meuestagio.user", { path: "/" });
     setUser(null);
     router.push("/login");
   }

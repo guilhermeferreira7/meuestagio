@@ -4,6 +4,7 @@ export type UserAuth = {
   role: Role;
   avatarURL?: string;
   sub: string;
+  rememberMe?: boolean;
 };
 
 export enum Role {

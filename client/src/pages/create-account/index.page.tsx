@@ -35,7 +35,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
     resolver: zodResolver(createUserFormSchema),
   });
   const { handleSubmit } = createAccountForm;
-
   const { signIn } = useContext(AuthContext);
 
   const [userRole, setUserRole] = useState<Role>(Role.Student);
@@ -47,6 +46,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
           ...data,
         });
         notify.success("Aluno cadastrado com sucesso!");
+        await signIn(data.email, data.password, Role.Student);
       } catch (error: any) {
         notify.error(error.response?.data?.message || error.message);
       }
@@ -54,6 +54,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
       try {
         await api.post(COMPANIES_PATH, { ...data });
         notify.success("Empresa cadastrada com sucesso!");
+        await signIn(data.email, data.password, Role.Company);
       } catch (error: any) {
         notify.error("" + error.response?.data?.message || error.message);
       }
@@ -82,7 +83,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
                 name="userRole"
                 id="student"
                 title="Aluno"
-                defaultChecked
                 onChange={() => setUserRole(Role.Student)}
               />
               <Form.InputRadio
@@ -92,6 +92,9 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
                 title="Empresa"
                 onChange={() => setUserRole(Role.Company)}
               />
+            </div>
+            <div className="text-center">
+              <Form.ErrorMessage field="userRole" />
             </div>
           </Form.Field>
 

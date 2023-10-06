@@ -2,7 +2,9 @@ import { z } from "zod";
 
 export const createUserFormSchema = z
   .object({
-    userRole: z.enum(["student", "company"]),
+    userRole: z.enum(["student", "company"], {
+      errorMap: (issue) => ({ message: "Selecione o tipo de conta" }),
+    }),
     name: z.string().min(3, "O nome precisa de pelo menos 3 caracteres"),
     email: z.string().nonempty("O email é obrigatório").email("Email inválido"),
     institutionId: z.string().optional(),
