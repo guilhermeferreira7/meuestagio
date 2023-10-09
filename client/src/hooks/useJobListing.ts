@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { parseCookies, setCookie } from "nookies";
 
 import { notify } from "../components/toasts/toast";
 import { CITIES_PATH, JOBS_PATH, REGIONS_PATH } from "../constants/api-routes";
@@ -8,6 +9,7 @@ import { Job } from "../types/job";
 import { Student } from "../types/users/student";
 import { City } from "../types/city";
 import { Region } from "../types/region";
+import { errorToString } from "../utils/helpers/error-to-string";
 
 type UseJobsProps = {
   jobs: Job[];
@@ -15,12 +17,10 @@ type UseJobsProps = {
 };
 
 export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
-  const [state, setState] = useState<string | undefined>(student?.city.state);
-  const [cityName, setCityName] = useState<string | undefined>(
-    student?.city.name
-  );
+  const [state, setState] = useState<string | undefined>("");
+  const [cityName, setCityName] = useState<string | undefined>("");
   const [regionName, setRegionName] = useState<string>("");
-  const [filters, setFilters] = useState<any>({ city: student?.city.id + "" });
+  const [filters, setFilters] = useState<any>({});
 
   const [cities, setCities] = useState<City[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
@@ -30,18 +30,50 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
   const [currentSearch, setCurrentSearch] = useState<string>("");
 
   useEffect(() => {
+    const { ["meuestagio.filter"]: cookie } = parseCookies();
+
+    if (cookie) {
+      const filter = JSON.parse(cookie);
+      setFilters(filter);
+      if (filter.state) setState(filter.state);
+      if (filter.cityName) setCityName(filter.cityName);
+      if (filter.regionName) setRegionName(filter.regionName);
+    }
+  }, []);
+
+  useEffect(() => {
     async function updateJobs() {
-      const response = await api.get<Job[]>(JOBS_PATH, {
-        params: {
-          limit: JOBS_LIST_STUDENT_LIMIT,
-          search: currentSearch,
-          ...filters,
-        },
-      });
-      setJobs(response.data);
-      setHasMoreJobs(response.data.length > JOBS_LIST_STUDENT_LIMIT - 1);
+      try {
+        const response = await api.get<Job[]>(JOBS_PATH, {
+          params: {
+            limit: JOBS_LIST_STUDENT_LIMIT,
+            search: currentSearch,
+            ...filters,
+          },
+        });
+        setJobs(response.data);
+        setHasMoreJobs(response.data.length > JOBS_LIST_STUDENT_LIMIT - 1);
+      } catch (error) {
+        notify.error(errorToString(error));
+      }
     }
     updateJobs();
+
+    if (filters) {
+      setCookie(
+        undefined,
+        "meuestagio.filter",
+        JSON.stringify({
+          ...filters,
+          regionName,
+          cityName,
+        }),
+        {
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          path: "/",
+        }
+      );
+    }
   }, [filters, currentSearch]);
 
   function cleanFilters() {
