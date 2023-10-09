@@ -11,7 +11,6 @@ type JobsQuery = {
   region?: number;
   city?: number;
   search?: string;
-  remote?: boolean;
 };
 
 @Injectable()
@@ -37,17 +36,9 @@ export class JobsService {
     return job;
   }
 
-  async findAll({
-    page,
-    limit,
-    state,
-    region,
-    city,
-    search,
-    remote,
-  }: JobsQuery) {
+  async findAll({ page, limit, state, region, city, search }: JobsQuery) {
     if (search) {
-      const jobs = await this.queryBuilder(search, remote, page, limit);
+      const jobs = await this.queryBuilder(search, page, limit);
 
       if (city || region || state) {
         if (city) {
@@ -128,12 +119,7 @@ export class JobsService {
     };
   }
 
-  private async queryBuilder(
-    search: string,
-    remote: boolean,
-    page: number,
-    limit: number,
-  ) {
+  private async queryBuilder(search: string, page: number, limit: number) {
     return await this.repository
       .createQueryBuilder()
       .select()
@@ -142,7 +128,6 @@ export class JobsService {
       .orWhere('keywords ILIKE :search', { search: `%${search}%` })
       .orWhere('area.title ILIKE :search', { search: `%${search}%` })
       .orWhere('company.name ILIKE :search', { search: `%${search}%` })
-      .addOrderBy('Job.remote', remote ? 'DESC' : 'ASC')
       .leftJoinAndSelect('Job.company', 'company')
       .leftJoinAndSelect('Job.city', 'city')
       .leftJoinAndSelect('Job.region', 'region')

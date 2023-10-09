@@ -29,7 +29,6 @@ export default function StudentJobs({ jobsData, student }: StudentPageProps) {
         onStateChange={pageFunctions.onStateChange}
         onRegionChange={pageFunctions.onRegionChange}
         onCityChange={pageFunctions.onCityChange}
-        setIsRemote={pageFunctions.setIsRemote}
         cleanFilters={pageFunctions.cleanFilters}
       />
 
@@ -43,7 +42,6 @@ export default function StudentJobs({ jobsData, student }: StudentPageProps) {
               : pageData.filters.region
               ? `Vagas em ${pageData.regionName} (região)`
               : "Vagas em todo o Brasil"}
-            {pageData.filters.isRemote && " (remoto)"}
             {pageData.currentSearch && ` de ${pageData.currentSearch}`}
           </span>
         </h2>
