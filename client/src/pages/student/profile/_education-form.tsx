@@ -6,19 +6,25 @@ import { Pencil, School } from "lucide-react";
 import { Autocomplete, TextField } from "@mui/material";
 
 import { notify } from "../../../components/toasts/toast";
-import { COURSES_PATH, INSTITUTIONS_PATH } from "../../../constants/api-routes";
+import { Form } from "../../../components";
+import {
+  COURSES_PATH,
+  INSTITUTIONS_PATH,
+  PROFILE_STUDENT_PATH,
+} from "../../../constants/api-routes";
 import { api } from "../../../services/api/api";
 import { Institution } from "../../../types/institution";
 import { Course } from "../../../types/course";
+import { LoginResponse } from "../../../types/auth/login";
 import { errorToString } from "../../../utils/helpers/error-to-string";
 import { editEducationSchema } from "../../../utils/validators/edit-profile-schema";
-import { Form } from "../../../components";
 
 type EducationData = z.infer<typeof editEducationSchema>;
 
 export default function EducationForm({ initialData, courses }: any) {
   const [coursesList, setCoursesList] = useState<Course[]>(courses);
   const [institutions, setInstitutions] = useState<Institution[]>([]);
+
   useEffect(() => {
     api
       .get<Institution[]>(INSTITUTIONS_PATH)
@@ -34,8 +40,8 @@ export default function EducationForm({ initialData, courses }: any) {
   const { handleSubmit } = editEducationForm;
 
   const setCourses = async (institutionId: string) => {
-    editEducationForm.setValue("course", "");
-    editEducationForm.setValue("institution", institutionId);
+    editEducationForm.setValue("courseId", "");
+    editEducationForm.setValue("institutionId", institutionId);
     if (!institutionId) return setCoursesList([]);
     try {
       const courses = await api.get<Course[]>(COURSES_PATH, {
@@ -50,7 +56,13 @@ export default function EducationForm({ initialData, courses }: any) {
   };
 
   const editProfile = async (data: EducationData) => {
-    console.log(data);
+    try {
+      await api.patch<LoginResponse>(PROFILE_STUDENT_PATH, data);
+      notify.success("Perfil atualizado com sucesso!");
+      setFormDisabled(true);
+    } catch (error) {
+      notify.error(errorToString(error));
+    }
   };
 
   return (
@@ -69,8 +81,8 @@ export default function EducationForm({ initialData, courses }: any) {
                     className="btn btn-sm btn-warning"
                     onClick={() => {
                       editEducationForm.reset({
-                        institution: initialData.institution.id,
-                        course: initialData.course.id,
+                        institutionId: initialData.institution.id,
+                        courseId: initialData.course.id,
                       });
                       setFormDisabled(!formDisabled);
                     }}
@@ -98,9 +110,11 @@ export default function EducationForm({ initialData, courses }: any) {
             </div>
           </div>
           <Form.Field>
+            <Form.Label htmlFor="institutionId">Instituição</Form.Label>
             <Autocomplete
               className="pt-1"
-              id="institution"
+              id="institutionId"
+              defaultValue={`${initialData.institution.id} - ${initialData.institution.name}`}
               disabled={formDisabled}
               onChange={(_e, value) => {
                 if (!value) setCourses("");
@@ -113,18 +127,18 @@ export default function EducationForm({ initialData, courses }: any) {
                 <TextField {...params} label="Instituição" />
               )}
             />
-            <Form.ErrorMessage field="institution" />
+            <Form.ErrorMessage field="institutionId" />
           </Form.Field>
           <Form.Field>
-            <Form.Label htmlFor="course">Curso</Form.Label>
+            <Form.Label htmlFor="courseId">Curso</Form.Label>
             {formDisabled ? (
               <Form.InputText
-                name="course"
+                name="courseId"
                 disabled
                 defaultValue={initialData.course.name}
               />
             ) : (
-              <Form.InputSelect name="course">
+              <Form.InputSelect name="courseId">
                 {coursesList.map((course) => (
                   <option key={course.id} value={course.id}>
                     {course.name}
@@ -132,7 +146,7 @@ export default function EducationForm({ initialData, courses }: any) {
                 ))}
               </Form.InputSelect>
             )}
-            <Form.ErrorMessage field="course" />
+            <Form.ErrorMessage field="courseId" />
           </Form.Field>
         </div>
       </FormProvider>

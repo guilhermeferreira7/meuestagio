@@ -52,14 +52,21 @@ export class StudentsService {
   }
 
   async updateStudent(email: string, dto: UpdateStudentDto) {
+    if (dto.email) {
+      return await this.updateEmail(email, dto);
+    }
+
+    await this.repository.update({ email }, dto);
+    return await this.findOne(email);
+  }
+
+  private async updateEmail(email: string, dto: UpdateStudentDto) {
     const anotherStudent = await this.repository.findOne({
       where: { email: dto.email },
     });
-
     if (anotherStudent && anotherStudent.email !== email) {
-      throw new ConflictException('Email já cadastrado!');
+      throw new ConflictException('Email pertence a outro usuário');
     }
-
     await this.repository.update({ email }, dto);
     return await this.findOne(dto.email);
   }

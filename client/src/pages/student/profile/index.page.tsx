@@ -5,6 +5,7 @@ import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
 import AddressForm from "./_address-form";
 import { notify } from "../../../components/toasts/toast";
+import { AppCard } from "../../../components";
 import {
   CITIES_PATH,
   COURSES_PATH,
@@ -16,7 +17,6 @@ import { Student } from "../../../types/users/student";
 import { City } from "../../../types/city";
 import { Course } from "../../../types/course";
 import { errorToString } from "../../../utils/helpers/error-to-string";
-import { AppCard } from "../../../components";
 
 interface StudentProfileProps {
   student: Student;
@@ -32,7 +32,6 @@ export default function StudentProfile({
   const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const about = event.currentTarget.about.value;
-    console.log(about);
 
     try {
       await api.patch(PROFILE_STUDENT_PATH, {

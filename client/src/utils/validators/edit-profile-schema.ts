@@ -9,10 +9,10 @@ export const editContactSchema = z.object({
 export type ContactData = z.infer<typeof editContactSchema>;
 
 export const editEducationSchema = z.object({
-  institution: z
+  institutionId: z
     .string({ required_error: "Selecione uma instituição" })
     .min(1, { message: "Selecione uma instituição" }),
-  course: z
+  courseId: z
     .string({ required_error: "Selecione um curso" })
     .min(1, { message: "Selecione um curso" }),
 });
