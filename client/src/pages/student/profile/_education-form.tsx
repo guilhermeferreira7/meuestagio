@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, School } from "lucide-react";
 import { Autocomplete, TextField } from "@mui/material";
@@ -17,9 +16,10 @@ import { Institution } from "../../../types/institution";
 import { Course } from "../../../types/course";
 import { LoginResponse } from "../../../types/auth/login";
 import { errorToString } from "../../../utils/helpers/error-to-string";
-import { editEducationSchema } from "../../../utils/validators/edit-profile-schema";
-
-type EducationData = z.infer<typeof editEducationSchema>;
+import {
+  EducationData,
+  editEducationSchema,
+} from "../../../utils/validators/edit-profile-schema";
 
 export default function EducationForm({ initialData, courses }: any) {
   const [coursesList, setCoursesList] = useState<Course[]>(courses);
@@ -58,7 +58,7 @@ export default function EducationForm({ initialData, courses }: any) {
   const editProfile = async (data: EducationData) => {
     try {
       await api.patch<LoginResponse>(PROFILE_STUDENT_PATH, data);
-      notify.success("Perfil atualizado com sucesso!");
+      notify.success("Instituição e curso atualizados com sucesso!");
       setFormDisabled(true);
     } catch (error) {
       notify.error(errorToString(error));

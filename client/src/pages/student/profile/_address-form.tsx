@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Map, Pencil } from "lucide-react";
 
+import { notify } from "../../../components/toasts/toast";
 import { Form } from "../../../components";
-import { CITIES_PATH } from "../../../constants/api-routes";
+import {
+  CITIES_PATH,
+  PROFILE_STUDENT_PATH,
+} from "../../../constants/api-routes";
 import { api } from "../../../services/api/api";
 import { City } from "../../../types/city";
-import { editAddressSchema } from "../../../utils/validators/edit-profile-schema";
-
-type AddressData = z.infer<typeof editAddressSchema>;
+import {
+  AddressData,
+  editAddressSchema,
+} from "../../../utils/validators/edit-profile-schema";
+import { errorToString } from "../../../utils/helpers/error-to-string";
 
 export default function AddressForm({ initialData, cities }: any) {
   const [formDisabled, setFormDisabled] = useState(true);
@@ -35,7 +40,15 @@ export default function AddressForm({ initialData, cities }: any) {
   }, [cities]);
 
   const editProfile = async (data: AddressData) => {
-    console.log(data);
+    try {
+      await api.patch(PROFILE_STUDENT_PATH, {
+        cityId: data.city,
+      });
+      notify.success("Endereço atualizado com sucesso!");
+      setFormDisabled(!formDisabled);
+    } catch (error) {
+      notify.error(errorToString(error));
+    }
   };
 
   const setCities = async (e: any) => {
@@ -96,9 +109,6 @@ export default function AddressForm({ initialData, cities }: any) {
               defaultValue={initialData.state}
               onChange={setCities}
             >
-              <option disabled value={initialData.state}>
-                {initialData.state}
-              </option>
               {states.map((state: any) => (
                 <option key={state} value={state}>
                   {state}
@@ -112,14 +122,14 @@ export default function AddressForm({ initialData, cities }: any) {
             <Form.InputSelect
               name="city"
               disabled={formDisabled}
-              defaultValue={initialData.city}
+              defaultValue={initialData.city.id}
             >
-              <option disabled value={initialData.city}>
-                {initialData.city}
+              <option disabled value={initialData.city.id}>
+                {initialData.city.name}
               </option>
 
               {citiesFiltered.map((city: City) => (
-                <option key={city.id} value={city.name}>
+                <option key={city.id} value={city.id}>
                   {city.name}
                 </option>
               ))}

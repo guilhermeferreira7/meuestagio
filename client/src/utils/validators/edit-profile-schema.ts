@@ -17,7 +17,11 @@ export const editEducationSchema = z.object({
     .min(1, { message: "Selecione um curso" }),
 });
 
+export type EducationData = z.infer<typeof editEducationSchema>;
+
 export const editAddressSchema = z.object({
   city: z.string().min(1).max(255),
   state: z.string().min(1).max(255),
 });
+
+export type AddressData = z.infer<typeof editAddressSchema>;

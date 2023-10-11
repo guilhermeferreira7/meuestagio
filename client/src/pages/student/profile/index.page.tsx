@@ -90,7 +90,7 @@ export default function StudentProfile({
           <div className="divider"></div>
           <AddressForm
             initialData={{
-              city: student.city.name,
+              city: student.city,
               state: student.city.state,
             }}
             cities={cities}

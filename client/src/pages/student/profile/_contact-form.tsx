@@ -40,7 +40,7 @@ export default function ContactInfoForm({ initialData }: any) {
       const { access_token, user } = (
         await api.patch<LoginResponse>(PROFILE_STUDENT_PATH, data)
       ).data;
-      notify.success("Perfil atualizado com sucesso!");
+      notify.success("Contato atualizado com sucesso!");
       updateUserData(user, access_token);
     } catch (error) {
       notify.error(errorToString(error));
