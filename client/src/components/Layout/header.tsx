@@ -29,7 +29,7 @@ export default function Header() {
         </div>
         <Link
           href={route}
-          className="flex items-center gap-1 p-2 text-primary font-semibold hover:bg-base-200"
+          className="flex items-center gap-1 p-2 mx-2 text-primary font-semibold hover:bg-base-200"
         >
           <Home />
           <span className="hidden md:flex">Início</span>

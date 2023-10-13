@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Company } from '../entities/company.entity';
 import { CreateCompanyDto } from '../dtos/create-company.dto';
 import bcryptService from '../../../../utils/bcriptUtils';
+import { UpdateCompanyDto } from '../dtos/update-company.dto';
 
 @Injectable()
 export class CompaniesService {
@@ -50,5 +51,26 @@ export class CompaniesService {
       relations: ['city'],
       where: { email },
     });
+  }
+
+  async update(email: string, dto: UpdateCompanyDto): Promise<Company> {
+    if (dto.email) {
+      return await this.updateEmail(email, dto);
+    }
+
+    await this.companiesRepository.update({ email }, dto);
+    return await this.findOne(email);
+  }
+
+  private async updateEmail(email: string, dto: UpdateCompanyDto) {
+    const hasAnotherCompany = await this.companiesRepository.findOne({
+      where: { email: dto.email },
+    });
+
+    if (hasAnotherCompany && hasAnotherCompany.email !== email) {
+      throw new ConflictException('Email pertence a outro usuário');
+    }
+    await this.companiesRepository.update({ email }, dto);
+    return await this.findOne(dto.email);
   }
 }

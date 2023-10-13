@@ -6,19 +6,26 @@ import {
   UseGuards,
   Request,
   UnauthorizedException,
+  Patch,
 } from '@nestjs/common';
-import { CompaniesService } from '../services/companies.service';
-import { CreateCompanyDto } from '../dtos/create-company.dto';
-import { Company } from '../entities/company.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { ReqAuth } from '../../../../types/auth/request';
+
 import { Role } from '../../../auth/roles/roles';
 import { HasRoles } from '../../../auth/roles/roles.decorator';
 import { RolesGuard } from '../../../auth/roles/roles.guard';
+import { AuthService } from '../../../auth/auth.service';
+import { CreateCompanyDto } from '../dtos/create-company.dto';
+import { UpdateCompanyDto } from '../dtos/update-company.dto';
+import { Company } from '../entities/company.entity';
+import { CompaniesService } from '../services/companies.service';
+import { ReqAuth } from '../../../../types/auth/request';
 
 @Controller('companies')
 export class CompaniesController {
-  constructor(private readonly companiesService: CompaniesService) {}
+  constructor(
+    private readonly companiesService: CompaniesService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
   async create(@Body() createCompanyDto: CreateCompanyDto): Promise<Company> {
@@ -40,5 +47,35 @@ export class CompaniesController {
     }
 
     return company;
+  }
+
+  @HasRoles(Role.COMPANY)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Patch('profile')
+  async updateProfile(
+    @Request() req: ReqAuth,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+  ): Promise<any> {
+    const company = await this.companiesService.update(
+      req.user.email,
+      updateCompanyDto,
+    );
+
+    const { access_token, user } = await this.authService.signJwt({
+      email: company.email,
+      name: company.name,
+      role: Role.COMPANY,
+      sub: company.id,
+    });
+
+    const companyUpdated = await this.companiesService.findOne(req.user.email);
+
+    const { password, ...userWithoutPassword } = companyUpdated;
+
+    return {
+      access_token,
+      user,
+      company: userWithoutPassword,
+    };
   }
 }
