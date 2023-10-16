@@ -15,4 +15,6 @@ export type Company = {
     };
     state: string;
   };
+
+  imageUrl: string;
 };
