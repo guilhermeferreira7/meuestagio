@@ -49,10 +49,7 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
         <div className="flex justify-end gap-1 mb-1">
           {currentCandidate.status === JobApplicationStatus.IN_PROGRESS ? (
             <>
-              <button
-                className="btn btn-success text-white"
-                onClick={setAproved}
-              >
+              <button className="btn btn-success" onClick={setAproved}>
                 Aceitar
               </button>
               <button className="btn btn-error" onClick={setRejected}>
