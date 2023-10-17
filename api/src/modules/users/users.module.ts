@@ -12,10 +12,11 @@ import { CompaniesService } from './companies/services/companies.service';
 import { StudentsController } from './students/controllers/students.controller';
 import { CompaniesController } from './companies/controllers/companies.controller';
 import { AdminController } from './admin/admin.controller';
+import { ImagesService } from '../images/images.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Student, Company, User, Resume])],
-  providers: [StudentsService, CompaniesService],
+  providers: [StudentsService, CompaniesService, ImagesService],
   controllers: [StudentsController, CompaniesController, AdminController],
   exports: [StudentsService, CompaniesService],
 })

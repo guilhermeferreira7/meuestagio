@@ -7,8 +7,11 @@ import {
   Request,
   UnauthorizedException,
   Patch,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { Role } from '../../../auth/roles/roles';
 import { HasRoles } from '../../../auth/roles/roles.decorator';
@@ -51,7 +54,19 @@ export class CompaniesController {
 
   @HasRoles(Role.COMPANY)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('profile/image')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @Request() req: ReqAuth,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<Company> {
+    return await this.companiesService.updateImage(req.user.email, file);
+  }
+
+  @HasRoles(Role.COMPANY)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch('profile')
+  @UseInterceptors(FileInterceptor('file'))
   async updateProfile(
     @Request() req: ReqAuth,
     @Body() updateCompanyDto: UpdateCompanyDto,

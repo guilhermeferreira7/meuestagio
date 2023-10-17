@@ -6,12 +6,14 @@ import { Company } from '../entities/company.entity';
 import { CreateCompanyDto } from '../dtos/create-company.dto';
 import bcryptService from '../../../../utils/bcriptUtils';
 import { UpdateCompanyDto } from '../dtos/update-company.dto';
+import { ImagesService } from '../../../images/images.service';
 
 @Injectable()
 export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private readonly companiesRepository: Repository<Company>,
+    private readonly imagesService: ImagesService,
   ) {}
 
   async create(company: CreateCompanyDto) {
@@ -59,6 +61,18 @@ export class CompaniesService {
     }
 
     await this.companiesRepository.update({ email }, dto);
+    return await this.findOne(email);
+  }
+
+  async updateImage(
+    email: string,
+    image: Express.Multer.File,
+  ): Promise<Company> {
+    const url = await this.imagesService.uploadImage(
+      image,
+      'companies/profile-picture',
+    );
+    await this.companiesRepository.update({ email }, { imageUrl: url });
     return await this.findOne(email);
   }
 
