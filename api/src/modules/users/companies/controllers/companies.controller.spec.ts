@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { BadRequestException } from '@nestjs/common';
+
 import { CreateCompanyDto } from '../dtos/create-company.dto';
 import { CompaniesService } from '../services/companies.service';
 import { CompaniesController } from './companies.controller';
-import { BadRequestException } from '@nestjs/common';
+import { AuthService } from '../../../auth/auth.service';
 
 const createCompanyDto: CreateCompanyDto = {
   name: 'company one',
@@ -16,6 +18,10 @@ const mockService = {
   create: jest.fn((company) => Promise.resolve({ id: 1, ...company })),
 };
 
+const mockAuthService = {
+  signJwt: jest.fn(),
+};
+
 describe('CompaniesController', () => {
   let controller: CompaniesController;
   let service: CompaniesService;
@@ -27,6 +33,10 @@ describe('CompaniesController', () => {
         {
           provide: CompaniesService,
           useValue: mockService,
+        },
+        {
+          provide: AuthService,
+          useValue: mockAuthService,
         },
       ],
     }).compile();
