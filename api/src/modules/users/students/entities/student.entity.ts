@@ -13,7 +13,7 @@ export class Student extends User {
   @ManyToOne(() => Institution)
   institution: Institution;
 
-  @Column()
+  @Column({ nullable: true })
   institutionId: number;
 
   @ManyToOne(() => Course)
