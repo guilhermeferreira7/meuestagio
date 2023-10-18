@@ -1,9 +1,7 @@
 import React from "react";
 import { Pencil, User } from "lucide-react";
+import Head from "next/head";
 
-import ContactInfoForm from "./_contact-form";
-import EducationForm from "./_education-form";
-import AddressForm from "./_address-form";
 import { notify } from "../../../components/toasts/toast";
 import { AppCard } from "../../../components";
 import {
@@ -17,6 +15,10 @@ import { Student } from "../../../types/users/student";
 import { City } from "../../../types/city";
 import { Course } from "../../../types/course";
 import { errorToString } from "../../../utils/helpers/error-to-string";
+
+import ContactInfoForm from "./_contact-form";
+import EducationForm from "./_education-form";
+import AddressForm from "./_address-form";
 
 interface StudentProfileProps {
   student: Student;
@@ -44,6 +46,9 @@ export default function StudentProfile({
   };
   return (
     <>
+      <Head>
+        <title>{student.name} | Dados pessoais</title>
+      </Head>
       <div className="flex flex-col gap-2 w-11/12 mb-4">
         <AppCard>
           <h1 className="font-semibold text-2xl flex items-center gap-1">

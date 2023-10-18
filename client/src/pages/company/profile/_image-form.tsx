@@ -55,16 +55,16 @@ export default function ImageForm({ company, setCompany }: ImageFormProps) {
           </p>
         </h2>
         <div className="flex flex-col items-center gap-1">
-          {company.imageUrl &&
-            (file ? (
-              <Image
-                className="w-32 h-32 rounded-sm border-4 border-primary"
-                src={URL.createObjectURL(file)}
-                alt="Imagem de perfil"
-                width={100}
-                height={100}
-              />
-            ) : (
+          {file ? (
+            <Image
+              className="w-32 h-32 rounded-sm border-4 border-primary"
+              src={URL.createObjectURL(file)}
+              alt="Imagem de perfil"
+              width={100}
+              height={100}
+            />
+          ) : (
+            company.imageUrl && (
               <Image
                 className="w-32 h-32 rounded-sm"
                 src={company.imageUrl}
@@ -72,7 +72,8 @@ export default function ImageForm({ company, setCompany }: ImageFormProps) {
                 width={100}
                 height={100}
               />
-            ))}
+            )
+          )}
           <div className="flex flex-col items-center gap-2">
             <ImageInput setFile={setFile} />
             {file && (

@@ -12,6 +12,7 @@ export type Student = {
   course: {
     id: number;
     name: string;
+    areaId: number;
   };
   phone?: number;
   emailVerified: boolean;

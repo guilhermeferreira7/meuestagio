@@ -1,39 +1,62 @@
 import Link from "next/link";
 import React from "react";
-import { Briefcase, DollarSign, MapPin } from "lucide-react";
+import {
+  AttachMoney,
+  InfoOutlined,
+  MapOutlined,
+  SchoolOutlined,
+  WorkOutline,
+} from "@mui/icons-material";
 
-import { Job } from "@customTypes/job";
 import { AppCard } from "../../../components";
+import { Job } from "../../../types/job";
 
 interface JobCardStudentProps {
   job: Job;
+  areaId: number;
 }
 
-export default function JobCardStudent({ job }: JobCardStudentProps) {
+export default function JobCardStudent({ job, areaId }: JobCardStudentProps) {
+  const tooltipText = "Seu curso é compatível com esta vaga!";
+
   return (
     <>
       <AppCard>
         <h2 className="flex justify-between items-center">
-          <span className="text-primary font-bold text-2xl">{job.title}</span>
+          <div className="flex items-center gap-1">
+            <span
+              data-tip={tooltipText}
+              className={`font-semibold text-2xl ${
+                job.areaId === areaId &&
+                "text-primary tooltip tooltip-primary tooltip-top"
+              }`}
+            >
+              {job.title}
+            </span>
+            <span className="text-sm">
+              {job.remote ? "(Remoto)" : "(Presencial)"}
+            </span>
+          </div>
           <span className="font-normal text-sm">Código da vaga: {job.id}</span>
         </h2>
-        <p className="text-sm">{job.remote ? "(Remoto)" : "(Presencial)"}</p>
-        <p className="text-sm">{job.area.title}</p>
         <div className="flex flex-col gap-2">
           <div className="flex flex-row gap-1">
             <div className="line-clamp-1 text-lg flex gap-1 items-center">
-              <Briefcase /> {job.company.name}
+              <WorkOutline /> {job.company.name}
             </div>
           </div>
           <div className="flex gap-1 items-center">
-            <MapPin /> {job.city.name} - {job.state}
+            <SchoolOutlined /> {job.area.title}
           </div>
           <div className="flex gap-1 items-center">
-            <DollarSign />{" "}
+            <MapOutlined /> {job.city.name} - {job.state}
+          </div>
+          <div className="flex gap-1 items-center">
+            <AttachMoney />{" "}
             {job.salary ? `R$ ${job.salary},00` : "Salário não informado"}
           </div>
           <div className="line-clamp-4">
-            <div>{job.description.replace(/<[^>]*>?/gm, " ")}</div>
+            <InfoOutlined /> {job.description.replace(/<[^>]*>?/gm, " ")}
           </div>
           <div className="card-actions flex flex-row items-center justify-between">
             <ul>

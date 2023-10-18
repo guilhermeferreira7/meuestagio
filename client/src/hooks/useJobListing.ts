@@ -6,17 +6,11 @@ import { CITIES_PATH, JOBS_PATH, REGIONS_PATH } from "../constants/api-routes";
 import { JOBS_LIST_STUDENT_LIMIT } from "../constants/request";
 import { api } from "../services/api/api";
 import { Job } from "../types/job";
-import { Student } from "../types/users/student";
 import { City } from "../types/city";
 import { Region } from "../types/region";
 import { errorToString } from "../utils/helpers/error-to-string";
 
-type UseJobsProps = {
-  jobs: Job[];
-  student: Student;
-};
-
-export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
+export function useJobsListing() {
   const [state, setState] = useState<string | undefined>("");
   const [cityName, setCityName] = useState<string | undefined>("");
   const [regionName, setRegionName] = useState<string>("");
@@ -24,7 +18,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
 
   const [cities, setCities] = useState<City[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
-  const [jobs, setJobs] = useState<Job[]>(initialJobs);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [hasMoreJobs, setHasMoreJobs] = useState<boolean>(false);
 
   const [currentSearch, setCurrentSearch] = useState<string>("");
@@ -149,7 +143,7 @@ export function useJobsListing({ jobs: initialJobs, student }: UseJobsProps) {
     try {
       const response = await api.get<Job[]>(JOBS_PATH, {
         params: {
-          page: jobs.length,
+          page: jobs?.length,
           limit: JOBS_LIST_STUDENT_LIMIT,
           search: currentSearch,
           ...filters,
