@@ -19,7 +19,6 @@ import { UpdateStudentDto } from '../dtos/update-student.dto';
 import { Student } from '../entities/student.entity';
 import { StudentsService } from '../services/students.service';
 import { ReqAuth } from '../../../../types/auth/request';
-import { UserAuth } from '../../../../types/auth/user-auth';
 
 @Controller('students')
 export class StudentsController {
@@ -53,10 +52,7 @@ export class StudentsController {
   async update(
     @Request() req: any,
     @Body() updateStudentDto: UpdateStudentDto,
-  ): Promise<{
-    access_token: string;
-    user: UserAuth;
-  }> {
+  ): Promise<any> {
     const student = await this.studentService.updateStudent(
       req.user.email,
       updateStudentDto,
@@ -69,9 +65,14 @@ export class StudentsController {
       sub: student.id,
     });
 
+    const studentUpdated = await this.studentService.findOne(student.email);
+
+    const { password, ...userWithoutPassword } = studentUpdated;
+
     return {
       access_token,
       user,
+      student: userWithoutPassword,
     };
   }
 }

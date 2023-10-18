@@ -1,12 +1,12 @@
-import React from "react";
-import { Pencil, User } from "lucide-react";
 import Head from "next/head";
+import { EditOutlined, PersonOutline } from "@mui/icons-material";
 
 import { notify } from "../../../components/toasts/toast";
 import { AppCard } from "../../../components";
 import {
   CITIES_PATH,
   COURSES_PATH,
+  INSTITUTIONS_PATH,
   PROFILE_STUDENT_PATH,
 } from "../../../constants/api-routes";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
@@ -14,6 +14,7 @@ import { api } from "../../../services/api/api";
 import { Student } from "../../../types/users/student";
 import { City } from "../../../types/city";
 import { Course } from "../../../types/course";
+import { Institution } from "../../../types/institution";
 import { errorToString } from "../../../utils/helpers/error-to-string";
 
 import ContactInfoForm from "./_contact-form";
@@ -24,12 +25,14 @@ interface StudentProfileProps {
   student: Student;
   cities: City[];
   courses: Course[];
+  institutions: Institution[];
 }
 
 export default function StudentProfile({
   student,
   cities,
   courses,
+  institutions,
 }: StudentProfileProps) {
   const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,13 +55,13 @@ export default function StudentProfile({
       <div className="flex flex-col gap-2 w-11/12 mb-4">
         <AppCard>
           <h1 className="font-semibold text-2xl flex items-center gap-1">
-            <User />
+            <PersonOutline />
             Dados pessoais
           </h1>
           <div className="divider"></div>
           <div>
             <span className="font-semibold flex gap-1 items-center mb-1">
-              <Pencil />
+              <EditOutlined />
               Sobre mim
             </span>
             <form className="flex gap-1" onSubmit={handleUpdate}>
@@ -82,24 +85,13 @@ export default function StudentProfile({
 
           <div className="divider"></div>
           <EducationForm
-            initialData={{
-              institution: student.institution,
-              course: {
-                id: student.course.id,
-                name: student.course.name,
-              },
-            }}
+            institutions={institutions}
             courses={courses}
+            student={student}
           />
 
           <div className="divider"></div>
-          <AddressForm
-            initialData={{
-              city: student.city,
-              state: student.city.state,
-            }}
-            cities={cities}
-          />
+          <AddressForm cities={cities} student={student} />
         </AppCard>
       </div>
     </>
@@ -114,12 +106,14 @@ export const getServerSideProps = withStudentAuth(
         institutionId: student.institution.id,
       },
     });
+    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
 
     return {
       props: {
         student: student,
         cities: cities.data,
         courses: courses.data,
+        institutions: institutions.data,
       },
     };
   }

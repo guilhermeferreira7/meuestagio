@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Contact, Pencil } from "lucide-react";
+import { ContactPageOutlined, EditOutlined } from "@mui/icons-material";
 
 import { Form } from "../../../components";
 import { notify } from "../../../components/toasts/toast";
@@ -58,7 +58,7 @@ export default function ContactInfoForm({ initialData }: any) {
         <div className="lg:grid grid-cols-2 gap-2">
           <div className="flex justify-between col-span-2">
             <h2 className="text-md font-semibold flex gap-1">
-              <Contact />
+              <ContactPageOutlined />
               <span>Informações de contato</span>
             </h2>
             <div className="flex items-center gap-1">
@@ -82,13 +82,13 @@ export default function ContactInfoForm({ initialData }: any) {
                 </>
               ) : (
                 <button
-                  className="btn btn-sm btn-primary gap-1"
+                  className="flex items-center text-info"
                   onClick={() => {
                     setFormDisabled(!formDisabled);
                   }}
                 >
-                  <Pencil size={18} />
-                  <span>Editar</span>
+                  <EditOutlined />
+                  Editar
                 </button>
               )}
             </div>
