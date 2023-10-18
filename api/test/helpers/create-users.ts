@@ -3,6 +3,7 @@ import { User } from '../../src/modules/users/user/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Student } from '../../src/modules/users/students/entities/student.entity';
 import { TestingModule } from '@nestjs/testing';
+import { Company } from '../../src/modules/users/companies/entities/company.entity';
 
 type CreateUser = {
   email: string;
@@ -30,4 +31,15 @@ export async function createStudent(
   );
   await studentRepository.upsert(student, ['email']);
   return await studentRepository.findOne({ where: { email: student.email } });
+}
+
+export async function createCompany(
+  company: CreateUser,
+  module: TestingModule,
+): Promise<Company> {
+  const studentRepository: Repository<Company> = module.get(
+    getRepositoryToken(Company),
+  );
+  await studentRepository.upsert(company, ['email']);
+  return await studentRepository.findOne({ where: { email: company.email } });
 }

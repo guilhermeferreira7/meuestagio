@@ -68,9 +68,13 @@ export class CompaniesService {
     email: string,
     image: Express.Multer.File,
   ): Promise<Company> {
+    const { id } = await this.companiesRepository.findOne({
+      where: { email },
+    });
+
     const url = await this.imagesService.uploadImage(
       image,
-      'companies/profile-picture',
+      `companies/${id}/profile-picture`,
     );
     await this.companiesRepository.update({ email }, { imageUrl: url });
     return await this.findOne(email);

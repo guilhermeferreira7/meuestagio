@@ -1,9 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { TestModule } from '../test.module';
-import bcryptService from '../../src/utils/bcriptUtils';
-import { createStudent } from '../helpers/create-users';
+
+import { TestModule } from '../../test.module';
+import bcryptService from '../../../src/utils/bcriptUtils';
+import { createStudent } from '../../helpers/create-users';
 
 describe('StudentAuth', () => {
   let app: INestApplication;

@@ -2,10 +2,10 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import bcryptService from '../../src/utils/bcriptUtils';
-import { Role } from '../../src/modules/auth/roles/roles';
-import { TestModule } from '../test.module';
-import { createAdmin } from '../helpers/create-users';
+import bcryptService from '../../../src/utils/bcriptUtils';
+import { Role } from '../../../src/modules/auth/roles/roles';
+import { TestModule } from '../../test.module';
+import { createAdmin } from '../../helpers/create-users';
 
 describe('Admin Auth', () => {
   let app: INestApplication;
