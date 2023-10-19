@@ -10,18 +10,18 @@ export class AuthController {
   @UseGuards(AuthGuard('student'))
   @Post('auth/login/student')
   async loginStudent(@Request() req: ReqAuth) {
-    return await this.authService.login({ ...req.user });
+    return await this.authService.signJwt({ ...req.user });
   }
 
   @UseGuards(AuthGuard('company'))
   @Post('auth/login/company')
   async loginCompany(@Request() req: ReqAuth) {
-    return await this.authService.login({ ...req.user });
+    return await this.authService.signJwt({ ...req.user });
   }
 
   @UseGuards(AuthGuard('admin'))
   @Post('auth/login/admin')
   async loginAdmin(@Request() req: ReqAuth) {
-    return await this.authService.login({ ...req.user });
+    return await this.authService.signJwt({ ...req.user });
   }
 }

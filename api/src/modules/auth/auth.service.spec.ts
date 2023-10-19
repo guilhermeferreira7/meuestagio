@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { UserAuth } from '../../types/auth/user-auth';
+
+import { AuthService } from './auth.service';
 import { Role } from './roles/roles';
+import { UserAuth } from '../../types/auth/user-auth';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -42,7 +43,7 @@ describe('AuthService', () => {
         role: Role.STUDENT,
       };
 
-      expect(await authService.login(user)).toEqual({
+      expect(await authService.signJwt(user)).toEqual({
         access_token: 'secret_token',
         user,
       });

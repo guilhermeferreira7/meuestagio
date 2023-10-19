@@ -41,9 +41,11 @@ export default function PageLayout({ children }: PageLayoutProps) {
         <div className="drawer-content flex flex-col">
           <Header />
           <div className="flex flex-1">
-            <div className="hidden lg:flex">
-              <PageMenu menuItems={menuItems} />
-            </div>
+            {user && (
+              <div className="hidden lg:flex">
+                <PageMenu menuItems={menuItems} />
+              </div>
+            )}
             <main className="flex flex-col items-center w-full my-5">
               {children}
             </main>

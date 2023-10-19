@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { JobsService } from './jobs.service';
-import { Job } from '../entities/job.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+
+import { JobsService } from './jobs.service';
+import { Job } from '../entities/job.entity';
 import { CreateJobDto } from '../dtos/create-job.dto';
 
 const job: CreateJobDto = {
@@ -175,7 +176,7 @@ describe('JobsService', () => {
     });
 
     it('should call repository.find with remote', async () => {
-      await service.findAll({ search: 'test', remote: true });
+      await service.findAll({ search: 'test' });
       expect(repository.createQueryBuilder).toBeCalled();
     });
   });

@@ -6,6 +6,7 @@ import { StudentsService } from '../services/students.service';
 import { StudentsController } from './students.controller';
 import { UserAuth } from '../../../../types/auth/user-auth';
 import { Role } from '../../../auth/roles/roles';
+import { AuthService } from '../../../auth/auth.service';
 
 const createStudentDto: CreateStudentDto = {
   name: 'student one',
@@ -28,6 +29,10 @@ const mockService = {
   }),
 };
 
+const mockAuthService = {
+  signJwt: jest.fn().mockResolvedValue({}),
+};
+
 describe('StudentController', () => {
   let controller: StudentsController;
   let service: StudentsService;
@@ -39,6 +44,10 @@ describe('StudentController', () => {
         {
           provide: StudentsService,
           useValue: mockService,
+        },
+        {
+          provide: AuthService,
+          useValue: mockAuthService,
         },
       ],
     }).compile();
@@ -100,13 +109,13 @@ describe('StudentController', () => {
         name: 'student one',
         sub: 1,
       };
-      const student = await controller.update({ user }, createStudentDto);
+
+      await controller.update({ user }, createStudentDto);
 
       expect(service.updateStudent).toHaveBeenCalledWith(
         user.email,
         createStudentDto,
       );
-      expect(student).toEqual({ id: 1, ...createStudentDto });
     });
   });
 });

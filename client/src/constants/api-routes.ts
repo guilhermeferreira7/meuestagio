@@ -1,5 +1,7 @@
 export const STUDENTS_PATH = "/students";
+export const STUDENT_PROFILE_PICTURE_PATH = "/students/profile/image";
 export const COMPANIES_PATH = "/companies";
+export const COMPANY_PROFILE_PICTURE_PATH = "/companies/profile/image";
 
 export const PROFILE_STUDENT_PATH = "/students/profile";
 export const PROFILE_COMPANY_PATH = "/companies/profile";

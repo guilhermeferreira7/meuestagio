@@ -23,10 +23,7 @@ export default function Content({
           <h3 className="text-lg">{children}</h3>
           <div className="modal-action">
             {confirmText && (
-              <button
-                className="btn btn-success text-white"
-                onClick={confirmAction}
-              >
+              <button className="btn btn-success" onClick={confirmAction}>
                 {confirmText}
               </button>
             )}

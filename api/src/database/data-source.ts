@@ -40,7 +40,7 @@ const options: DataSourceOptions & SeederOptions = {
     Experience,
   ],
   seeds: [MainSeeder],
-  synchronize: true,
+  synchronize: process.env.NODE_ENV !== 'production',
 };
 
 export const dataSource = new DataSource(options);

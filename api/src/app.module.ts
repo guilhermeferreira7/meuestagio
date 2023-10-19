@@ -9,17 +9,18 @@ import { JobsModule } from './modules/jobs/jobs.module';
 import { AreasModule } from './modules/areas/areas.module';
 import { JobApplicationModule } from './modules/job-applications/job-applications.module';
 import { ResumesModule } from './modules/resumes/resumes.module';
+import { ImagesModule } from './modules/images/images.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: process.env.DB_TYPE as any,
+      type: 'postgres',
       host: process.env.PG_HOST,
       port: parseInt(process.env.PG_PORT),
       username: process.env.PG_USER,
       password: process.env.PG_PASSWORD,
       database: process.env.PG_DB,
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
       autoLoadEntities: true,
     }),
     AuthModule,
@@ -30,6 +31,7 @@ import { ResumesModule } from './modules/resumes/resumes.module';
     JobsModule,
     JobApplicationModule,
     ResumesModule,
+    ImagesModule,
   ],
 })
 export class AppModule {}

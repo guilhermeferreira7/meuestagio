@@ -160,29 +160,26 @@ export default function RegisterCity({ states }: RegisterCityProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
   try {
-    const apiClient = getAPIClient(ctx);
+    await apiClient.get<User>(PROFILE_ADMIN_PATH);
+
     const states = await ibgeApi.get("/estados", {
       params: { orderBy: "nome" },
     });
-    await apiClient.get<User>(PROFILE_ADMIN_PATH);
+
     return {
       props: {
         states: states.data,
       },
     };
   } catch (error: any) {
-    if (error.response.status === 401) {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-    }
+    console.log(errorToString(error));
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
   }
-
-  return {
-    props: {},
-  };
 };

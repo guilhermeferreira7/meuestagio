@@ -1,9 +1,10 @@
-import { LogIn, Menu } from "lucide-react";
 import React, { useContext } from "react";
 import Link from "next/link";
+import { Add, Home, Login, Menu, School } from "@mui/icons-material";
 
 import { AuthContext } from "../../contexts/AuthContext";
 import DropDown from "../MUI/DropDown";
+import { Role } from "../../types/auth/user-auth";
 
 export default function Header() {
   const { user, isAuthenticated, signOut } = useContext(AuthContext);
@@ -14,36 +15,61 @@ export default function Header() {
       <div className="bg-base-100 w-full navbar drop-shadow-lg flex items-center justify-between px-4">
         <div className="flex-none lg:hidden">
           <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
-            <Menu />
+            <Menu className="text-primary" />
           </label>
         </div>
         <div className="flex-1 px-2">
           <Link
             href={route}
-            className="pl-2 text-2xl text-primary self-center font-bold"
+            className="flex items-center gap-1 pl-2 text-2xl text-primary font-bold"
           >
-            MeuEstagio
+            <School fontSize="large" />
+            <span className="hidden sm:flex">MeuEstagio</span>
           </Link>
         </div>
+        <Link
+          href={route}
+          className="flex items-center gap-1 p-2 mx-2 text-primary font-semibold hover:bg-base-200"
+        >
+          <Home />
+          <span className="hidden md:flex">Início</span>
+        </Link>
         {isAuthenticated ? (
-          <DropDown
-            title={user?.name || "Usuário"}
-            menuList={[
-              {
-                label: "Ver perfil",
-                href: `/${user?.role}/profile`,
-                btnType: "primary",
-              },
-              { label: "Sair da conta", action: signOut, btnType: "error" },
-            ]}
-          />
+          <div className="flex items-center gap-1">
+            {user?.role === Role.Student && (
+              <Link href="/student/resume" className="btn btn-primary mx-1">
+                Ver currículo
+              </Link>
+            )}
+            <DropDown
+              title={user?.name || "Usuário"}
+              menuList={[
+                {
+                  label: "Ver perfil",
+                  href: `/${user?.role}/profile`,
+                  btnType: "primary",
+                },
+                { label: "Sair da conta", action: signOut, btnType: "error" },
+              ]}
+            />
+          </div>
         ) : (
-          <Link
-            className="border-0 btn hover:bg-info-content text-info flex flex-row gap-2"
-            href="/login"
-          >
-            Login <LogIn />
-          </Link>
+          <div className="gap-2">
+            <Link
+              className="text-primary text-lg flex items-center gap-1 font-semibold hover:bg-base-200"
+              href="/create-account"
+            >
+              <Add />
+              <span>Criar conta</span>
+            </Link>
+            <Link
+              className="text-primary text-lg flex items-center gap-1 font-semibold hover:bg-base-200"
+              href="/login"
+            >
+              <Login />
+              <span>Login</span>
+            </Link>
+          </div>
         )}
       </div>
     </>

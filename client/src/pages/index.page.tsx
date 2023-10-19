@@ -68,8 +68,8 @@ export default function Home() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
-  const { ["next.token"]: token } = parseCookies(ctx);
-  const { ["next.user"]: user } = parseCookies(ctx);
+  const { ["meuestagio.token"]: token } = parseCookies(ctx);
+  const { ["meuestagio.user"]: user } = parseCookies(ctx);
 
   const userObj = user ? JSON.parse(user) : null;
 

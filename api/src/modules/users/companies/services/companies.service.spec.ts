@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CompaniesService } from './companies.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Company } from '../entities/company.entity';
 import { Repository } from 'typeorm';
+
+import { CompaniesService } from './companies.service';
+import { Company } from '../entities/company.entity';
+import { ImagesService } from '../../../images/images.service';
 import bcryptService from '../../../../utils/bcriptUtils';
 
 const oneCompany = {
@@ -19,6 +21,10 @@ const mockCompaniesRepository = {
   save: jest.fn((company) => Promise.resolve(company)),
 };
 
+const mockImagesService = {
+  uploadImage: jest.fn(),
+};
+
 describe('CompaniesService', () => {
   let service: CompaniesService;
   let repository: Repository<Company>;
@@ -29,7 +35,10 @@ describe('CompaniesService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CompaniesService],
+      providers: [
+        CompaniesService,
+        { provide: ImagesService, useValue: mockImagesService },
+      ],
     })
       .useMocker((token) => {
         switch (token) {

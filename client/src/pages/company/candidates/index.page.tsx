@@ -25,7 +25,7 @@ export default function Candidates({ candidates }: CandidatesPageProps) {
       <div className="w-11/12">
         <div className="flex justify-end gap-1 pb-2">
           <button
-            className="btn btn-success text-white"
+            className="btn btn-success"
             onClick={() => setCurrentCandidate(null)}
           >
             Agendar entrevista

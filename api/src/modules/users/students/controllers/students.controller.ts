@@ -7,21 +7,28 @@ import {
   Request,
   UnauthorizedException,
   Patch,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
-
-import { CreateStudentDto } from '../dtos/create-student.dto';
-import { Student } from '../entities/student.entity';
-import { StudentsService } from '../services/students.service';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateStudentDto } from '../dtos/update-student.dto';
-import { ReqAuth } from '../../../../types/auth/request';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import { AuthService } from '../../../auth/auth.service';
 import { Role } from '../../../auth/roles/roles';
 import { HasRoles } from '../../../auth/roles/roles.decorator';
 import { RolesGuard } from '../../../auth/roles/roles.guard';
+import { CreateStudentDto } from '../dtos/create-student.dto';
+import { UpdateStudentDto } from '../dtos/update-student.dto';
+import { Student } from '../entities/student.entity';
+import { StudentsService } from '../services/students.service';
+import { ReqAuth } from '../../../../types/auth/request';
 
 @Controller('students')
 export class StudentsController {
-  constructor(private readonly studentService: StudentsService) {}
+  constructor(
+    private readonly studentService: StudentsService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
   async create(@Body() createStudentDto: CreateStudentDto): Promise<Student> {
@@ -46,12 +53,40 @@ export class StudentsController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch('profile')
   async update(
-    @Request() req: ReqAuth,
+    @Request() req: any,
     @Body() updateStudentDto: UpdateStudentDto,
-  ): Promise<Student> {
-    return await this.studentService.updateStudent(
+  ): Promise<any> {
+    const student = await this.studentService.updateStudent(
       req.user.email,
       updateStudentDto,
     );
+
+    const { access_token, user } = await this.authService.signJwt({
+      email: student.email,
+      name: student.name,
+      role: Role.STUDENT,
+      sub: student.id,
+    });
+
+    const studentUpdated = await this.studentService.findOne(student.email);
+
+    const { password, ...userWithoutPassword } = studentUpdated;
+
+    return {
+      access_token,
+      user,
+      student: userWithoutPassword,
+    };
+  }
+
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('profile/image')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @Request() req: ReqAuth,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<Student> {
+    return await this.studentService.updateImage(req.user.email, file);
   }
 }

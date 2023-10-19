@@ -12,7 +12,6 @@ type SearchBarProps = {
   onStateChange: (state: string) => void;
   onRegionChange: (region: string) => void;
   onCityChange: (city: string) => void;
-  setIsRemote: (isRemote: boolean) => void;
   cleanFilters: () => void;
 };
 
@@ -23,7 +22,6 @@ export default function SearchBar({
   onStateChange,
   onRegionChange,
   onCityChange,
-  setIsRemote,
   cleanFilters,
 }: SearchBarProps) {
   const [states, setStates] = useState<string[]>([]);
@@ -102,17 +100,6 @@ export default function SearchBar({
                 </option>
               ))}
             </select>
-          </div>
-          <div className="flex items-center gap-1 self-start">
-            <label htmlFor="remote" className="text-center">
-              Mostrar vagas remotas?
-            </label>
-            <input
-              type="checkbox"
-              id="remote"
-              className="checkbox checkbox-primary"
-              onChange={(e) => setIsRemote(e.target.checked)}
-            />
           </div>
         </div>
         <button

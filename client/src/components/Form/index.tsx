@@ -1,21 +1,19 @@
 import { ErrorMessage } from "./ErrorMessage";
 import { Field } from "./Field";
 import { Label } from "./Label";
-import { InputRadio } from "./InputRadio";
-import { InputText } from "./InputText";
-import { InputTextarea } from "./InputTextarea";
-import { InputSelect } from "./InputSelect";
-import { InputCheckbox } from "./InputCheckbox";
-import { Date } from "./Date";
+import { InputRadio } from "./inputs/InputRadio";
+import { InputText } from "./inputs/InputText";
+import { InputTextarea } from "./inputs/InputTextarea";
+import { InputSelect } from "./inputs/InputSelect";
+import { InputCheckbox } from "./inputs/InputCheckbox";
 
 export const Form = {
-  Date,
   Label,
+  ErrorMessage,
+  Field,
   InputText,
   InputRadio,
   InputSelect,
-  ErrorMessage,
-  Field,
   InputCheckbox,
   InputTextarea,
 };

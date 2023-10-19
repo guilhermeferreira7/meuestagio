@@ -25,6 +25,9 @@ export abstract class User {
   @Column({ nullable: true })
   phoneVerified: boolean;
 
+  @Column({ nullable: true })
+  imageUrl: string;
+
   @ManyToOne(() => City)
   city: City;
 
