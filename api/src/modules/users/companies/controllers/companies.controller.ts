@@ -66,7 +66,6 @@ export class CompaniesController {
   @HasRoles(Role.COMPANY)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch('profile')
-  @UseInterceptors(FileInterceptor('file'))
   async updateProfile(
     @Request() req: ReqAuth,
     @Body() updateCompanyDto: UpdateCompanyDto,

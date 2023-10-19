@@ -3,7 +3,7 @@ import { TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import bcryptService from '../../src/utils/bcriptUtils';
-import { createCompany } from './create-users';
+import { createCompany, createStudent } from './create-users';
 
 export async function companyLogin(
   module: TestingModule,
@@ -20,6 +20,26 @@ export async function companyLogin(
     .post('/auth/login/company')
     .send({
       email: company.email,
+      password: '123123',
+    });
+
+  return req.body.access_token;
+}
+
+export async function studentLogin(
+  module: TestingModule,
+  app: INestApplication,
+): Promise<string> {
+  const student = {
+    name: 'Student Test',
+    email: 'student@example.com',
+    password: bcryptService.hashSync('123123'),
+  };
+  await createStudent(student, module);
+  const req = await request(app.getHttpServer())
+    .post('/auth/login/student')
+    .send({
+      email: student.email,
       password: '123123',
     });
 

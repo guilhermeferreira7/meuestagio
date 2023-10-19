@@ -7,8 +7,11 @@ import {
   Request,
   UnauthorizedException,
   Patch,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { AuthService } from '../../../auth/auth.service';
 import { Role } from '../../../auth/roles/roles';
@@ -74,5 +77,16 @@ export class StudentsController {
       user,
       student: userWithoutPassword,
     };
+  }
+
+  @HasRoles(Role.STUDENT)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Post('profile/image')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @Request() req: ReqAuth,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<Student> {
+    return await this.studentService.updateImage(req.user.email, file);
   }
 }
