@@ -86,21 +86,18 @@ export default function EducationForm({
       <FormProvider {...editEducationForm}>
         <div className="lg:grid grid-cols-2 gap-2">
           <div className="flex justify-between col-span-2">
-            <h2 className="text-md font-semibold flex gap-1">
+            <h2 className="text-xl font-semibold flex gap-1">
               <SchoolOutlined />
               <span>Instituição</span>
             </h2>
             <div className="flex items-center gap-1">
               {!formDisabled ? (
                 <>
-                  <button
-                    className="btn btn-sm btn-warning"
-                    onClick={() => resetForm()}
-                  >
+                  <button className="text-error" onClick={() => resetForm()}>
                     Cancelar
                   </button>
                   <button
-                    className="btn btn-sm btn-success"
+                    className="btn btn-sm btn-primary"
                     onClick={handleSubmit(editProfile)}
                   >
                     Salvar

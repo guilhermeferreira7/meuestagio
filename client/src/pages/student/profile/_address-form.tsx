@@ -27,7 +27,7 @@ export default function AddressForm({ student, cities }: AddressFormProps) {
   const [formDisabled, setFormDisabled] = useState(true);
   const [states, setStates] = useState<string[]>([]);
 
-  const [citiesFiltered, setCitiesFiltered] = useState<City[]>([]);
+  const [citiesFiltered, setCitiesFiltered] = useState<City[]>(cities);
 
   const editAddressForm = useForm<AddressData>({
     resolver: zodResolver(editAddressSchema),
@@ -76,6 +76,7 @@ export default function AddressForm({ student, cities }: AddressFormProps) {
       city: city ? city : student.city.name,
       state: state ? state : student.city.state,
     });
+    setCitiesFiltered(cities);
     setFormDisabled(true);
   };
 
@@ -84,21 +85,18 @@ export default function AddressForm({ student, cities }: AddressFormProps) {
       <FormProvider {...editAddressForm}>
         <div className="lg:grid grid-cols-2 gap-2">
           <div className="flex justify-between col-span-2">
-            <h2 className="text-md font-semibold flex gap-1">
+            <h2 className="text-xl font-semibold flex gap-1">
               <MapOutlined />
               <span>Endereço</span>
             </h2>
             <div className="flex items-center gap-1">
               {!formDisabled ? (
                 <>
-                  <button
-                    className="btn btn-sm btn-warning"
-                    onClick={() => resetForm()}
-                  >
+                  <button className="text-error" onClick={() => resetForm()}>
                     Cancelar
                   </button>
                   <button
-                    className="btn btn-sm btn-success"
+                    className="btn btn-sm btn-primary"
                     onClick={handleSubmit(editProfile)}
                   >
                     Salvar

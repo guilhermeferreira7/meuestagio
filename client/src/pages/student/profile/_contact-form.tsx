@@ -22,7 +22,6 @@ export default function ContactInfoForm({ initialData }: any) {
     mode: "onTouched",
     resolver: zodResolver(editContactSchema),
     defaultValues: {
-      name: initialData.name,
       email: initialData.email,
       phone: initialData.phone,
     },
@@ -42,6 +41,7 @@ export default function ContactInfoForm({ initialData }: any) {
       ).data;
       notify.success("Contato atualizado com sucesso!");
       updateUserData(user, access_token);
+      setFormDisabled(!formDisabled);
     } catch (error) {
       notify.error(errorToString(error));
     }
@@ -57,7 +57,7 @@ export default function ContactInfoForm({ initialData }: any) {
       <FormProvider {...editContactForm}>
         <div className="lg:grid grid-cols-2 gap-2">
           <div className="flex justify-between col-span-2">
-            <h2 className="text-md font-semibold flex gap-1">
+            <h2 className="text-xl font-semibold flex gap-1">
               <ContactPageOutlined />
               <span>Informações de contato</span>
             </h2>
@@ -65,7 +65,7 @@ export default function ContactInfoForm({ initialData }: any) {
               {!formDisabled ? (
                 <>
                   <button
-                    className="btn btn-sm btn-warning"
+                    className="text-error"
                     onClick={() => {
                       editContactForm.reset(initialData);
                       setFormDisabled(!formDisabled);
@@ -74,7 +74,7 @@ export default function ContactInfoForm({ initialData }: any) {
                     Cancelar
                   </button>
                   <button
-                    className="btn btn-sm btn-success"
+                    className="btn btn-sm btn-primary"
                     onClick={handleSubmit(editProfile)}
                   >
                     Salvar
@@ -93,17 +93,6 @@ export default function ContactInfoForm({ initialData }: any) {
               )}
             </div>
           </div>
-          <Form.Field>
-            <Form.Label htmlFor="name">Nome</Form.Label>
-            <Form.InputText
-              type="text"
-              name="name"
-              disabled={formDisabled}
-              placeholder={initialData.name}
-              defaultValue={initialData.name}
-            />
-            <Form.ErrorMessage field="name" />
-          </Form.Field>
           <Form.Field>
             <Form.Label htmlFor="email">
               <span>Email</span>

@@ -7,7 +7,7 @@ type ImageInputProps = {
 
 export default function ImageInput({ setFile, key }: ImageInputProps) {
   return (
-    <div>
+    <>
       <label
         htmlFor={`input-file${key}`}
         className="cursor-pointer underline text-info flex items-center gap-1"
@@ -21,10 +21,9 @@ export default function ImageInput({ setFile, key }: ImageInputProps) {
         className="opacity-0 absolute -z-10"
         type="file"
         accept="image/*"
-        onChange={(e) => {
-          setFile(e.target.files![0]);
-        }}
+        onChange={(e) => setFile(e.target.files![0])}
+        onClick={(e) => (e.currentTarget.value = "")}
       />
-    </div>
+    </>
   );
 }
