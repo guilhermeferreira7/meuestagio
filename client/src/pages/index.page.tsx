@@ -10,6 +10,7 @@ import { getAPIClient } from "@services/api/clientApi";
 import CompanyCard from "@components/Index/company-card";
 import PublicJobCard from "@components/Index/PublicJobCard";
 import { COMPANIES_PATH, JOBS_PATH } from "../constants/api-routes";
+import { errorToString } from "../utils/helpers/error-to-string";
 
 export default function Home() {
   return (
@@ -82,14 +83,24 @@ export const getServerSideProps: GetServerSideProps = async (ctx: any) => {
     };
   }
 
-  const apiClient = getAPIClient(ctx);
-  const jobs = await apiClient.get<Job[]>(JOBS_PATH);
-  const companies = await apiClient.get<Company[]>(COMPANIES_PATH);
+  try {
+    const apiClient = getAPIClient(ctx);
+    const jobs = await apiClient.get<Job[]>(JOBS_PATH);
+    const companies = await apiClient.get<Company[]>(COMPANIES_PATH);
 
-  return {
-    props: {
-      jobs: jobs.data,
-      companies: companies.data,
-    },
-  };
+    return {
+      props: {
+        jobs: jobs.data,
+        companies: companies.data,
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return {
+      props: {
+        jobs: [],
+        companies: [],
+      },
+    };
+  }
 };

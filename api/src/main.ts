@@ -24,10 +24,12 @@ async function bootstrap() {
   );
   app.enableCors();
 
-  await app.listen(process.env.APP_PORT);
+  await app.listen(process.env.API_PORT);
 
   if (!dataSource.isInitialized) {
     await dataSource.initialize();
   }
+
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
