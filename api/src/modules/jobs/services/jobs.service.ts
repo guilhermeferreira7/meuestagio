@@ -71,6 +71,7 @@ export class JobsService {
         ...job,
         company: {
           name: job.company.name,
+          imageUrl: job.company.imageUrl,
         },
         city: {
           name: job.city.name,
@@ -115,6 +116,7 @@ export class JobsService {
       ...job,
       company: {
         name: job.company.name,
+        imageUrl: job.company.imageUrl,
       },
     };
   }

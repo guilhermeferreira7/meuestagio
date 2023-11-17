@@ -19,7 +19,7 @@ export function getAPIClient(ctx?: any) {
 
   // development (uncomment lines below and comment lines above)
   // const api = axios.create({
-  //   baseURL: API_BASE_URL,
+  //   baseURL: API_BASE_URL_CLIENT,
   // });
 
   if (token) {

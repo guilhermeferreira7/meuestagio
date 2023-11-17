@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Banknote, Building, GraduationCap, Hash, MapPin } from "lucide-react";
+import Image from "next/image";
+import {
+  AttachMoney,
+  PlaceOutlined,
+  PsychologyOutlined,
+  Tag,
+} from "@mui/icons-material";
 
 import { notify } from "../../../components/toasts/toast";
-import { Modal } from "../../../components";
+import { PageDefaults, Modal } from "../../../components";
 import { api } from "../../../services/api/api";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
 import { Job } from "../../../types/job";
@@ -48,71 +54,76 @@ export default function JobDetailsPage({
 
   return (
     <>
-      <div className="w-full p-2">
-        <div className="card card-bordered p-3 w-full">
-          <div className="flex justify-between">
-            <h2 className="text-2xl font-bold py-3">
-              {job.title} - {job.remote ? "Remoto" : "Presencial"} - Código da
-              vaga: {job.id}
+      <PageDefaults currentPage={job.title} />
+      <div className="w-full px-6">
+        <div className="flex justify-between">
+          <h2 className="text-2xl font-bold py-3">
+            {job.title} - {job.remote ? "Remoto" : "Presencial"} - Código da
+            vaga: {job.id}
+          </h2>
+
+          {jobApplied ? (
+            <h2 className="m-2 text-sm lg:text-xl font-bold text-primary">
+              Já se candidatou a essa vaga!
+            </h2>
+          ) : (
+            <Modal.Button id="modal">Quero me candidatar</Modal.Button>
+          )}
+        </div>
+        <div className="lg:flex flex-row">
+          <div className="lg:w-2/3">
+            <h2 className="text-xl jobDescription">
+              Sobre a vaga:
+              <div>
+                <div
+                  className="text-xl"
+                  dangerouslySetInnerHTML={{ __html: job.description }}
+                />
+              </div>
+            </h2>
+          </div>
+          <div className="divider divider-horizontal"></div>
+
+          <div className="lg:w-1/3 text-xl">
+            <h2 className="flex items-center gap-1">
+              <Image
+                className="rounded-lg"
+                src={job.company.imageUrl}
+                height={50}
+                width={50}
+                alt="Foto da empresa"
+              />
+              {job.company?.name}
+            </h2>
+            <h2 className="flex items-center gap-1">
+              <PsychologyOutlined className="text-yellow-500" />
+              {job.area?.title}
+            </h2>
+            <h2 className="flex items-center gap-1">
+              <AttachMoney className="text-green-500" />
+              {job.salary ? (
+                <span>R$ {job.salary},00</span>
+              ) : (
+                <span>Salário não informado</span>
+              )}
+            </h2>
+            <h2 className="flex items-center gap-1">
+              <PlaceOutlined className="text-red-500" /> {job.city?.name}
             </h2>
 
-            {jobApplied ? (
-              <h2 className="m-2 text-sm lg:text-xl font-bold text-primary">
-                Já se candidatou a essa vaga!
-              </h2>
-            ) : (
-              <Modal.Button id="modal">Quero me candidatar</Modal.Button>
-            )}
-          </div>
-          <div className="lg:flex flex-row">
-            <div className="lg:w-1/3 text-xl">
-              <h2 className="flex items-center gap-1">
-                <GraduationCap />
-                {job.area?.title}
-              </h2>
-              <h2 className="flex items-center gap-1">
-                <Building />
-                {job.company?.name}
-              </h2>
-              <h2 className="flex items-center gap-1">
-                <Banknote />{" "}
-                {job.salary ? (
-                  <span className="font-semibold">R$ {job.salary},00</span>
-                ) : (
-                  <span>Salário não informado</span>
-                )}
-              </h2>
-              <h2 className="flex items-center gap-1">
-                <MapPin /> {job.city?.name}
-              </h2>
-
-              <h2 className="flex items-center gap-1">
-                <Hash />
-                <p>
-                  {job.keywords?.split(", ").map((keyword: any, index: any) => (
-                    <span
-                      key={index}
-                      className="font-semibold text-primary inline-block mr-4 underline"
-                    >
-                      {keyword}{" "}
-                    </span>
-                  ))}
-                </p>
-              </h2>
-            </div>
-            <div className="divider divider-horizontal"></div>
-
-            <div className="lg:w-2/3">
-              <h2 className="text-xl jobDescription">
-                Sobre a vaga:
-                <div>
-                  <div
-                    className="text-xl"
-                    dangerouslySetInnerHTML={{ __html: job.description }}
-                  />
-                </div>
-              </h2>
-            </div>
+            <h2 className="flex items-center gap-1">
+              <Tag className="text-primary" />
+              <p>
+                {job.keywords?.split(", ").map((keyword: any, index: any) => (
+                  <span
+                    key={index}
+                    className="font-semibold text-primary inline-block mr-4 underline"
+                  >
+                    {keyword}{" "}
+                  </span>
+                ))}
+              </p>
+            </h2>
           </div>
         </div>
       </div>
@@ -149,7 +160,6 @@ export const getServerSideProps = withStudentAuth(
         },
       }
     );
-
     const job = await apiClient.get<Job>(JOB_PATH(Number(context.query.id)));
 
     let applied = false;

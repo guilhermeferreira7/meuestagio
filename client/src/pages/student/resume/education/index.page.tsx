@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
+import { WorkHistoryOutlined } from "@mui/icons-material";
 
 import { notify } from "../../../../components/toasts/toast";
-import { AppCard, Form } from "../../../../components";
+import { Form, PageDefaults } from "../../../../components";
 import { Degree, Education, Resume } from "../../../../types/resume";
 import {
   FormAddEducation,
@@ -12,7 +13,6 @@ import {
 import { getMonths, getYears } from "../../../../utils/helpers/date-helpers";
 
 import { api } from "../../../../services/api/api";
-import { isAxiosError } from "axios";
 import { Trash } from "lucide-react";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";
 import {
@@ -20,6 +20,7 @@ import {
   STUDENT_RESUME_EDUCATIONS_PATH,
   STUDENT_RESUME_PATH,
 } from "../../../../constants/api-routes";
+import { errorToString } from "../../../../utils/helpers/error-to-string";
 
 type PageAddEducationProps = {
   resumeId: number;
@@ -49,11 +50,7 @@ export default function PageAddEducation({
       notify.success("Formação adicionada com sucesso!");
       setEducations([education.data, ...educationsUpdated]);
     } catch (error) {
-      if (isAxiosError(error)) {
-        return notify.error(error.response?.data.message);
-      } else {
-        notify.error("Ocorreu um erro inesperado.");
-      }
+      notify.error(errorToString(error));
     }
   };
 
@@ -95,7 +92,17 @@ export default function PageAddEducation({
 
   return (
     <>
-      <div className="w-11/12">
+      <PageDefaults
+        currentPage="Formação"
+        linksTree={[
+          {
+            name: "Currículo",
+            href: "/student/resume",
+            icon: <WorkHistoryOutlined />,
+          },
+        ]}
+      />
+      <div className="w-full px-4">
         <h2 className="text-xl text-primary font-bold mb-2 justify-between">
           Cadastrar nova formação
         </h2>

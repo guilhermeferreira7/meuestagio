@@ -1,4 +1,5 @@
 import { Area } from "./area";
+import { Company } from "./users/company";
 
 export type Job = {
   id: number;
@@ -15,10 +16,7 @@ export type Job = {
   };
   regionId: string;
   state: string;
-  company: {
-    id: number;
-    name: string;
-  };
+  company: Company;
   area: Area;
   status: JobStatus;
 };
