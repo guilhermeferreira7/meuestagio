@@ -1,0 +1,250 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Area {
+  id      Int      @id @default(autoincrement())
+  cnpqId  Int      @unique(map: "UQ_f794f0ecffbb32ce35789ef25f0")
+  title   String   @db.VarChar
+  courses Course[]
+  jobs    Job[]
+
+  @@map("area")
+}
+
+model City {
+  id           Int           @id(map: "PK_b222f51ce26f7e5ca86944a6739") @default(autoincrement())
+  name         String        @db.VarChar
+  state        String        @db.VarChar
+  regionId     Int
+  IBGECityCode Int
+  region       Region        @relation(fields: [regionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a702dde63cef536819298d776b5")
+  companies    Company[]
+  institutions Institution[]
+  jobs         Job[]
+  students     Student[]
+  users        User[]
+
+  @@map("city")
+}
+
+model Company {
+  id            Int      @id(map: "PK_056f7854a7afdba7cbd6d45fc20") @default(autoincrement())
+  name          String   @db.VarChar
+  email         String   @unique(map: "UQ_b0fc567cf51b1cf717a9e8046a1") @db.VarChar
+  password      String   @db.VarChar
+  phone         String?  @unique(map: "UQ_e53ef0697f9d5d933fa075be1c3") @db.VarChar
+  emailVerified Boolean?
+  phoneVerified Boolean?
+  cityId        Int?
+  cnpj          String?  @unique(map: "UQ_b55d9c6e6adfa3c6de735c5a2eb") @db.VarChar
+  imageUrl      String?  @db.VarChar
+  city          City?    @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d37b1b0cc9656c160b5464ac4f3")
+  jobs          Job[]
+
+  @@map("company")
+}
+
+model Course {
+  id            Int         @id(map: "PK_bf95180dd756fd204fb01ce4916") @default(autoincrement())
+  name          String      @db.VarChar
+  institutionId Int
+  areaId        Int
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_8fa9f33441d0e7cb28c5d934bc4")
+  area          Area        @relation(fields: [areaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d43d51e738645bda6c1afca405b")
+  students      Student[]
+
+  @@map("course")
+}
+
+model Education {
+  id           Int                   @id(map: "PK_bf3d38701b3030a8ad634d43bd6") @default(autoincrement())
+  school       String                @db.VarChar
+  degree       EducationDegreeEnum   @default(EnsinoMedio)
+  fieldOfStudy String                @db.VarChar
+  startDate    String                @db.VarChar
+  endDate      String                @db.VarChar
+  resumeId     Int
+  resume       Resume                @relation(fields: [resumeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0f65a811d17b239cbcd6afdcc58")
+
+  @@map("education")
+}
+
+model Experience {
+  id          Int      @id(map: "PK_5e8d5a534100e1b17ee2efa429a") @default(autoincrement())
+  company     String   @db.VarChar
+  position    String   @db.VarChar
+  description String   @db.VarChar
+  startDate   DateTime @db.Timestamp(6)
+  endDate     String   @db.VarChar
+  currentJob  Boolean
+  resumeId    Int
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_9bfd4060e7f71a77c6b82b1745b")
+
+  @@map("experience")
+}
+
+model Institution {
+  id       Int       @id(map: "PK_f60ee4ff0719b7df54830b39087") @default(autoincrement())
+  name     String    @unique(map: "UQ_d218ad3566afa9e396f184fd7d5") @db.VarChar
+  cityId   Int
+  courses  Course[]
+  city     City      @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_e5a41c16e4f91031eead1c9ce02")
+  students Student[]
+
+  @@map("institution")
+}
+
+model Job {
+  id              Int              @id(map: "PK_98ab1c14ff8d1cf80d18703b92f") @default(autoincrement())
+  status          JobStatusEnum    @default(open)
+  title           String           @db.VarChar
+  description     String           @db.VarChar
+  salary          Int?
+  cityId          Int
+  regionId        Int
+  state           String           @db.VarChar
+  remote          Boolean          @default(false)
+  companyId       Int
+  keywords        String           @db.VarChar
+  areaId          Int
+  area            Area             @relation(fields: [areaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_5f511592fb74953c5756705aa9c")
+  region          Region           @relation(fields: [regionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_900c4db1616cff0cecefa427a9b")
+  city            City             @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_cb7d0a23f9c31ad2f9e213d89b5")
+  company         Company          @relation(fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_e66170573cabd565dab1132727d")
+  jobApplications JobApplication[]
+
+  @@map("job")
+}
+
+model JobApplication {
+  id        Int                         @id(map: "PK_c0b8f6b6341802967369b5d70f5") @default(autoincrement())
+  studentId Int
+  message   String?                     @db.VarChar
+  resumeId  Int
+  jobId     Int
+  status    JobApplicationStatusEnum    @default(EmAndamento)
+  resume    Resume                      @relation(fields: [resumeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2489e8c185ca6249e02460be5dd")
+  student   Student                     @relation(fields: [studentId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_941485e9ff0e23eca1263bfd24d")
+  job       Job                         @relation(fields: [jobId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d0452612ad9cb0e20f6f320ebc0")
+
+  @@map("job_application")
+}
+
+model Language {
+  id       Int                 @id(map: "PK_cc0a99e710eb3733f6fb42b1d4c") @default(autoincrement())
+  name     String              @db.VarChar
+  level    LanguageLevelEnum   @default(Basico)
+  resumeId Int
+  resume   Resume              @relation(fields: [resumeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d461521e55cf56e648410b218b3")
+
+  @@map("language")
+}
+
+model Region {
+  id       Int    @id(map: "PK_5f48ffc3af96bc486f5f3f3a6da") @default(autoincrement())
+  IBGECode Int    @unique(map: "UQ_202c13e0659a61976a78003c8a7")
+  name     String @db.VarChar
+  state    String @db.VarChar
+  cities   City[]
+  jobs     Job[]
+
+  @@map("region")
+}
+
+model Resume {
+  id              Int              @id(map: "PK_7ff05ea7599e13fac01ac812e48") @default(autoincrement())
+  studentId       Int?
+  educations      Education[]
+  experiences     Experience[]
+  jobApplications JobApplication[]
+  languages       Language[]
+  skills          Skill[]
+  student         Student?
+
+  @@map("resume")
+}
+
+model Skill {
+  id       Int              @id(map: "PK_a0d33334424e64fb78dc3ce7196") @default(autoincrement())
+  name     String           @unique(map: "UQ_0f49a593960360f6f85b692aca8") @db.VarChar
+  level    SkillLevelEnum   @default(Basico)
+  resumeId Int
+  resume   Resume           @relation(fields: [resumeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_fa2b5ae9b6fd6021d111c823aca")
+
+  @@map("skill")
+}
+
+model Student {
+  id               Int              @id(map: "PK_3d8016e1cb58429474a3c041904") @default(autoincrement())
+  name             String           @db.VarChar
+  email            String           @unique(map: "UQ_a56c051c91dbe1068ad683f536e") @db.VarChar
+  password         String           @db.VarChar
+  phone            String?          @unique(map: "UQ_bdd296b786640a32e5b7b0966b5") @db.VarChar
+  emailVerified    Boolean?
+  phoneVerified    Boolean?
+  cityId           Int?
+  about            String?          @db.VarChar
+  institutionId    Int?
+  courseId         Int?
+  resumeId         Int?             @unique(map: "UQ_43fa98877aae7cb691a3ab1dc1b")
+  imageUrl         String?          @db.VarChar
+  job_applications JobApplication[]
+  city             City?            @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0c67f4cf7cf70a1fb68110b8339")
+  institution      Institution?     @relation(fields: [institutionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_1829558ab114be65a7aa1dc950b")
+  resume           Resume?          @relation(fields: [resumeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_43fa98877aae7cb691a3ab1dc1b")
+  course           Course?          @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a29d066e554ba135f0d9408c1b3")
+
+  @@map("student")
+}
+
+model User {
+  id            Int      @id(map: "PK_cace4a159ff9f2512dd42373760") @default(autoincrement())
+  name          String   @db.VarChar
+  email         String   @unique(map: "UQ_e12875dfb3b1d92d7d7c5377e22") @db.VarChar
+  password      String   @db.VarChar
+  phone         String?  @unique(map: "UQ_8e1f623798118e629b46a9e6299") @db.VarChar
+  emailVerified Boolean?
+  phoneVerified Boolean?
+  cityId        Int?
+  imageUrl      String?  @db.VarChar
+  city          City?    @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_beb5846554bec348f6baf449e83")
+
+  @@map("user")
+}
+
+enum EducationDegreeEnum {
+  EnsinoMedio    @map("Ensino Médio")
+  EnsinoTecnico  @map("Ensino Técnico")
+  EnsinoSuperior @map("Ensino Superior")
+  PosGraduacao   @map("Pós-Graduação")
+}
+
+enum JobApplicationStatusEnum {
+  EmAndamento @map("Em andamento")
+  Entrevista
+  Finalizado
+}
+
+enum JobStatusEnum {
+  open
+  closed
+}
+
+enum LanguageLevelEnum {
+  Basico        @map("Básico")
+  Intermediario @map("Intermediário")
+  Avancado      @map("Avançado")
+  Fluente
+}
+
+enum SkillLevelEnum {
+  Basico        @map("Básico")
+  Intermediario @map("Intermediário")
+  Avancado      @map("Avançado")
+}
