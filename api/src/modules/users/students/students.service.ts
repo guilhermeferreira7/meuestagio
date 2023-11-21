@@ -1,20 +1,15 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Student } from '@prisma/client';
 
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { CreateStudentDto } from './student-create.dto';
 import bcryptService from '../../../utils/bcriptUtils';
 import { UpdateStudentDto } from './student-update.dto';
-import { Resume } from '../../resumes/resume/resume.entity';
 import { ImagesService } from '../../images/images.service';
 
 @Injectable()
 export class StudentsService {
   constructor(
-    @InjectRepository(Resume)
-    private readonly resumeRepository: Repository<Resume>,
     private readonly imagesService: ImagesService,
     private prisma: PrismaService,
   ) {}
@@ -33,13 +28,17 @@ export class StudentsService {
       },
     });
 
-    const newResume = await this.resumeRepository.save({
-      studentId: studentSave.id,
+    const resume = await this.prisma.resume.create({
+      data: {
+        studentId: studentSave.id,
+      },
     });
 
     await this.prisma.student.update({
       where: { id: studentSave.id },
-      data: { resumeId: newResume.id },
+      data: {
+        resumeId: resume.id,
+      },
     });
 
     return await this.findOne(createStudent.email);

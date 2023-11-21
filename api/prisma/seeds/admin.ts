@@ -1,6 +1,6 @@
 import bcryptService from '../../src/utils/bcriptUtils';
 
-console.log('Gerando usuário administrador...');
+console.log('Criando usuário administrador...');
 export const admin = {
   email: process.env.ADMIN_EMAIL,
   name: process.env.ADMIN_NAME,

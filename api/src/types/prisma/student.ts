@@ -8,3 +8,5 @@ export type StudentWithAllRelations = Prisma.StudentGetPayload<{
     resume: true;
   };
 }>;
+
+export type StudentCreateInput = Prisma.StudentCreateInput;

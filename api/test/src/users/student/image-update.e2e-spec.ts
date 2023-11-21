@@ -2,25 +2,25 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import { TestModule } from '../../../test.module';
 import { studentLogin } from '../../../helpers/login';
+import { AppModule } from '../../../../src/app.module';
 
-describe('Student Image Update', () => {
+describe('[E2E] Student Image Update', () => {
   let app: INestApplication;
   let imageUpdatePath = '/students/profile/image';
   let token = '';
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [TestModule],
+      imports: [AppModule],
     }).compile();
 
     app = module.createNestApplication();
     await app.init();
-    token = await studentLogin(module, app);
+    token = await studentLogin(app);
   });
 
-  describe('upload image', () => {
+  describe(`[POST] ${imageUpdatePath}`, () => {
     it(`should update the student's image and return the image url`, async () => {
       const image = `${__dirname}/avatar.jpg`;
 

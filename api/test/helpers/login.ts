@@ -1,20 +1,10 @@
 import { INestApplication } from '@nestjs/common';
-import { TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
+import { createCompany, createStudent } from './database-setup';
 
-import bcryptService from '../../src/utils/bcriptUtils';
-import { createCompany, createStudent } from './create-users';
-
-export async function companyLogin(
-  module: TestingModule,
-  app: INestApplication,
-): Promise<string> {
-  const company = {
-    name: 'Company Test',
-    email: 'company@email.com',
-    password: bcryptService.hashSync('123123'),
-  };
-  await createCompany(company, module);
+export async function companyLogin(app: INestApplication): Promise<string> {
+  const company = { email: 'company@email.com', pass: '123123' };
+  await createCompany(company.email, company.pass);
 
   const req = await request(app.getHttpServer())
     .post('/auth/login/company')
@@ -26,16 +16,10 @@ export async function companyLogin(
   return req.body.access_token;
 }
 
-export async function studentLogin(
-  module: TestingModule,
-  app: INestApplication,
-): Promise<string> {
-  const student = {
-    name: 'Student Test',
-    email: 'student@example.com',
-    password: bcryptService.hashSync('123123'),
-  };
-  await createStudent(student, module);
+export async function studentLogin(app: INestApplication): Promise<string> {
+  const student = { email: 'student@email.com', pass: '123123' };
+  await createStudent(student.email, student.pass);
+
   const req = await request(app.getHttpServer())
     .post('/auth/login/student')
     .send({

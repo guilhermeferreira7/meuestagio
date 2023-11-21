@@ -2,15 +2,15 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import { Role } from '../../../src/modules/auth/roles/roles';
 import { AppModule } from '../../../src/app.module';
-import { createAdmin } from '../../helpers/database-setup';
+import { Role } from '../../../src/modules/auth/roles/roles';
+import { createCompany } from '../../helpers/database-setup';
 
-describe('[E2E] Admin Auth', () => {
+describe('[E2E] Company Auth', () => {
   let app: INestApplication;
-  const authRoute = '/auth/login/admin';
-  const admin = {
-    email: 'admin@example.com',
+  let authRoute = '/auth/login/company';
+  const company = {
+    email: 'company@email.com',
     pass: '123123',
   };
 
@@ -19,7 +19,7 @@ describe('[E2E] Admin Auth', () => {
       imports: [AppModule],
     }).compile();
 
-    await createAdmin(admin.email, admin.pass);
+    await createCompany(company.email, company.pass);
 
     app = module.createNestApplication();
     await app.init();
@@ -31,20 +31,20 @@ describe('[E2E] Admin Auth', () => {
 
   describe(`[POST] ${authRoute}`, () => {
     it('should return a JWT if email/password is correct', async () => {
-      const authReq = await request(app.getHttpServer())
+      const req = await request(app.getHttpServer())
         .post(authRoute)
         .send({
-          email: admin.email,
-          password: admin.pass,
+          email: company.email,
+          password: company.pass,
         })
         .expect(201);
 
-      expect(authReq.body).toEqual({
+      expect(req.body).toEqual({
         user: {
           sub: expect.any(Number),
           name: expect.any(String),
-          email: admin.email,
-          role: Role.ADMIN,
+          email: company.email,
+          role: Role.COMPANY,
         },
         access_token: expect.any(String),
       });
@@ -54,7 +54,7 @@ describe('[E2E] Admin Auth', () => {
       await request(app.getHttpServer())
         .post(authRoute)
         .send({
-          email: 'admin@wrong.com',
+          email: 'company@wrong.com',
           password: '123123',
         })
         .expect(401);
@@ -62,7 +62,7 @@ describe('[E2E] Admin Auth', () => {
       await request(app.getHttpServer())
         .post(authRoute)
         .send({
-          email: admin.email,
+          email: company.email,
           password: 'asdasd',
         })
         .expect(401);

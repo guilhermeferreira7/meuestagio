@@ -1,13 +1,12 @@
 import { prisma } from './prisma';
 import { areas } from './seeds/areas';
 import { admin } from './seeds/admin';
-import { CityIBGE, createRegion, getCities } from './seeds/cities';
+import { CityIBGE, getCities, region } from './seeds/cities';
 
 async function main() {
-  const region = await createRegion();
-  const cities = await getCities(region.IBGECode);
+  const cities = await getCities(41029);
 
-  await prisma.$transaction([
+  const seeds = await prisma.$transaction([
     ...areas.map((area) =>
       prisma.area.upsert({
         where: { cnpqId: area.cnpqId },
@@ -19,10 +18,18 @@ async function main() {
     prisma.user.upsert({
       where: { email: admin.email },
       update: {},
+      create: admin,
+    }),
+
+    prisma.region.upsert({
       create: {
-        email: admin.email,
-        name: admin.name,
-        password: admin.password,
+        IBGECode: region.IBGECode,
+        name: region.name,
+        state: region.state,
+      },
+      update: {},
+      where: {
+        IBGECode: region.IBGECode,
       },
     }),
 
@@ -34,11 +41,17 @@ async function main() {
           IBGECityCode: city.id,
           name: city.nome,
           state: city.microrregiao.mesorregiao.UF.nome,
-          regionId: region.id,
+          region: {
+            connect: {
+              IBGECode: 41029,
+            },
+          },
         },
       });
     })),
   ]);
+
+  console.log(`${seeds.length} dados inseridos.`);
 }
 
 main()

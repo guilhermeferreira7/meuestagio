@@ -1,5 +1,3 @@
-console.log('Gerando áreas...');
-
 export const areas = [
   { cnpqId: 60200006, title: 'Administração' },
   { cnpqId: 90100000, title: 'Administração Hospitalar' },
@@ -109,3 +107,5 @@ export const areas = [
   { cnpqId: 20400004, title: 'Zoologia' },
   { cnpqId: 50400002, title: 'Zootecnia' },
 ];
+
+console.log(`Criando ${areas.length} áreas de conhecimento...`);
