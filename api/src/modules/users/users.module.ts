@@ -14,11 +14,18 @@ import { CompaniesController } from './companies/controllers/companies.controlle
 import { AdminController } from './admin/admin.controller';
 import { ImagesService } from '../images/images.service';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { AdminService } from './admin/admin.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Student, Company, User, Resume])],
-  providers: [StudentsService, CompaniesService, ImagesService, PrismaService],
+  providers: [
+    StudentsService,
+    CompaniesService,
+    AdminService,
+    ImagesService,
+    PrismaService,
+  ],
   controllers: [StudentsController, CompaniesController, AdminController],
-  exports: [StudentsService, CompaniesService],
+  exports: [StudentsService, CompaniesService, AdminService],
 })
 export class UsersModule {}

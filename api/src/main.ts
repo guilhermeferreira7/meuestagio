@@ -1,7 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { dataSource } from './database/data-source';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -25,10 +24,6 @@ async function bootstrap() {
   app.enableCors();
 
   await app.listen(process.env.API_PORT);
-
-  if (!dataSource.isInitialized) {
-    await dataSource.initialize();
-  }
 
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
