@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { StudentsService } from '../../users/students/services/students.service';
+import { StudentsService } from '../../users/students/students.service';
 import { AuthStudentService } from './auth-student.service';
 import { Role } from '../roles/roles';
 import bcryptService from '../../../utils/bcriptUtils';

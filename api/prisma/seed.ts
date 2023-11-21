@@ -1,4 +1,4 @@
-import { prisma } from '../src/prisma';
+import { prisma } from './prisma';
 import { areas } from './seeds/areas';
 import { admin } from './seeds/admin';
 import { CityIBGE, createRegion, getCities } from './seeds/cities';

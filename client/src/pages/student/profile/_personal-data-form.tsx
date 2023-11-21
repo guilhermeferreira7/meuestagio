@@ -179,7 +179,7 @@ export default function PersonalDataForm({ student }: PersonalDataFormProps) {
               id="about"
               className="textarea textarea-primary w-full"
               placeholder="Fale um pouco sobre você"
-              value={formData.about}
+              value={formData.about ?? ""}
               onChange={(event) => {
                 setFormData({ ...formData, about: event.target.value });
               }}

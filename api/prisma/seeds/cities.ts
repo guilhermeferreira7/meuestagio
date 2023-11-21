@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { prisma } from '../../src/prisma';
-import { Prisma } from '@prisma/client';
+import { prisma } from '../prisma';
 
 const GET_CITY_URL =
   'http://servicodados.ibge.gov.br/api/v1/localidades/municipios/guarapuava';

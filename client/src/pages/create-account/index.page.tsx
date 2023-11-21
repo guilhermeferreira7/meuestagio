@@ -49,7 +49,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
         notify.success("Aluno cadastrado com sucesso!");
         await signIn(data.email, data.password, Role.Student);
       } catch (error: any) {
-        notify.error(error.response?.data?.message || error.message);
+        notify.error(errorToString(error));
       }
     } else if (data.userRole === Role.Company) {
       try {
@@ -57,7 +57,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
         notify.success("Empresa cadastrada com sucesso!");
         await signIn(data.email, data.password, Role.Company);
       } catch (error: any) {
-        notify.error("" + error.response?.data?.message || error.message);
+        notify.error(errorToString(error));
       }
     } else {
       notify.warning();
@@ -156,6 +156,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       props: { institutions: [], cities: [] },
     };
   }
-
-
 };

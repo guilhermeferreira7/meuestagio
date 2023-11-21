@@ -1,7 +1,6 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
 
-import MainSeeder from './seeds/MainSeeder';
 import { Company } from '../modules/users/companies/entities/company.entity';
 import { Job } from '../modules/jobs/entities/job.entity';
 import { City } from '../modules/cities/entities/city.entity';
@@ -39,7 +38,6 @@ const options: DataSourceOptions & SeederOptions = {
     Language,
     Experience,
   ],
-  seeds: [MainSeeder],
   synchronize: process.env.NODE_ENV !== 'production',
 };
 
