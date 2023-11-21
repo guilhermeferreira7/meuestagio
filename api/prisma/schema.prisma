@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Area {
@@ -22,7 +23,7 @@ model City {
   name         String        @db.VarChar
   state        String        @db.VarChar
   regionId     Int
-  IBGECityCode Int
+  IBGECityCode Int           @unique
   region       Region        @relation(fields: [regionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a702dde63cef536819298d776b5")
   companies    Company[]
   institutions Institution[]
@@ -34,17 +35,17 @@ model City {
 }
 
 model Company {
-  id            Int      @id(map: "PK_056f7854a7afdba7cbd6d45fc20") @default(autoincrement())
-  name          String   @db.VarChar
-  email         String   @unique(map: "UQ_b0fc567cf51b1cf717a9e8046a1") @db.VarChar
-  password      String   @db.VarChar
-  phone         String?  @unique(map: "UQ_e53ef0697f9d5d933fa075be1c3") @db.VarChar
+  id            Int       @id(map: "PK_056f7854a7afdba7cbd6d45fc20") @default(autoincrement())
+  name          String    @db.VarChar
+  email         String    @unique(map: "UQ_b0fc567cf51b1cf717a9e8046a1") @db.VarChar
+  password      String    @db.VarChar
+  cityId        Int
+  city          City      @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d37b1b0cc9656c160b5464ac4f3")
+  cnpj          String    @unique(map: "UQ_b55d9c6e6adfa3c6de735c5a2eb") @db.VarChar
+  phone         String?   @unique(map: "UQ_e53ef0697f9d5d933fa075be1c3") @db.VarChar
   emailVerified Boolean?
   phoneVerified Boolean?
-  cityId        Int?
-  cnpj          String?  @unique(map: "UQ_b55d9c6e6adfa3c6de735c5a2eb") @db.VarChar
-  imageUrl      String?  @db.VarChar
-  city          City?    @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d37b1b0cc9656c160b5464ac4f3")
+  imageUrl      String?   @db.VarChar
   jobs          Job[]
 
   @@map("company")
@@ -185,35 +186,35 @@ model Student {
   name             String           @db.VarChar
   email            String           @unique(map: "UQ_a56c051c91dbe1068ad683f536e") @db.VarChar
   password         String           @db.VarChar
+  institutionId    Int
+  institution      Institution      @relation(fields: [institutionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_1829558ab114be65a7aa1dc950b")
+  courseId         Int
+  course           Course           @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a29d066e554ba135f0d9408c1b3")
+  cityId           Int
+  city             City             @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0c67f4cf7cf70a1fb68110b8339")
   phone            String?          @unique(map: "UQ_bdd296b786640a32e5b7b0966b5") @db.VarChar
   emailVerified    Boolean?
   phoneVerified    Boolean?
-  cityId           Int?
   about            String?          @db.VarChar
-  institutionId    Int?
-  courseId         Int?
   resumeId         Int?             @unique(map: "UQ_43fa98877aae7cb691a3ab1dc1b")
+  resume           Resume?          @relation(fields: [resumeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_43fa98877aae7cb691a3ab1dc1b")
   imageUrl         String?          @db.VarChar
   job_applications JobApplication[]
-  city             City?            @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_0c67f4cf7cf70a1fb68110b8339")
-  institution      Institution?     @relation(fields: [institutionId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_1829558ab114be65a7aa1dc950b")
-  resume           Resume?          @relation(fields: [resumeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_43fa98877aae7cb691a3ab1dc1b")
-  course           Course?          @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a29d066e554ba135f0d9408c1b3")
 
   @@map("student")
 }
 
 model User {
-  id            Int      @id(map: "PK_cace4a159ff9f2512dd42373760") @default(autoincrement())
-  name          String   @db.VarChar
-  email         String   @unique(map: "UQ_e12875dfb3b1d92d7d7c5377e22") @db.VarChar
-  password      String   @db.VarChar
-  phone         String?  @unique(map: "UQ_8e1f623798118e629b46a9e6299") @db.VarChar
+  id            Int       @id(map: "PK_cace4a159ff9f2512dd42373760") @default(autoincrement())
+  name          String    @db.VarChar
+  email         String    @unique(map: "UQ_e12875dfb3b1d92d7d7c5377e22") @db.VarChar
+  password      String    @db.VarChar
+  cityId        Int?
+  city          City?      @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_beb5846554bec348f6baf449e83")
+  phone         String?   @unique(map: "UQ_8e1f623798118e629b46a9e6299") @db.VarChar
   emailVerified Boolean?
   phoneVerified Boolean?
-  cityId        Int?
-  imageUrl      String?  @db.VarChar
-  city          City?    @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_beb5846554bec348f6baf449e83")
+  imageUrl      String?   @db.VarChar
 
   @@map("user")
 }
