@@ -13,15 +13,14 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { Role } from '../../../auth/roles/roles';
-import { HasRoles } from '../../../auth/roles/roles.decorator';
-import { RolesGuard } from '../../../auth/roles/roles.guard';
-import { AuthService } from '../../../auth/auth.service';
-import { CreateCompanyDto } from '../dtos/create-company.dto';
-import { UpdateCompanyDto } from '../dtos/update-company.dto';
-import { Company } from '../entities/company.entity';
-import { CompaniesService } from '../services/companies.service';
-import { ReqAuth } from '../../../../types/auth/request';
+import { Role } from '../../auth/roles/roles';
+import { HasRoles } from '../../auth/roles/roles.decorator';
+import { RolesGuard } from '../../auth/roles/roles.guard';
+import { AuthService } from '../../auth/auth.service';
+import { CreateCompanyDto } from './create-company.dto';
+import { UpdateCompanyDto } from './update-company.dto';
+import { CompaniesService } from './companies.service';
+import { ReqAuth } from '../../../types/auth/request';
 
 @Controller('companies')
 export class CompaniesController {
@@ -31,13 +30,8 @@ export class CompaniesController {
   ) {}
 
   @Post()
-  async create(@Body() createCompanyDto: CreateCompanyDto): Promise<Company> {
-    return await this.companiesService.create(createCompanyDto);
-  }
-
-  @Get()
-  async findAll(): Promise<Company[]> {
-    return await this.companiesService.findAll();
+  async create(@Body() body: CreateCompanyDto) {
+    return await this.companiesService.createCompany(body);
   }
 
   @HasRoles(Role.COMPANY)
@@ -45,10 +39,7 @@ export class CompaniesController {
   @Get('profile')
   async getProfile(@Request() req: ReqAuth): Promise<any> {
     const company = await this.companiesService.findOne(req.user.email);
-    if (!company) {
-      throw new UnauthorizedException();
-    }
-
+    if (!company) throw new UnauthorizedException();
     return company;
   }
 
@@ -59,7 +50,7 @@ export class CompaniesController {
   async uploadFile(
     @Request() req: ReqAuth,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<Company> {
+  ) {
     return await this.companiesService.updateImage(req.user.email, file);
   }
 
@@ -69,7 +60,7 @@ export class CompaniesController {
   async updateProfile(
     @Request() req: ReqAuth,
     @Body() updateCompanyDto: UpdateCompanyDto,
-  ): Promise<any> {
+  ) {
     const company = await this.companiesService.update(
       req.user.email,
       updateCompanyDto,
@@ -82,14 +73,13 @@ export class CompaniesController {
       sub: company.id,
     });
 
-    const companyUpdated = await this.companiesService.findOne(req.user.email);
-
-    const { password, ...userWithoutPassword } = companyUpdated;
-
     return {
       access_token,
       user,
-      company: userWithoutPassword,
+      company: {
+        ...company,
+        password: undefined,
+      },
     };
   }
 }

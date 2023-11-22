@@ -75,6 +75,4 @@ describe('Students Service', () => {
       expect(service.updateStudent(student.email, { email })).resolves;
     });
   });
-
-  describe('updateImage', () => {});
 });
