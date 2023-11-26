@@ -4,6 +4,7 @@ import * as request from 'supertest';
 
 import { companyLogin } from '../../../helpers/login';
 import { AppModule } from '../../../../src/app.module';
+import { clearDatabase } from '../../../helpers/database-setup';
 
 describe('[E2E] Company Image Update', () => {
   let app: INestApplication;
@@ -22,6 +23,10 @@ describe('[E2E] Company Image Update', () => {
 
   afterAll(async () => {
     await app.close();
+  });
+
+  afterEach(async () => {
+    await clearDatabase();
   });
 
   describe(`[POST] ${imageUpdatePath}`, () => {

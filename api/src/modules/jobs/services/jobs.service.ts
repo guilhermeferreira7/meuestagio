@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+
 import { CreateJobDto } from '../dtos/create-job.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Job, JobStatus } from '../entities/job.entity';
-import { Repository } from 'typeorm';
+import { PrismaService } from '../../../../prisma/prisma.service';
+import { JobApplicationStatusEnum, JobStatusEnum } from '@prisma/client';
 
 type JobsQuery = {
   page?: number;
@@ -15,127 +15,157 @@ type JobsQuery = {
 
 @Injectable()
 export class JobsService {
-  constructor(
-    @InjectRepository(Job)
-    private readonly repository: Repository<Job>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(createJobDto: CreateJobDto): Promise<Job> {
-    const job = this.repository.create(createJobDto);
-    await this.repository.save(job);
-    return job;
+  async create(createJobDto: CreateJobDto) {
+    await this.validateCreate(createJobDto);
+
+    return await this.prisma.job.create({
+      data: createJobDto,
+    });
   }
 
   async close(id: number) {
-    const job = await this.repository.findOne({
-      where: { id },
+    await this.prisma.jobApplication.updateMany({
+      where: {
+        jobId: id,
+      },
+      data: {
+        status: JobApplicationStatusEnum.Finalizado,
+      },
     });
-    job.status = JobStatus.CLOSED;
 
-    await this.repository.save(job);
-    return job;
+    return await this.prisma.job.update({
+      where: {
+        id,
+      },
+      data: {
+        status: JobStatusEnum.closed,
+      },
+    });
   }
 
   async findAll({ page, limit, state, region, city, search }: JobsQuery) {
     if (search) {
-      const jobs = await this.queryBuilder(search, page, limit);
+      const jobs = this.prisma.job.findMany({
+        where: {
+          title: {
+            contains: search,
+            mode: 'insensitive',
+          },
+          OR: [
+            {
+              description: {
+                contains: search,
+                mode: 'insensitive',
+              },
+              keywords: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              company: {
+                name: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+            {
+              area: {
+                title: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          ],
+        },
+        orderBy: {
+          id: 'desc',
+        },
+        skip: page ? page : 0,
+        take: limit ? limit : undefined,
+        include: {
+          company: {
+            select: {
+              name: true,
+              imageUrl: true,
+            },
+          },
+          city: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
 
-      if (city || region || state) {
-        if (city) {
-          return jobs.filter((job) => job.city.id === Number(city));
-        } else if (region) {
-          return jobs.filter((job) => job.region.id === Number(region));
-        } else if (state) {
-          return jobs.filter((job) => job.state === state);
-        }
-      }
+      if (city) return (await jobs).filter((job) => job.cityId === city);
+      else if (region)
+        return (await jobs).filter((job) => job.regionId === region);
+      else if (state) return (await jobs).filter((job) => job.state === state);
 
       return jobs;
     }
 
-    const jobs = await this.repository.find({
-      skip: page,
-      take: limit,
-      order: {
-        id: 'DESC',
-      },
-      where: {
-        state,
-        regionId: region,
-        cityId: city,
-      },
-      relations: ['company', 'city', 'region', 'area'],
-    });
-    const result = jobs.map((job) => {
-      return {
-        ...job,
-        company: {
-          name: job.company.name,
-          imageUrl: job.company.imageUrl,
-        },
-        city: {
-          name: job.city.name,
-        },
-      };
-    });
-
-    return result;
+    return await this.prisma.job.findMany();
   }
 
   async findAllByCompany(companyId: number) {
-    const jobs = await this.repository.find({
+    return await this.prisma.job.findMany({
       where: {
         companyId,
       },
-      order: {
-        id: 'DESC',
+      orderBy: {
+        id: 'desc',
       },
-      relations: ['company', 'area', 'city', 'region'],
-    });
-    const result = jobs.map((job) => {
-      return {
-        ...job,
+      include: {
         company: {
-          name: job.company.name,
+          select: {
+            name: true,
+            imageUrl: true,
+          },
         },
         city: {
-          name: job.city.name,
+          select: {
+            name: true,
+          },
         },
-      };
+      },
     });
-
-    return result;
   }
 
   async findOne(id: number) {
-    const job = await this.repository.findOne({
-      where: { id: id },
-      relations: ['company', 'area', 'city', 'region'],
-    });
-    return {
-      ...job,
-      company: {
-        name: job.company.name,
-        imageUrl: job.company.imageUrl,
+    const job = await this.prisma.job.findUnique({
+      where: {
+        id,
       },
-    };
+      include: {
+        company: {
+          select: {
+            name: true,
+            imageUrl: true,
+          },
+        },
+        area: {
+          select: { title: true },
+        },
+        city: {
+          select: { name: true },
+        },
+      },
+    });
+    return job;
   }
 
-  private async queryBuilder(search: string, page: number, limit: number) {
-    return await this.repository
-      .createQueryBuilder()
-      .select()
-      .where('Job.title ILIKE :search', { search: `%${search}%` })
-      .orWhere('description ILIKE :search', { search: `%${search}%` })
-      .orWhere('keywords ILIKE :search', { search: `%${search}%` })
-      .orWhere('area.title ILIKE :search', { search: `%${search}%` })
-      .orWhere('company.name ILIKE :search', { search: `%${search}%` })
-      .leftJoinAndSelect('Job.company', 'company')
-      .leftJoinAndSelect('Job.city', 'city')
-      .leftJoinAndSelect('Job.region', 'region')
-      .leftJoinAndSelect('Job.area', 'area')
-      .skip(page)
-      .take(limit)
-      .getMany();
+  private async validateCreate(createJobDto: CreateJobDto) {
+    if (
+      !(await this.prisma.city.findUnique({
+        where: { id: createJobDto.cityId },
+      }))
+    )
+      throw new BadRequestException();
   }
 }

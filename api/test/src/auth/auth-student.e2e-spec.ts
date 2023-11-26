@@ -2,24 +2,19 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import { createStudent } from '../../helpers/database-setup';
 import { AppModule } from '../../../src/app.module';
 import { Role } from '../../../src/modules/auth/roles/roles';
+import { createStudent } from '../../../prisma/factories/student';
+import { clearDatabase } from '../../helpers/database-setup';
 
 describe('[E2E] Student Auth', () => {
   let app: INestApplication;
   let authRoute = '/auth/login/student';
-  const student = {
-    email: 'student@email.com',
-    pass: '123123',
-  };
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
-    await createStudent(student.email, student.pass);
 
     app = module.createNestApplication();
     await app.init();
@@ -29,13 +24,19 @@ describe('[E2E] Student Auth', () => {
     await app.close();
   });
 
+  afterEach(async () => {
+    await clearDatabase();
+  });
+
   describe(`[POST] ${authRoute}`, () => {
     it('should return JWT if email/password is correct', async () => {
+      const student = await createStudent();
+
       const req = await request(app.getHttpServer())
         .post(authRoute)
         .send({
           email: student.email,
-          password: student.pass,
+          password: '123123',
         })
         .expect(201);
 
@@ -51,6 +52,8 @@ describe('[E2E] Student Auth', () => {
     });
 
     it('should not login if the email/password is invalid', async () => {
+      const student = await createStudent();
+
       await request(app.getHttpServer())
         .post(authRoute)
         .send({

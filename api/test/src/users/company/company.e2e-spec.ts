@@ -6,8 +6,10 @@ import { faker } from '@faker-js/faker';
 import { AppModule } from '../../../../src/app.module';
 import { CreateCompanyDto } from '../../../../src/modules/users/companies/create-company.dto';
 import { UpdateCompanyDto } from '../../../../src/modules/users/companies/update-company.dto';
-import { createCity, createCompany } from '../../../helpers/database-setup';
 import { companyLogin, studentLogin } from '../../../helpers/login';
+import { clearDatabase } from '../../../helpers/database-setup';
+import { createCity } from '../../../../prisma/factories/city';
+import { createCompany } from '../../../../prisma/factories/company';
 
 describe('[E2E] Company', () => {
   let app: INestApplication;
@@ -26,6 +28,10 @@ describe('[E2E] Company', () => {
 
   afterAll(async () => {
     await app.close();
+  });
+
+  afterEach(async () => {
+    await clearDatabase();
   });
 
   describe(`[POST] ${createCompanyPath}`, () => {
@@ -155,16 +161,16 @@ describe('[E2E] Company', () => {
     });
 
     describe('When token is valid', () => {
-      it('should return a company profile if token is from company', async () => {
-        const companyEmail = faker.internet.email();
-        const companyToken = await companyLogin(app, companyEmail);
+      it('should return company profile', async () => {
+        const company = await createCompany();
+        const companyToken = await companyLogin(app, company.email);
 
         const req = await request(app.getHttpServer())
           .get(profilePath)
           .set('Authorization', `Bearer ${companyToken}`)
           .expect(200);
 
-        expect(req.body).toHaveProperty('email', companyEmail);
+        expect(req.body).toHaveProperty('email', company.email);
       });
     });
   });
@@ -218,16 +224,14 @@ describe('[E2E] Company', () => {
       });
 
       it('should not update a company profile if email is already in use', async () => {
-        const emailOne = faker.internet.email();
-        const emailTwo = faker.internet.email();
-
-        const companyOneToken = await companyLogin(app, emailOne);
-        await createCompany(emailTwo, '123123');
+        const companyOne = await createCompany();
+        const companyTwo = await createCompany();
+        const companyOneToken = await companyLogin(app, companyOne.email);
 
         await request(app.getHttpServer())
           .patch(profilePath)
           .set('Authorization', `Bearer ${companyOneToken}`)
-          .send({ email: emailTwo })
+          .send({ email: companyTwo.email })
           .expect({
             statusCode: 409,
             message: 'Email pertence a outro usuário',

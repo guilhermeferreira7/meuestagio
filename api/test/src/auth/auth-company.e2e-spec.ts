@@ -4,22 +4,17 @@ import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
 import { Role } from '../../../src/modules/auth/roles/roles';
-import { createCompany } from '../../helpers/database-setup';
+import { createCompany } from '../../../prisma/factories/company';
+import { clearDatabase } from '../../helpers/database-setup';
 
 describe('[E2E] Company Auth', () => {
   let app: INestApplication;
   let authRoute = '/auth/login/company';
-  const company = {
-    email: 'company@email.com',
-    pass: '123123',
-  };
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
-    await createCompany(company.email, company.pass);
 
     app = module.createNestApplication();
     await app.init();
@@ -29,13 +24,18 @@ describe('[E2E] Company Auth', () => {
     await app.close();
   });
 
+  afterEach(async () => {
+    await clearDatabase();
+  });
+
   describe(`[POST] ${authRoute}`, () => {
     it('should return a JWT if email/password is correct', async () => {
+      const company = await createCompany();
       const req = await request(app.getHttpServer())
         .post(authRoute)
         .send({
           email: company.email,
-          password: company.pass,
+          password: '123123',
         })
         .expect(201);
 
@@ -51,6 +51,7 @@ describe('[E2E] Company Auth', () => {
     });
 
     it('should not login if the email/password is invalid', async () => {
+      const company = await createCompany();
       await request(app.getHttpServer())
         .post(authRoute)
         .send({

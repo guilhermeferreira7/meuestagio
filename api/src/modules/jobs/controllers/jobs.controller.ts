@@ -10,21 +10,18 @@ import {
   Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 
 import { JobsService } from '../services/jobs.service';
 import { CreateJobDto } from '../dtos/create-job.dto';
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { RolesGuard } from '../../auth/roles/roles.guard';
-import { JobApplicationsService } from '../../job-applications/services/job-applications.service';
-import { JobApplicationStatus } from '../../job-applications/entities/status';
 
+@ApiTags('Jobs')
 @Controller('jobs')
 export class JobsController {
-  constructor(
-    private readonly jobsService: JobsService,
-    private readonly jobApplicationsService: JobApplicationsService,
-  ) {}
+  constructor(private readonly jobsService: JobsService) {}
 
   @HasRoles(Role.COMPANY)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -37,7 +34,6 @@ export class JobsController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch(':id/close')
   async close(@Param('id', ParseIntPipe) id: number) {
-    this.jobApplicationsService.closeAllByJobId(id);
     return this.jobsService.close(id);
   }
 

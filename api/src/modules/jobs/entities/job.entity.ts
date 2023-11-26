@@ -1,5 +1,4 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Company } from '../../users/companies/entities/company.entity';
 import { Area } from '../../areas/entities/area.entity';
 import { City } from '../../cities/entities/city.entity';
 import { Region } from '../../cities/entities/region.entity';
@@ -50,9 +49,6 @@ export class Job {
 
   @Column()
   companyId: number;
-
-  @ManyToOne(() => Company)
-  company: Company;
 
   @Column()
   keywords: string;

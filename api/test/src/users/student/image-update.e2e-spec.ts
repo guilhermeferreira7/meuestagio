@@ -4,6 +4,7 @@ import * as request from 'supertest';
 
 import { studentLogin } from '../../../helpers/login';
 import { AppModule } from '../../../../src/app.module';
+import { clearDatabase } from '../../../helpers/database-setup';
 
 describe('[E2E] Student Image Update', () => {
   let app: INestApplication;
@@ -18,6 +19,14 @@ describe('[E2E] Student Image Update', () => {
     app = module.createNestApplication();
     await app.init();
     token = await studentLogin(app);
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  afterEach(async () => {
+    await clearDatabase();
   });
 
   describe(`[POST] ${imageUpdatePath}`, () => {
