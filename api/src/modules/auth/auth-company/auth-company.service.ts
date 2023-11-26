@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import bcryptService from '../../../utils/bcriptUtils';
-import { CompaniesService } from '../../users/companies/services/companies.service';
+import { CompaniesService } from '../../users/companies/companies.service';
 import { Role } from '../roles/roles';
 import { UserAuth } from '../../../types/auth/user-auth';
 
@@ -13,7 +13,7 @@ export class AuthCompanyService {
     email: string,
     password: string,
   ): Promise<UserAuth | null> {
-    const company = await this.companiesService.findByEmail(email);
+    const company = await this.companiesService.findOne(email);
 
     const validCredentials =
       company && (await bcryptService.compare(password, company?.password));

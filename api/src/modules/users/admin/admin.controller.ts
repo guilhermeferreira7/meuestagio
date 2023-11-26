@@ -6,6 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 
 import { ReqAuth } from '../../../types/auth/request';
 import { HasRoles } from '../../auth/roles/roles.decorator';
@@ -13,6 +14,7 @@ import { Role } from '../../auth/roles/roles';
 import { RolesGuard } from '../../auth/roles/roles.guard';
 import { AdminService } from './admin.service';
 
+@ApiTags('Admin')
 @Controller('admin')
 export class AdminController {
   constructor(private readonly service: AdminService) {}

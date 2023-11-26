@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 
 import { Institution } from '../entities/institution.entity';
 import { InstitutionsService } from '../services/institutions.service';
@@ -17,6 +18,7 @@ import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { RolesGuard } from '../../auth/roles/roles.guard';
 
+@ApiTags('Institutions')
 @Controller('institutions')
 export class InstitutionsController {
   constructor(private readonly institutionsService: InstitutionsService) {}

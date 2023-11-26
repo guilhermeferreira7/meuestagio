@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from '../../auth/auth.service';
 import { Role } from '../../auth/roles/roles';
@@ -22,6 +23,7 @@ import { UpdateStudentDto } from './student-update.dto';
 import { StudentsService } from './students.service';
 import { ReqAuth } from '../../../types/auth/request';
 
+@ApiTags('Students')
 @Controller('students')
 export class StudentsController {
   constructor(

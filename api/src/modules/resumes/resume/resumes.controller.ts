@@ -21,13 +21,6 @@ export class ResumesController {
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Patch('/me')
-  async update(@Body() body: UpdateResumeDto) {
-    return await this.resumesService.update(body.id, body);
-  }
-
-  @HasRoles(Role.STUDENT)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('/me')
   async getResume(@Request() req: ReqAuth) {
     return await this.resumesService.getResume(req.user.sub);

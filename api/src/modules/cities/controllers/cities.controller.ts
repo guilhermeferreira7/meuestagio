@@ -7,6 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 
 import { CreateCityDto } from '../dtos/create-city.dto';
 import { City } from '../entities/city.entity';
@@ -17,6 +18,7 @@ import { Role } from '../../auth/roles/roles';
 import { CreateRegionDto } from '../dtos/create-region.dto';
 import { Region } from '../entities/region.entity';
 
+@ApiTags('Cities')
 @Controller('cities')
 export class CitiesController {
   constructor(private readonly citiesService: CitiesService) {}

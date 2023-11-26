@@ -10,6 +10,7 @@ import { AreasModule } from './modules/areas/areas.module';
 import { JobApplicationModule } from './modules/job-applications/job-applications.module';
 import { ResumesModule } from './modules/resumes/resumes.module';
 import { ImagesModule } from './modules/images/images.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -33,5 +34,6 @@ import { ImagesModule } from './modules/images/images.module';
     ResumesModule,
     ImagesModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

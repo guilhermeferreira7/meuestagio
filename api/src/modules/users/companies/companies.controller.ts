@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 
 import { Role } from '../../auth/roles/roles';
 import { HasRoles } from '../../auth/roles/roles.decorator';
@@ -22,6 +23,7 @@ import { UpdateCompanyDto } from './update-company.dto';
 import { CompaniesService } from './companies.service';
 import { ReqAuth } from '../../../types/auth/request';
 
+@ApiTags('Companies')
 @Controller('companies')
 export class CompaniesController {
   constructor(

@@ -5,6 +5,8 @@ import {
   Body,
   UseGuards,
   Request,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -14,7 +16,9 @@ import { Role } from '../../auth/roles/roles';
 import { CreateJobApplicationDto } from '../dtos/create-jobApplication.dto';
 import { JobApplicationStatus } from '../entities/status';
 import { JobApplicationsService } from '../services/job-applications.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Job Applications')
 @Controller('job-applications')
 export class JobApplicationsController {
   constructor(
@@ -31,8 +35,8 @@ export class JobApplicationsController {
   @HasRoles(Role.COMPANY)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('company')
-  async findByJobId(@Request() req: any) {
-    return this.jobApplicationsService.findByJobId(req.query.jobId);
+  async findByJobId(@Query('jobId', ParseIntPipe) jobId: number) {
+    return this.jobApplicationsService.findByJobId(jobId);
   }
 
   @HasRoles(Role.STUDENT)
