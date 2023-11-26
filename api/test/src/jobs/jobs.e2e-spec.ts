@@ -1,10 +1,9 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { JobStatusEnum } from '@prisma/client';
+import { JobApplicationStatusEnum, JobStatusEnum } from '@prisma/client';
 
 import { AppModule } from '../../../src/app.module';
 import { CreateJobDto } from '../../../src/modules/jobs/dtos/create-job.dto';
-import { JobApplicationStatus } from '../../../src/modules/job-applications/entities/status';
 import { createCompany } from '../../../prisma/factories/company';
 import { createArea } from '../../../prisma/factories/area';
 import { createRegion } from '../../../prisma/factories/region';
@@ -130,7 +129,7 @@ describe('[E2E] Jobs', () => {
         await patch(`/jobs/${job.id}/close`, app, companyToken).expect(200);
 
         const getJobApplications = await get(
-          '/job-applications/company',
+          '/job-applications/job',
           app,
           companyToken,
           {
@@ -141,7 +140,7 @@ describe('[E2E] Jobs', () => {
         expect(getJobApplications.body).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              status: JobApplicationStatus.FINISHED,
+              status: JobApplicationStatusEnum.Finalizado,
             }),
           ]),
         );

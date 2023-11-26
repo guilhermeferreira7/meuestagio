@@ -2,30 +2,50 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { createStudent } from '../../prisma/factories/student';
 import { createCompany } from '../../prisma/factories/company';
+import { createUser } from '../../prisma/factories/user';
 
 export async function companyLogin(
   app: INestApplication,
   email?: string,
 ): Promise<string> {
-  const company = await createCompany();
+  const companyEmail = email || (await createCompany()).email;
 
   const req = await request(app.getHttpServer())
     .post('/auth/login/company')
     .send({
-      email: email || company.email,
+      email: companyEmail,
       password: '123123',
     });
 
   return req.body.access_token;
 }
 
-export async function studentLogin(app: INestApplication): Promise<string> {
-  const student = await createStudent();
+export async function studentLogin(
+  app: INestApplication,
+  email?: string,
+): Promise<string> {
+  const studentEmail = email || (await createStudent()).email;
 
   const req = await request(app.getHttpServer())
     .post('/auth/login/student')
     .send({
-      email: student.email,
+      email: studentEmail,
+      password: '123123',
+    });
+
+  return req.body.access_token;
+}
+
+export async function adminLogin(
+  app: INestApplication,
+  email?: string,
+): Promise<string> {
+  const adminEmail = email || (await createUser()).email;
+
+  const req = await request(app.getHttpServer())
+    .post('/auth/login/admin')
+    .send({
+      email: adminEmail,
       password: '123123',
     });
 

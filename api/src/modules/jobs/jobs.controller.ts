@@ -12,11 +12,11 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 
-import { JobsService } from '../services/jobs.service';
-import { CreateJobDto } from '../dtos/create-job.dto';
-import { HasRoles } from '../../auth/roles/roles.decorator';
-import { Role } from '../../auth/roles/roles';
-import { RolesGuard } from '../../auth/roles/roles.guard';
+import { HasRoles } from '../auth/roles/roles.decorator';
+import { RolesGuard } from '../auth/roles/roles.guard';
+import { JobsService } from './jobs.service';
+import { CreateJobDto } from './dtos/create-job.dto';
+import { Role } from '../auth/roles/roles';
 
 @ApiTags('Jobs')
 @Controller('jobs')

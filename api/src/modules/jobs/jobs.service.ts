@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-
-import { CreateJobDto } from '../dtos/create-job.dto';
-import { PrismaService } from '../../../../prisma/prisma.service';
 import { JobApplicationStatusEnum, JobStatusEnum } from '@prisma/client';
+
+import { CreateJobDto } from './dtos/create-job.dto';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 type JobsQuery = {
   page?: number;
