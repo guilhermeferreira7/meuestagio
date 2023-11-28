@@ -3,6 +3,6 @@ import bcryptService from '../../src/utils/bcriptUtils';
 console.log('Criando usuário administrador...');
 export const admin = {
   email: process.env.ADMIN_EMAIL,
-  name: process.env.ADMIN_NAME,
+  name: 'Administrador',
   password: bcryptService.hashSync(process.env.ADMIN_PASSWORD),
 };
