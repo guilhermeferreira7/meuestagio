@@ -68,8 +68,8 @@ model Education {
   school       String                @db.VarChar
   degree       EducationDegreeEnum   @default(EnsinoMedio)
   fieldOfStudy String                @db.VarChar
-  startDate    String                @db.VarChar
-  endDate      String                @db.VarChar
+  startDate    DateTime  
+  endDate      DateTime
   resumeId     Int
   resume       Resume                @relation(fields: [resumeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_0f65a811d17b239cbcd6afdcc58")
 
@@ -82,7 +82,7 @@ model Experience {
   position    String   @db.VarChar
   description String   @db.VarChar
   startDate   DateTime @db.Timestamp(6)
-  endDate     String   @db.VarChar
+  endDate     DateTime
   currentJob  Boolean
   resumeId    Int
   resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_9bfd4060e7f71a77c6b82b1745b")
@@ -160,7 +160,7 @@ model Region {
 
 model Resume {
   id              Int              @id(map: "PK_7ff05ea7599e13fac01ac812e48") @default(autoincrement())
-  studentId       Int?
+  studentId       Int              @unique
   educations      Education[]
   experiences     Experience[]
   jobApplications JobApplication[]
@@ -220,10 +220,10 @@ model User {
 }
 
 enum EducationDegreeEnum {
-  EnsinoMedio    @map("Ensino Médio")
-  EnsinoTecnico  @map("Ensino Técnico")
+  EnsinoMedio    @map("Ensino Medio")
+  EnsinoTecnico  @map("Ensino Tecnico")
   EnsinoSuperior @map("Ensino Superior")
-  PosGraduacao   @map("Pós-Graduação")
+  PosGraduacao   @map("Pos-Graduação")
 }
 
 enum JobApplicationStatusEnum {
@@ -238,14 +238,14 @@ enum JobStatusEnum {
 }
 
 enum LanguageLevelEnum {
-  Basico        @map("Básico")
-  Intermediario @map("Intermediário")
-  Avancado      @map("Avançado")
+  Basico        
+  Intermediario 
+  Avancado      
   Fluente
 }
 
 enum SkillLevelEnum {
-  Basico        @map("Básico")
-  Intermediario @map("Intermediário")
-  Avancado      @map("Avançado")
+  Basico        
+  Intermediario 
+  Avancado      
 }

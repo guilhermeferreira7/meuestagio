@@ -8,9 +8,9 @@ import { CoursesModule } from './modules/courses/courses.module';
 import { JobsModule } from './modules/jobs/jobs.module';
 import { AreasModule } from './modules/areas/areas.module';
 import { JobApplicationModule } from './modules/job-applications/job-applications.module';
-import { ResumesModule } from './modules/resumes/resumes.module';
 import { ImagesModule } from './modules/images/images.module';
 import { AppController } from './app.controller';
+import { ResumesModule } from './modules/resumes/resumes.module';
 
 @Module({
   imports: [

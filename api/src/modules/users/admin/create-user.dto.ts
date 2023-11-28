@@ -1,5 +1,5 @@
-import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsNotEmpty()

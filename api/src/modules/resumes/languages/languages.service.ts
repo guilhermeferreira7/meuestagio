@@ -1,50 +1,70 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Language } from './language.entity';
-import { CreateLanguageDto } from './create-language.dto';
+
+import { PrismaService } from '../../../../prisma/prisma.service';
+import { CreateLanguageDto } from './create.dto';
 
 @Injectable()
 export class LanguagesService {
-  constructor(
-    @InjectRepository(Language)
-    private readonly repository: Repository<Language>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async add(body: CreateLanguageDto): Promise<Language> {
-    const languageExists = await this.repository.findOne({
-      where: { resumeId: body.resumeId, name: body.name },
-    });
-    if (languageExists) {
-      throw new ConflictException('Idioma já cadastrado');
-    }
-    const language = this.repository.create(body);
-    await this.repository.save(language);
-    return language;
-  }
+  async add(body: CreateLanguageDto, email: string) {
+    const resume = await this.validateLanguage(body, email);
 
-  async getAll(resumeId: number): Promise<Language[]> {
-    return await this.repository.find({
-      where: { resumeId },
+    return await this.prisma.language.create({
+      data: {
+        ...body,
+        resumeId: resume.id,
+      },
     });
   }
 
-  async delete(id: number): Promise<void> {
-    await this.findById(id);
-
-    await this.repository.delete(id);
+  async getAll(email: string) {
+    const resume = await this.getResume(email);
+    return await this.prisma.language.findMany({
+      where: {
+        resumeId: resume.id,
+      },
+    });
   }
 
-  async findById(id: number): Promise<Language> {
-    if (!id) {
-      throw new BadRequestException();
-    }
-    return await this.repository.findOne({
-      where: { id },
+  async delete(id: number, email: string) {
+    const resume = await this.getResume(email);
+    const language = await this.prisma.language.findFirst({
+      where: {
+        id,
+        resumeId: resume.id,
+      },
     });
+    if (!language) throw new NotFoundException('Idioma não encontrada');
+
+    await this.prisma.language.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  private async getResume(email: string) {
+    const student = await this.prisma.student.findUnique({ where: { email } });
+    return await this.prisma.resume.findUnique({
+      where: { studentId: student.id },
+    });
+  }
+
+  private async validateLanguage(body: CreateLanguageDto, email: string) {
+    const resume = await this.getResume(email);
+    if (!resume) throw new NotFoundException('Currículo não encontrado');
+
+    const language = await this.prisma.language.findFirst({
+      where: { resumeId: resume.id, name: body.name },
+    });
+
+    if (language) throw new ConflictException('Idioma já cadastrado');
+
+    return resume;
   }
 }

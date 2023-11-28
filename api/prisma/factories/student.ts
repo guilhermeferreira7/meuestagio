@@ -10,9 +10,8 @@ export const createStudent = async () => {
   const city = await createCity();
   const institution = await createInstitution();
   const course = await createCourse();
-  const resume = await createResume();
 
-  return await prisma.student.create({
+  const student = await prisma.student.create({
     data: {
       name: 'Student Test',
       email: faker.internet.email(),
@@ -26,9 +25,24 @@ export const createStudent = async () => {
       institution: {
         connect: institution,
       },
-      resume: {
-        connect: resume,
-      },
     },
   });
+
+  const resume = await createResume(student.id);
+  return await prisma.student.update({
+    where: { id: student.id },
+    data: {
+      resumeId: resume.id,
+    },
+  });
+};
+
+export const createManyStudents = async (length: number) => {
+  const students = [];
+  for (let i = 0; i < length; i++) {
+    const student = await createStudent();
+    students.push(student);
+  }
+
+  return students;
 };

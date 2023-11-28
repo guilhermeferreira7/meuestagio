@@ -36,3 +36,15 @@ export function get(
     .query(query)
     .set('Authorization', `Bearer ${token}`);
 }
+
+export function del(
+  path: string,
+  app: INestApplication,
+  token?: string,
+  query?: any,
+): request.Test {
+  return request(app.getHttpServer())
+    .delete(path)
+    .query(query)
+    .set('Authorization', `Bearer ${token}`);
+}

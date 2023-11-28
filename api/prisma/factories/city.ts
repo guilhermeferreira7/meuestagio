@@ -7,7 +7,7 @@ export const createCity = async () => {
 
   return await prisma.city.create({
     data: {
-      IBGECityCode: Number(faker.string.numeric(5)),
+      IBGECityCode: Number(faker.string.numeric(7)),
       name: faker.internet.userName(),
       state: faker.location.state(),
       region: {
