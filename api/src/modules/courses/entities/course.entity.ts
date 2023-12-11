@@ -1,7 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Institution } from '../../institutions/entities/institution.entity';
-import { Area } from '../../areas/entities/area.entity';
 
 @Entity()
 export class Course {
@@ -19,7 +18,4 @@ export class Course {
 
   @Column()
   areaId: number;
-
-  @ManyToOne(() => Area)
-  area: Area;
 }
