@@ -1,6 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { City } from '../../cities/entities/city.entity';
 
 @Entity()
 export class Institution {
@@ -10,8 +9,6 @@ export class Institution {
   @Column({ unique: true })
   name: string;
 
-  @ManyToOne(() => City)
-  city: City;
 
   @Column()
   cityId: number;

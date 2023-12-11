@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 
-import { City } from '../../cities/entities/city.entity';
 import { CreateInstitutionDto } from '../dtos/create-institution.dto';
 import { Institution } from '../entities/institution.entity';
 
@@ -20,8 +19,6 @@ export class InstitutionsService {
   constructor(
     @InjectRepository(Institution)
     private readonly repository: Repository<Institution>,
-    @InjectRepository(City)
-    private readonly citiesRepository: Repository<City>,
   ) {}
 
   async createInstitution(
@@ -80,25 +77,25 @@ export class InstitutionsService {
   }
 
   private async validate(institution: CreateInstitutionDto): Promise<void> {
-    const institutionExists = await this.repository.findOne({
-      where: {
-        name: institution.name,
-        cityId: institution.cityId,
-      },
-    });
+    // const institutionExists = await this.repository.findOne({
+    //   where: {
+    //     name: institution.name,
+    //     cityId: institution.cityId,
+    //   },
+    // });
 
-    if (institutionExists) {
-      throw new BadRequestException('Instituição já existe neste município!');
-    }
+    // if (institutionExists) {
+    //   throw new BadRequestException('Instituição já existe neste município!');
+    // }
 
-    const cityExists = await this.citiesRepository.findOne({
-      where: {
-        id: institution.cityId,
-      },
-    });
+    // const cityExists = await this.citiesRepository.findOne({
+    //   where: {
+    //     id: institution.cityId,
+    //   },
+    // });
 
-    if (!cityExists) {
-      throw new BadRequestException('Município não encontrado!');
-    }
+    // if (!cityExists) {
+    //   throw new BadRequestException('Município não encontrado!');
+    // }
   }
 }
