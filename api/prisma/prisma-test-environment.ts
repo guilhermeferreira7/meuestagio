@@ -1,5 +1,6 @@
 import { exec } from 'node:child_process';
 import { Client } from 'pg';
+import { faker } from '@faker-js/faker';
 
 require('dotenv').config();
 const NodeEnvironment = require('jest-environment-node').TestEnvironment;
@@ -17,7 +18,7 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
     const dbHost = process.env.TEST_DATABASE_HOST;
     const dbPort = process.env.TEST_DATABASE_PORT;
     const dbName = process.env.TEST_DATABASE_NAME;
-    this.schema = `test_schema`;
+    this.schema = `test_schema_${faker.string.uuid()}`;
     this.connectionString = `postgresql://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}?schema=${this.schema}`;
   }
 

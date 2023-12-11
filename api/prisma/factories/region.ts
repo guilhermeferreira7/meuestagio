@@ -10,3 +10,11 @@ export const createRegion = async () => {
     },
   });
 };
+
+export async function createManyRegions(quantity: number) {
+  const regions = [];
+  for (let i = 0; i < quantity; i++) {
+    regions.push(createRegion());
+  }
+  return await Promise.all(regions);
+}

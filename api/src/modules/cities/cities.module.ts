@@ -1,15 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { City } from './entities/city.entity';
-import { Region } from './entities/region.entity';
-import { Institution } from '../institutions/entities/institution.entity';
-import { CitiesService } from './services/cities.service';
-import { CitiesController } from './controllers/cities.controller';
+import { CitiesService } from './cities.service';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { RegionsService } from './regions.service';
+import { CitiesController } from './cities.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([City, Institution, Region])],
-  providers: [CitiesService],
+  providers: [CitiesService, RegionsService, PrismaService],
   controllers: [CitiesController],
 })
 export class CitiesModule {}
