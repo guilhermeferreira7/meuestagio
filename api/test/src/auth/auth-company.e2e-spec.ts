@@ -5,7 +5,7 @@ import * as request from 'supertest';
 import { AppModule } from '../../../src/app.module';
 import { Role } from '../../../src/modules/auth/roles/roles';
 import { createCompany } from '../../../prisma/factories/company';
-import { clearDatabase } from '../../helpers/database-setup';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Company Auth', () => {
   let app: INestApplication;
@@ -25,7 +25,7 @@ describe('[E2E] Company Auth', () => {
   });
 
   afterEach(async () => {
-    await clearDatabase();
+    await prisma.company.deleteMany();
   });
 
   describe(`[POST] ${authRoute}`, () => {

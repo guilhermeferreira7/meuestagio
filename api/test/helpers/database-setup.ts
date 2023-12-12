@@ -15,5 +15,7 @@ export async function clearDatabase() {
     ]);
   } catch (error) {
     console.log(error);
+  } finally {
+    await prisma.$disconnect();
   }
 }

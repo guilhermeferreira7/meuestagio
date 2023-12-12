@@ -1,6 +1,7 @@
 import { exec } from 'node:child_process';
 import { Client } from 'pg';
 import { faker } from '@faker-js/faker';
+import { prisma } from './prisma';
 
 require('dotenv').config();
 const NodeEnvironment = require('jest-environment-node').TestEnvironment;
@@ -36,5 +37,7 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
     await client.connect();
     await client.query(`DROP SCHEMA IF EXISTS "${this.schema}" CASCADE`);
     await client.end();
+
+    await prisma.$disconnect();
   }
 }
