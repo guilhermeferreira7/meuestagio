@@ -129,15 +129,17 @@ describe('[E2E] Company', () => {
           password: faker.internet.password(),
         };
 
-        const req = await request(app.getHttpServer())
+        const { body } = await request(app.getHttpServer())
           .post(createCompanyPath)
           .send(companyDto)
           .expect(201);
 
-        expect(req.body).toHaveProperty('id');
+        expect(body).toHaveProperty('id');
+        expect(body.name).toBe(companyDto.name);
       });
     });
   });
+
   describe('[GET] /companies/profile', () => {
     describe('When token is invalid', () => {
       it('should return a 401 Unauthorized if token not provided', async () => {
@@ -165,12 +167,14 @@ describe('[E2E] Company', () => {
         const company = await createCompany();
         const companyToken = await companyLogin(app, company.email);
 
-        const req = await request(app.getHttpServer())
+        const { body } = await request(app.getHttpServer())
           .get(profilePath)
           .set('Authorization', `Bearer ${companyToken}`)
           .expect(200);
 
-        expect(req.body).toHaveProperty('email', company.email);
+        expect(body).toHaveProperty('email', company.email);
+        expect(body.name).toBe(company.name);
+        expect(body.city).toHaveProperty('name');
       });
     });
   });

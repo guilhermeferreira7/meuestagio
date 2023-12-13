@@ -106,7 +106,7 @@ model Job {
   status          JobStatusEnum    @default(open)
   title           String           @db.VarChar
   description     String           @db.VarChar
-  salary          Int?
+  salary          String?
   cityId          Int
   regionId        Int
   state           String           @db.VarChar

@@ -1,7 +1,8 @@
 import { prisma } from './prisma';
 import { areas } from './seeds/areas';
 import { admin } from './seeds/admin';
-import { CityIBGE, getCities, region } from './seeds/cities';
+import { getCities, region } from './seeds/cities';
+import { City } from '@prisma/client';
 
 async function main() {
   const cities = await getCities(41029);
@@ -33,14 +34,14 @@ async function main() {
       },
     }),
 
-    ...(await cities.map((city: CityIBGE) => {
+    ...cities.map((city: City) => {
       return prisma.city.upsert({
-        where: { IBGECityCode: city.id },
+        where: { IBGECityCode: city.IBGECityCode },
         update: {},
         create: {
-          IBGECityCode: city.id,
-          name: city.nome,
-          state: city.microrregiao.mesorregiao.UF.nome,
+          IBGECityCode: city.IBGECityCode,
+          name: city.name,
+          state: city.state,
           region: {
             connect: {
               IBGECode: 41029,
@@ -48,7 +49,7 @@ async function main() {
           },
         },
       });
-    })),
+    }),
   ]);
 
   console.log(`${seeds.length} dados inseridos.`);

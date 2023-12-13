@@ -24,4 +24,5 @@ export const createJobFormSchema = z.object({
   areaId: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
     message: "Selecione uma área",
   }),
+  cityId: z.string().optional(),
 });

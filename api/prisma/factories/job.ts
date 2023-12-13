@@ -17,7 +17,7 @@ export const createJob = async (companyId?: number) => {
       keywords: 'keyword1, keyword2',
       state: 'Paraná',
       remote: false,
-      salary: 1000,
+      salary: '1000',
       companyId: companyId || company.id,
       areaId: area.id,
       cityId: city.id,

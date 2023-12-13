@@ -166,6 +166,6 @@ export class JobsService {
         where: { id: createJobDto.cityId },
       }))
     )
-      throw new BadRequestException();
+      throw new BadRequestException('Cidade é obrigatória.');
   }
 }

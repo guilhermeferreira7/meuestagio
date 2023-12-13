@@ -49,6 +49,15 @@ export class CompaniesService {
     return await this.prisma.company.findUnique({ where: { email } });
   }
 
+  async findOneWithAllRelations(email: string) {
+    return await this.prisma.company.findUnique({
+      where: { email },
+      include: {
+        city: true,
+      },
+    });
+  }
+
   async updateImage(email: string, image: Express.Multer.File) {
     const { id } = await this.prisma.company.findUnique({ where: { email } });
 

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateJobDto {
   @ApiProperty()
@@ -10,12 +11,16 @@ export class CreateJobDto {
   description: string;
 
   @IsOptional()
-  salary: number;
+  salary: string;
 
   @IsNotEmpty()
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
   cityId: number;
 
   @IsNotEmpty()
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
   regionId: number;
 
   @IsNotEmpty()
@@ -25,11 +30,15 @@ export class CreateJobDto {
   remote: boolean;
 
   @IsNotEmpty()
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
   companyId: number;
 
   @IsNotEmpty()
   keywords: string;
 
   @IsNotEmpty()
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
   areaId: number;
 }

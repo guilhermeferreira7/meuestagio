@@ -5,7 +5,7 @@ export type Job = {
   id: number;
   title: string;
   description: string;
-  salary: number;
+  salary: string;
   remote: boolean;
   keywords: string;
   areaId: number;

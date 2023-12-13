@@ -57,7 +57,7 @@ describe('[E2E] Jobs', () => {
           keywords: 'keyword1, keyword2',
           state: 'Paraná',
           remote: false,
-          salary: 1000,
+          salary: '1000',
         };
 
         await post(postPath, app, companyToken, jobDto);

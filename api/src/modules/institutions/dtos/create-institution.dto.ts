@@ -1,4 +1,5 @@
-import { IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateInstitutionDto {
   @IsNotEmpty({
@@ -9,5 +10,7 @@ export class CreateInstitutionDto {
   @IsNotEmpty({
     message: 'A cidade é obrigatória',
   })
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
   cityId: number;
 }

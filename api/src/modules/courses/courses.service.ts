@@ -7,16 +7,6 @@ import {
 import { CreateCourseDto } from './dtos/create-course.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 
-type CourseQuery = {
-  page: number;
-  limit: number;
-  name: string;
-  institutionId: number;
-  areaId: number;
-  orderBy: string;
-  order: string;
-};
-
 @Injectable()
 export class CoursesService {
   constructor(private readonly prisma: PrismaService) {}
