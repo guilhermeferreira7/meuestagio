@@ -48,7 +48,7 @@ export default function InfoForm({
       name: company.name,
       email: company.email,
       phone: company.phone,
-      cityId: company.city.id + "",
+      cityId: company.cityId + "",
     },
   });
 

@@ -86,13 +86,15 @@ export default function JobDetailsPage({
 
           <div className="lg:w-1/3 text-xl">
             <h2 className="flex items-center gap-1">
-              <Image
-                className="rounded-lg"
-                src={job.company.imageUrl}
-                height={50}
-                width={50}
-                alt="Foto da empresa"
-              />
+              {job.company?.imageUrl && (
+                <Image
+                  className="rounded-lg"
+                  src={job.company.imageUrl}
+                  height={50}
+                  width={50}
+                  alt="Foto da empresa"
+                />
+              )}
               {job.company?.name}
             </h2>
             <h2 className="flex items-center gap-1">

@@ -41,7 +41,7 @@ export default function StudentJobs({ student }: StudentJobsProps) {
               : pageData.filters.region
               ? `Vagas em ${pageData.regionName} (região)`
               : "Vagas em todo o Brasil"}
-            {pageData.currentSearch && ` de ${pageData.currentSearch}`}
+            {pageData.currentSearch && ` de '${pageData.currentSearch}'`}
           </span>
         </h2>
         {pageData.jobs.length > 0 ? (
