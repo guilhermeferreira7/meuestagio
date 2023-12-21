@@ -7,7 +7,6 @@ import { AppModule } from '../../../../src/app.module';
 import { CreateCompanyDto } from '../../../../src/modules/users/companies/create-company.dto';
 import { UpdateCompanyDto } from '../../../../src/modules/users/companies/update-company.dto';
 import { companyLogin, studentLogin } from '../../../helpers/login';
-import { clearDatabase } from '../../../helpers/database-setup';
 import { createCity } from '../../../../prisma/factories/city';
 import { createCompany } from '../../../../prisma/factories/company';
 
@@ -28,10 +27,6 @@ describe('[E2E] Company', () => {
 
   afterAll(async () => {
     await app.close();
-  });
-
-  afterEach(async () => {
-    await clearDatabase();
   });
 
   describe(`[POST] ${createCompanyPath}`, () => {

@@ -1,16 +1,16 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { JobApplicationStatusEnum } from '@prisma/client';
 
 import { AppModule } from '../../../src/app.module';
-import { clearDatabase } from '../../helpers/database-setup';
 import { patch, post } from '../../helpers/request';
 import { adminLogin, companyLogin, studentLogin } from '../../helpers/login';
 import { createJobApplications } from '../../../prisma/factories/job-applications';
 import { createCompany } from '../../../prisma/factories/company';
 import { createJob } from '../../../prisma/factories/job';
-import { JobApplicationStatusEnum } from '@prisma/client';
 import { createStudent } from '../../../prisma/factories/student';
 import { CreateJobApplicationDto } from '../../../src/modules/job-applications/dtos/update';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Job Applications', () => {
   let app: INestApplication;
@@ -28,12 +28,12 @@ describe('[E2E] Job Applications', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterEach(async () => {
+    await prisma.jobApplication.deleteMany();
   });
 
-  afterEach(async () => {
-    await clearDatabase();
+  afterAll(async () => {
+    await app.close();
   });
 
   describe(`PATCH ${interviewPath}`, () => {

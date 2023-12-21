@@ -1,10 +1,10 @@
-import { prisma } from '../prisma';
 import { createCity } from './city';
 import { createInstitution } from './institution';
 import { createCourse } from './course';
 import bcryptService from '../../src/utils/bcriptUtils';
 import { faker } from '@faker-js/faker/locale/af_ZA';
 import { createResume } from './resume';
+import { prisma } from '../prisma';
 
 export const createStudent = async () => {
   const city = await createCity();
@@ -40,9 +40,8 @@ export const createStudent = async () => {
 export const createManyStudents = async (length: number) => {
   const students = [];
   for (let i = 0; i < length; i++) {
-    const student = await createStudent();
-    students.push(student);
+    students.push(createStudent());
   }
 
-  return students;
+  return await Promise.all(students);
 };

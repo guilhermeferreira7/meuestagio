@@ -26,10 +26,6 @@ describe('[E2E] Language', () => {
     await app.close();
   });
 
-  afterEach(async () => {
-    await clearDatabase();
-  });
-
   describe(`[GET] ${path}/:id`, () => {
     describe('When user is a student', () => {
       it('should return a 204 status code', async () => {

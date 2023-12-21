@@ -20,12 +20,12 @@ describe('[E2E] cities/regions get', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
   afterEach(async () => {
     await prisma.region.deleteMany();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('[GET] /cities/regions', () => {

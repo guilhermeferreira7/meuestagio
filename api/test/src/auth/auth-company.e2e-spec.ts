@@ -9,7 +9,7 @@ import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Company Auth', () => {
   let app: INestApplication;
-  let authRoute = '/auth/login/company';
+  const authRoute = '/auth/login/company';
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -20,12 +20,12 @@ describe('[E2E] Company Auth', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
   afterEach(async () => {
     await prisma.company.deleteMany();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe(`[POST] ${authRoute}`, () => {

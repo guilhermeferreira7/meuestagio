@@ -23,12 +23,12 @@ describe('[E2E] [GET] /courses', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
   afterEach(async () => {
     await prisma.course.deleteMany();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('[GET] /courses', () => {

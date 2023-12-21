@@ -20,12 +20,12 @@ describe('[E2E] Admin Auth', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
   afterEach(async () => {
     await prisma.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe(`[POST] ${authRoute}`, () => {

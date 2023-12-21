@@ -2,6 +2,7 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "./prisma/prisma-test-environment.ts",
+  "setupFilesAfterEnv": ["<rootDir>/prisma/prisma-test-setup.ts"],
   "testMatch": ["<rootDir>/test/**/*.e2e-spec.{ts,js}"],
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"

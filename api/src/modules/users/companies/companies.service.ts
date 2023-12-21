@@ -41,11 +41,11 @@ export class CompaniesService {
     return await this.findOne(companyUpdated.email);
   }
 
-  async findByCnpj(cnpj: string = '') {
+  async findByCnpj(cnpj = '') {
     return await this.prisma.company.findUnique({ where: { cnpj } });
   }
 
-  async findOne(email: string = '') {
+  async findOne(email = '') {
     return await this.prisma.company.findUnique({ where: { email } });
   }
 

@@ -27,12 +27,12 @@ describe('[E2E] [DELETE] /courses', () => {
     token = await adminLogin(app);
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
   afterEach(async () => {
     await prisma.course.deleteMany();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('When user is admin', () => {

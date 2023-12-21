@@ -4,10 +4,10 @@ import {
   Post,
   Body,
   UseGuards,
-  Request,
   Param,
   ParseIntPipe,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
@@ -45,10 +45,15 @@ export class JobsController {
   }
 
   @Get()
-  async findAll(@Request() request) {
-    return await this.jobsService.findAll({
-      ...request.query,
-    });
+  async findAll(@Query() query) {
+    return await this.jobsService.findAll(
+      query.page ? Number(query.page) : undefined,
+      query.limit ? Number(query.limit) : undefined,
+      query.search ? query.search : undefined,
+      query.city ? Number(query.city) : undefined,
+      query.region ? Number(query.region) : undefined,
+      query.state ? query.state : undefined,
+    );
   }
 
   @Get(':id')

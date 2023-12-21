@@ -8,8 +8,12 @@ import { PrismaService } from '../../../../prisma/prisma.service';
 import { StudentWithAllRelations } from '../../../types/prisma/student';
 import bcryptService from '../../../utils/bcriptUtils';
 
-const resume = {} as Prisma.ResumeGetPayload<{}>;
-const student = {} as StudentWithAllRelations;
+const resume = { studentId: 1 } as Prisma.ResumeGetPayload<{
+  include: {
+    student: { select: { name: true } };
+  };
+}>;
+const student = { name: 'student name' } as StudentWithAllRelations;
 
 describe('Students Service', () => {
   let service: StudentsService;
@@ -41,9 +45,7 @@ describe('Students Service', () => {
 
   describe('createStudent', () => {
     it('should not create a student with an existing email', async () => {
-      jest
-        .spyOn(service, 'findOne')
-        .mockResolvedValueOnce({} as StudentWithAllRelations);
+      jest.spyOn(service, 'findOne').mockResolvedValueOnce(student);
       await expect(service.createStudent(student)).rejects.toThrow(
         ConflictException,
       );
@@ -59,9 +61,7 @@ describe('Students Service', () => {
   describe('updateStudent', () => {
     it('should not update the email if it is taken', async () => {
       const email = 'new@email.com';
-      jest.spyOn(service, 'findOne').mockResolvedValueOnce({
-        email,
-      } as StudentWithAllRelations);
+      jest.spyOn(service, 'findOne').mockResolvedValueOnce(student);
 
       await expect(
         service.updateStudent(student.email, { email }),

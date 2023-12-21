@@ -11,7 +11,15 @@ import bcryptService from '../../../utils/bcriptUtils';
 const companyDto = {
   password: '123456',
 } as CreateCompanyDto;
-const company = {} as Prisma.CompanyGetPayload<{}>;
+
+const company = {
+  id: 1,
+  email: 'company@email.com',
+} as Prisma.CompanyGetPayload<{
+  include: {
+    city: { select: { name: true } };
+  };
+}>;
 
 describe('Companies Service', () => {
   let service: CompaniesService;
@@ -40,9 +48,7 @@ describe('Companies Service', () => {
 
   describe('create()', () => {
     it('should throw error if email is already in use', async () => {
-      jest
-        .spyOn(service, 'findOne')
-        .mockResolvedValueOnce({} as Prisma.CompanyGetPayload<{}>);
+      jest.spyOn(service, 'findOne').mockResolvedValueOnce(company);
 
       await expect(service.createCompany(companyDto)).rejects.toThrow(
         new ConflictException('Email já cadastrado!'),
@@ -50,9 +56,7 @@ describe('Companies Service', () => {
     });
 
     it('should throw error if cnpj already used', async () => {
-      jest
-        .spyOn(service, 'findByCnpj')
-        .mockResolvedValueOnce({} as Prisma.CompanyGetPayload<{}>);
+      jest.spyOn(service, 'findByCnpj').mockResolvedValueOnce(company);
 
       await expect(service.createCompany(companyDto)).rejects.toThrow(
         new ConflictException('CNPJ já cadastrado!'),

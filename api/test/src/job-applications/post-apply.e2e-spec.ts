@@ -4,11 +4,11 @@ import { Job, Student } from '@prisma/client';
 
 import { AppModule } from '../../../src/app.module';
 import { CreateJobApplicationDto } from '../../../src/modules/job-applications/dtos/update';
-import { clearDatabase } from '../../helpers/database-setup';
 import { companyLogin, studentLogin } from '../../helpers/login';
 import { post } from '../../helpers/request';
 import { createJob } from '../../../prisma/factories/job';
 import { createStudent } from '../../../prisma/factories/student';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Job Applications', () => {
   let app: INestApplication;
@@ -24,12 +24,12 @@ describe('[E2E] Job Applications', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterEach(async () => {
+    await prisma.jobApplication.deleteMany();
   });
 
-  afterEach(async () => {
-    await clearDatabase();
+  afterAll(async () => {
+    await app.close();
   });
 
   describe(`[POST] ${path}`, () => {

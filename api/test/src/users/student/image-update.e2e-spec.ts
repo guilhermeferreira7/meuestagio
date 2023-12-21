@@ -4,11 +4,10 @@ import * as request from 'supertest';
 
 import { studentLogin } from '../../../helpers/login';
 import { AppModule } from '../../../../src/app.module';
-import { clearDatabase } from '../../../helpers/database-setup';
 
 describe('[E2E] Student Image Update', () => {
   let app: INestApplication;
-  let imageUpdatePath = '/students/profile/image';
+  const imageUpdatePath = '/students/profile/image';
   let token = '';
 
   beforeAll(async () => {
@@ -23,10 +22,6 @@ describe('[E2E] Student Image Update', () => {
 
   afterAll(async () => {
     await app.close();
-  });
-
-  afterEach(async () => {
-    await clearDatabase();
   });
 
   describe(`[POST] ${imageUpdatePath}`, () => {

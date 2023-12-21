@@ -1,16 +1,16 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
-import { clearDatabase } from '../../helpers/database-setup';
 import { companyLogin, studentLogin } from '../../helpers/login';
-import { get } from '../../helpers/request';
 import { createJob } from '../../../prisma/factories/job';
 import { createJobApplications } from '../../../prisma/factories/job-applications';
-import { createCompany } from '../../../prisma/factories/company';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Job Applications', () => {
   let app: INestApplication;
+  let get: any;
   const getByJobIdPath = '/job-applications/job';
 
   beforeAll(async () => {
@@ -21,35 +21,36 @@ describe('[E2E] Job Applications', () => {
     app = module.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     await app.init();
+
+    get = request(app.getHttpServer()).get;
+  });
+
+  afterEach(async () => {
+    await prisma.jobApplication.deleteMany();
   });
 
   afterAll(async () => {
     await app.close();
   });
 
-  afterEach(async () => {
-    await clearDatabase();
-  });
-
   describe(`[GET] ${getByJobIdPath}`, () => {
-    beforeEach(async () => {});
-
     describe('When user is a company', () => {
       it('should return 200', async () => {
         const companyToken = await companyLogin(app);
-        await get(getByJobIdPath, app, companyToken, {
-          jobId: 1,
-        }).expect(200);
+        await get(getByJobIdPath)
+          .set('Authorization', `Bearer ${companyToken}`)
+          .query({ jobId: 1 })
+          .expect(200);
       });
 
       it('should return job applications if jobId is valid', async () => {
         const job = await createJob();
         const jobApplications = await createJobApplications(2, job.id);
-        const companyToken = await companyLogin(app);
+        const token = await companyLogin(app);
 
-        const response = await get(getByJobIdPath, app, companyToken, {
-          jobId: job.id,
-        });
+        const response = await get(getByJobIdPath)
+          .set('Authorization', `Bearer ${token}`)
+          .query({ jobId: job.id });
 
         expect(response.body.length).toBe(2);
         expect(response.body[0].jobId).toBe(job.id);
@@ -63,37 +64,34 @@ describe('[E2E] Job Applications', () => {
       });
 
       it('should not return job applications from another job', async () => {
-        const company = await createCompany();
-        const companyToken = await companyLogin(app, company.email);
-        const job = await createJob(company.id);
+        const job = await createJob();
         const anotherJob = await createJob();
-
         await createJobApplications(2, job.id);
         await createJobApplications(2, anotherJob.id);
+        const companyToken = await companyLogin(app);
 
-        const response = await get(getByJobIdPath, app, companyToken, {
-          jobId: job.id,
-        });
+        const { body } = await get(getByJobIdPath)
+          .set('Authorization', `Bearer ${companyToken}`)
+          .query({ jobId: job.id });
 
-        expect(response.body.length).toBe(2);
-        expect(response.body).not.toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              jobId: anotherJob.id,
-            }),
-          ]),
-        );
+        expect(body.length).toBe(2);
+        expect(body[0].jobId).toBe(job.id);
+        expect(body[1].jobId).toBe(job.id);
       });
     });
 
     describe('When user is not a company', () => {
       it('should return 401 if token is invalid', async () => {
-        await get(getByJobIdPath, app, 'invalid-token').expect(401);
+        await get(getByJobIdPath)
+          .set('Authorization', `Bearer invalid_token`)
+          .expect(401);
       });
       it('should return 403', async () => {
         const studentToken = await studentLogin(app);
 
-        await get(getByJobIdPath, app, studentToken).expect(403);
+        await get(getByJobIdPath)
+          .set('Authorization', `Bearer ${studentToken}`)
+          .expect(403);
       });
     });
   });

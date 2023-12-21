@@ -3,7 +3,6 @@ import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../../src/app.module';
 import { CreateEducationDto } from '../../../../src/modules/resumes/educations/create.dto';
-import { clearDatabase } from '../../../helpers/database-setup';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { del, get } from '../../../helpers/request';
 import { createStudent } from '../../../../prisma/factories/student';
@@ -25,10 +24,6 @@ describe('[E2E] Education', () => {
 
   afterAll(async () => {
     await app.close();
-  });
-
-  afterEach(async () => {
-    await clearDatabase();
   });
 
   describe(`[GET] ${path}/:id`, () => {

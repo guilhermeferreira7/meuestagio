@@ -3,9 +3,10 @@ import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../src/app.module';
 import { CreateRegionDto } from '../../../src/modules/cities/dtos/create-region.dto';
-import { clearDatabase } from '../../helpers/database-setup';
 import { post } from '../../helpers/request';
 import { adminLogin, studentLogin } from '../../helpers/login';
+import { faker } from '@faker-js/faker';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] cities/regions post', () => {
   let app: INestApplication;
@@ -23,10 +24,6 @@ describe('[E2E] cities/regions post', () => {
 
   afterAll(async () => {
     await app.close();
-  });
-
-  afterEach(async () => {
-    await clearDatabase();
   });
 
   describe('[POST] /cities/regions', () => {
@@ -50,8 +47,8 @@ describe('[E2E] cities/regions post', () => {
         it('should not create a region with same name', async () => {
           const token = await adminLogin(app);
           const dto: CreateRegionDto = {
-            name: 'Test Region',
-            IBGECode: 123,
+            name: `Test Region ${faker.string.numeric(7)}`,
+            IBGECode: Number(faker.string.numeric(7)),
             state: 'Paraná',
           };
 
@@ -66,6 +63,7 @@ describe('[E2E] cities/regions post', () => {
           await post(path, app, token, {}).expect({
             statusCode: 400,
             message: [
+              'IBGECode must be a number conforming to the specified constraints',
               'IBGECode should not be empty',
               'name should not be empty',
               'state should not be empty',

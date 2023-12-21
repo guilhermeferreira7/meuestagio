@@ -4,8 +4,8 @@ import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
 import { adminLogin, studentLogin } from '../../helpers/login';
-import { prisma } from '../../../prisma/prisma';
 import { createInstitution } from '../../../prisma/factories/institution';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Institution', () => {
   let app: INestApplication;
@@ -21,12 +21,12 @@ describe('[E2E] Institution', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
   afterEach(async () => {
     await prisma.institution.deleteMany();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('[DELETE] /institutions', () => {

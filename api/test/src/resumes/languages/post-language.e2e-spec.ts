@@ -2,7 +2,6 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../../src/app.module';
-import { clearDatabase } from '../../../helpers/database-setup';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { post } from '../../../helpers/request';
 import { CreateLanguageDto } from '../../../../src/modules/resumes/languages/create.dto';
@@ -25,10 +24,6 @@ describe('[E2E] Language', () => {
 
   afterAll(async () => {
     await app.close();
-  });
-
-  afterEach(async () => {
-    await clearDatabase();
   });
 
   describe(`[POST] ${path}`, () => {

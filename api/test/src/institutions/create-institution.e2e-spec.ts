@@ -5,8 +5,8 @@ import * as request from 'supertest';
 import { AppModule } from '../../../src/app.module';
 import { CreateInstitutionDto } from '../../../src/modules/institutions/dtos/create-institution.dto';
 import { adminLogin, studentLogin } from '../../helpers/login';
-import { prisma } from '../../../prisma/prisma';
 import { createCity } from '../../../prisma/factories/city';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Institution', () => {
   let app: INestApplication;
@@ -22,12 +22,12 @@ describe('[E2E] Institution', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
   afterEach(async () => {
     await prisma.institution.deleteMany();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('[POST] /institutions', () => {
@@ -100,6 +100,7 @@ describe('[E2E] Institution', () => {
               statusCode: 400,
               message: [
                 'O nome da instituição é obrigatório',
+                'cityId must be a number conforming to the specified constraints',
                 'A cidade é obrigatória',
               ],
               error: 'Bad Request',

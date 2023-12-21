@@ -2,7 +2,6 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../../src/app.module';
-import { clearDatabase } from '../../../helpers/database-setup';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { createStudent } from '../../../../prisma/factories/student';
 import { get } from '../../../helpers/request';
@@ -24,10 +23,6 @@ describe('[E2E] Skill', () => {
 
   afterAll(async () => {
     await app.close();
-  });
-
-  afterEach(async () => {
-    await clearDatabase();
   });
 
   describe(`[GET] ${path}`, () => {

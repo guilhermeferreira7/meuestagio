@@ -43,8 +43,10 @@ export class StudentsController {
     const student = await this.studentService.findOne(req.user.email);
     if (!student) throw new UnauthorizedException();
 
-    const { password, ...result } = student;
-    return result;
+    return {
+      ...student,
+      password: undefined,
+    };
   }
 
   @HasRoles(Role.STUDENT)
@@ -67,7 +69,11 @@ export class StudentsController {
     });
 
     const studentUpdated = await this.studentService.findOne(student.email);
-    const { password, ...userWithoutPassword } = studentUpdated;
+
+    const userWithoutPassword = {
+      ...studentUpdated,
+      password: undefined,
+    };
 
     return {
       access_token,

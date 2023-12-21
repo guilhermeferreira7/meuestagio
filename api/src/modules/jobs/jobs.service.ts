@@ -4,15 +4,6 @@ import { JobApplicationStatusEnum, JobStatusEnum } from '@prisma/client';
 import { CreateJobDto } from './dtos/create-job.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
 
-type JobsQuery = {
-  page?: number;
-  limit?: number;
-  state?: string;
-  region?: number;
-  city?: number;
-  search?: string;
-};
-
 @Injectable()
 export class JobsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -45,94 +36,49 @@ export class JobsService {
     });
   }
 
-  async findAll({ page, limit, state, region, city, search }: JobsQuery) {
+  async findAll(
+    page = 0,
+    limit = 10,
+    search: string,
+    city: number,
+    region: number,
+    state: string,
+  ) {
     if (search) {
-      const jobs = this.prisma.job.findMany({
-        where: {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-          OR: [
-            {
-              description: {
-                contains: search,
-                mode: 'insensitive',
-              },
-              keywords: {
-                contains: search,
-                mode: 'insensitive',
-              },
-            },
-            {
-              company: {
-                name: {
-                  contains: search,
-                  mode: 'insensitive',
-                },
-              },
-            },
-            {
-              area: {
-                title: {
-                  contains: search,
-                  mode: 'insensitive',
-                },
-              },
-            },
-          ],
-        },
-        orderBy: {
-          id: 'desc',
-        },
-        skip: page ? page : 0,
-        take: limit ? limit : undefined,
-        include: {
-          company: {
-            select: {
-              name: true,
-              imageUrl: true,
-            },
-          },
-          city: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      });
-
-      if (city) return (await jobs).filter((job) => job.cityId === city);
-      else if (region)
-        return (await jobs).filter((job) => job.regionId === region);
-      else if (state) return (await jobs).filter((job) => job.state === state);
-
-      return jobs;
+      return await this.searchJobs(search, page, limit, city, region, state);
     }
 
-    return await this.prisma.job.findMany();
+    return this.prisma.job.findMany({
+      orderBy: {
+        id: 'desc',
+      },
+      where: {
+        cityId: city,
+        regionId: region,
+        state: state,
+      },
+      skip: page,
+      take: limit,
+      include: {
+        company: { select: { name: true, imageUrl: true } },
+        city: { select: { name: true } },
+        region: { select: { name: true } },
+        area: { select: { title: true } },
+      },
+    });
   }
 
   async findAllByCompany(companyId: number) {
     return await this.prisma.job.findMany({
-      where: {
-        companyId,
-      },
-      orderBy: {
-        id: 'desc',
-      },
+      where: { companyId },
+      orderBy: { id: 'desc' },
       include: {
         company: {
-          select: {
-            name: true,
-            imageUrl: true,
-          },
+          select: { name: true, imageUrl: true },
         },
-        city: {
-          select: {
-            name: true,
-          },
-        },
+        city: { select: { name: true } },
+        area: { select: { title: true } },
+        region: { select: { name: true } },
       },
     });
   }
@@ -144,17 +90,15 @@ export class JobsService {
       },
       include: {
         company: {
-          select: {
-            name: true,
-            imageUrl: true,
-          },
-        },
-        area: {
-          select: { title: true },
+          select: { name: true, imageUrl: true },
         },
         city: {
           select: { name: true },
         },
+        area: {
+          select: { title: true },
+        },
+        region: { select: { name: true } },
       },
     });
     return job;
@@ -167,5 +111,43 @@ export class JobsService {
       }))
     )
       throw new BadRequestException('Cidade é obrigatória.');
+  }
+
+  private async searchJobs(
+    search: string,
+    page: number,
+    limit: number,
+    city: number,
+    region: number,
+    state: string,
+  ) {
+    const jobs = this.prisma.job.findMany({
+      orderBy: {
+        id: 'desc',
+      },
+      skip: page,
+      take: limit,
+      where: {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+          { keywords: { contains: search, mode: 'insensitive' } },
+          { company: { name: { contains: search, mode: 'insensitive' } } },
+          { area: { title: { contains: search, mode: 'insensitive' } } },
+        ],
+
+        cityId: city,
+        regionId: region,
+        state: state,
+      },
+      include: {
+        company: { select: { name: true, imageUrl: true } },
+        city: { select: { name: true } },
+        area: { select: { title: true } },
+        region: { select: { name: true } },
+      },
+    });
+
+    return jobs;
   }
 }

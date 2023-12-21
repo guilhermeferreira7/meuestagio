@@ -3,10 +3,10 @@ import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../src/app.module';
 import { CreateCityDto } from '../../../src/modules/cities/dtos/create-city.dto';
-import { clearDatabase } from '../../helpers/database-setup';
 import { adminLogin, studentLogin } from '../../helpers/login';
 import { post } from '../../helpers/request';
 import { createRegion } from '../../../prisma/factories/region';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Cities', () => {
   let app: INestApplication;
@@ -22,12 +22,13 @@ describe('[E2E] Cities', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterEach(async () => {
+    await prisma.region.deleteMany();
+    await prisma.city.deleteMany();
   });
 
-  afterEach(async () => {
-    await clearDatabase();
+  afterAll(async () => {
+    await app.close();
   });
 
   describe('[POST] /cities', () => {
@@ -81,7 +82,9 @@ describe('[E2E] Cities', () => {
             message: [
               'name should not be empty',
               'state should not be empty',
+              'regionId must be a number conforming to the specified constraints',
               'regionId should not be empty',
+              'IBGECityCode must be a number conforming to the specified constraints',
               'IBGECityCode should not be empty',
             ],
             error: 'Bad Request',

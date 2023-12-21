@@ -8,6 +8,7 @@ import { adminLogin, studentLogin } from '../../helpers/login';
 import { createCourse } from '../../../prisma/factories/course';
 import { createArea } from '../../../prisma/factories/area';
 import { createInstitution } from '../../../prisma/factories/institution';
+import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] [POST] /courses', () => {
   let app: INestApplication;
@@ -80,7 +81,9 @@ describe('[E2E] [POST] /courses', () => {
             statusCode: 400,
             message: [
               'name should not be empty',
+              'institutionId must be a number conforming to the specified constraints',
               'institutionId should not be empty',
+              'areaId must be a number conforming to the specified constraints',
               'areaId should not be empty',
             ],
             error: 'Bad Request',

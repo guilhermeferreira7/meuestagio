@@ -2,12 +2,12 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../../src/app.module';
-import { clearDatabase } from '../../../helpers/database-setup';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { post } from '../../../helpers/request';
 import { createStudent } from '../../../../prisma/factories/student';
 import { CreateSkillDto } from '../../../../src/modules/resumes/skills/create.dto';
 import { createSkill } from '../../../../prisma/factories/skill';
+import { prisma } from '../../../../prisma/prisma';
 
 describe('[E2E] Skill', () => {
   let app: INestApplication;
@@ -23,12 +23,12 @@ describe('[E2E] Skill', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterEach(async () => {
+    await prisma.skill.deleteMany();
   });
 
-  afterEach(async () => {
-    await clearDatabase();
+  afterAll(async () => {
+    await app.close();
   });
 
   describe(`[POST] ${path}`, () => {

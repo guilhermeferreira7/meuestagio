@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client';
 import { createInstitution } from './institution';
 import { prisma } from '../prisma';
 import { faker } from '@faker-js/faker';
