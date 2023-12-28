@@ -79,7 +79,18 @@ describe('[E2E] Job Applications', () => {
         expect(response.body[0].jobId).toBe(jobApplications[0].jobId);
 
         expect(response.body[0].student.name).toEqual(expect.any(String));
+        expect(response.body[0].student.course.name).toEqual(
+          expect.any(String),
+        );
+        expect(response.body[0].student.institution.name).toEqual(
+          expect.any(String),
+        );
+        expect(response.body[0].student.city.name).toEqual(expect.any(String));
+
         expect(response.body[0].resume.skills).toEqual(expect.any(Array));
+        expect(response.body[0].resume.educations).toEqual(expect.any(Array));
+        expect(response.body[0].resume.experiences).toEqual(expect.any(Array));
+        expect(response.body[0].resume.languages).toEqual(expect.any(Array));
       });
 
       it('should not return job applications from another job', async () => {

@@ -46,7 +46,9 @@ export class JobApplicationsService {
     return await this.prisma.jobApplication.findMany({
       where: { jobId },
       include: {
-        student: { select: { name: true } },
+        student: {
+          select: { name: true, course: true, institution: true, city: true },
+        },
         resume: {
           include: {
             skills: true,

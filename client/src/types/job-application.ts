@@ -20,7 +20,7 @@ export type JobApplication = {
 };
 
 export enum JobApplicationStatus {
-  IN_PROGRESS = "Em andamento",
+  IN_PROGRESS = "EmAndamento",
   INTERVIEW = "Entrevista",
   FINISHED = "Finalizado",
 }
