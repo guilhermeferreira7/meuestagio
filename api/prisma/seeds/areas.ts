@@ -108,4 +108,4 @@ export const areas = [
   { cnpqId: 50400002, title: 'Zootecnia' },
 ];
 
-console.log(`Criando ${areas.length} áreas de conhecimento...`);
+console.log(`Adicionando ${areas.length} áreas de conhecimento`);

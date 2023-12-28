@@ -1,5 +1,5 @@
 const getRegion = () => {
-  console.log('Criando região...');
+  console.log('Adicionando região');
   return {
     IBGECode: 41029,
     name: 'Guarapuava',
@@ -102,7 +102,7 @@ export const getCities = async (regionIBGECode: number) => {
       state: 'Paraná',
     },
   ];
-  console.log(`Criando ${cities.length} cidades...`);
+  console.log(`Adicionando ${cities.length} cidades`);
 
   return cities;
 };

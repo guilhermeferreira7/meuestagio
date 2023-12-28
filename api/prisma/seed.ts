@@ -3,9 +3,12 @@ import { areas } from './seeds/areas';
 import { admin } from './seeds/admin';
 import { getCities, region } from './seeds/cities';
 import { City } from '@prisma/client';
+import { createInstitutionBase } from './seeds/institutions';
+import { coursesBase } from './seeds/courses';
 
 async function main() {
   const cities = await getCities(41029);
+  const institution = await createInstitutionBase();
 
   const seeds = await prisma.$transaction([
     ...areas.map((area) =>
@@ -47,6 +50,27 @@ async function main() {
               IBGECode: 41029,
             },
           },
+        },
+      });
+    }),
+
+    prisma.institution.upsert({
+      where: { name: institution.name },
+      update: {},
+      create: {
+        name: institution.name,
+        cityId: institution.cityId,
+      },
+    }),
+
+    ...(
+      await coursesBase()
+    ).map((course) => {
+      return prisma.course.createMany({
+        data: {
+          name: course.name,
+          institutionId: course.institutionId,
+          areaId: course.areaId,
         },
       });
     }),

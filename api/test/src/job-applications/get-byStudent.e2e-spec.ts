@@ -1,6 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { Job, Student } from '@prisma/client';
+import { Job, Prisma, Student } from '@prisma/client';
 
 import { AppModule } from '../../../src/app.module';
 import { CreateJobApplicationDto } from '../../../src/modules/job-applications/dtos/update';
@@ -76,6 +76,21 @@ describe('[E2E] Job Applications', () => {
           ]),
         );
       });
+
+      it('should display correct data', async () => {
+        const { body } = await get(
+          getByStudentIdPath,
+          app,
+          studentToken,
+        ).expect(200);
+
+        expect(body[0].studentId).toBe(student.id);
+        expect(body[0].resumeId).toBe(student.resumeId);
+        expect(body[0].jobId).toBe(job.id);
+        expect(body[0].job.title).toBe(job.title);
+        expect(body[0].job.company.name).toEqual(expect.any(String));
+      });
+
       it('should not return job applications from other students', async () => {
         const otherStudent = await createStudent();
         const otherStudentToken = await studentLogin(app, otherStudent.email);

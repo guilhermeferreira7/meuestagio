@@ -20,6 +20,11 @@ export class JobApplicationsService {
   async findByStudentId(studentId: number) {
     return await this.prisma.jobApplication.findMany({
       where: { studentId },
+      include: {
+        job: {
+          include: { company: { select: { name: true } } },
+        },
+      },
     });
   }
 
@@ -40,6 +45,17 @@ export class JobApplicationsService {
   async findByJobId(jobId: number) {
     return await this.prisma.jobApplication.findMany({
       where: { jobId },
+      include: {
+        student: { select: { name: true } },
+        resume: {
+          include: {
+            skills: true,
+            educations: true,
+            experiences: true,
+            languages: true,
+          },
+        },
+      },
     });
   }
 

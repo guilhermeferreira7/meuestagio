@@ -63,6 +63,25 @@ describe('[E2E] Job Applications', () => {
         expect(response.body[0].jobId).toBe(jobApplications[0].jobId);
       });
 
+      it('should display correct data', async () => {
+        const job = await createJob();
+        const jobApplications = await createJobApplications(2, job.id);
+        const token = await companyLogin(app);
+
+        const response = await get(getByJobIdPath)
+          .set('Authorization', `Bearer ${token}`)
+          .query({ jobId: job.id });
+
+        expect(response.body[0].id).toBe(jobApplications[0].id);
+        expect(response.body[0].studentId).toBe(jobApplications[0].studentId);
+        expect(response.body[0].resumeId).toBe(jobApplications[0].resumeId);
+        expect(response.body[0].message).toBe(jobApplications[0].message);
+        expect(response.body[0].jobId).toBe(jobApplications[0].jobId);
+
+        expect(response.body[0].student.name).toEqual(expect.any(String));
+        expect(response.body[0].resume.skills).toEqual(expect.any(Array));
+      });
+
       it('should not return job applications from another job', async () => {
         const job = await createJob();
         const anotherJob = await createJob();

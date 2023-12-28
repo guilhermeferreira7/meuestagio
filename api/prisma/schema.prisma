@@ -220,14 +220,14 @@ model User {
 }
 
 enum EducationDegreeEnum {
-  EnsinoMedio    @map("Ensino Medio")
-  EnsinoTecnico  @map("Ensino Tecnico")
-  EnsinoSuperior @map("Ensino Superior")
-  PosGraduacao   @map("Pos-Graduação")
+  EnsinoMedio   
+  EnsinoTecnico 
+  EnsinoSuperior
+  PosGraduacao   
 }
 
 enum JobApplicationStatusEnum {
-  EmAndamento @map("Em andamento")
+  EmAndamento
   Entrevista
   Finalizado
 }
