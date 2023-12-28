@@ -131,7 +131,7 @@ export default function ExperiencePage({
 
             <Form.Field>
               <Form.Label htmlFor="startDate">Data de início</Form.Label>
-              <Form.InputText name="startDate" />
+              <Form.InputText name="startDate" type="date" />
               <Form.ErrorMessage field="startDate" />
             </Form.Field>
             <Form.Field>
@@ -143,6 +143,7 @@ export default function ExperiencePage({
               <Form.InputText
                 disabled={createExperienceForm.watch("currentJob")}
                 name="endDate"
+                type="date"
               />
               <Form.ErrorMessage field="endDate" />
             </Form.Field>

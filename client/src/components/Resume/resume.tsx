@@ -135,7 +135,7 @@ export default function ResumeView({ student, resume }: ResumeProps) {
                   De {new Date(exp.startDate).getMonth()}/
                   {new Date(exp.startDate).getFullYear()} até{" "}
                   {exp.currentJob ? (
-                    <span>Atualmente</span>
+                    <span>o momento</span>
                   ) : (
                     <span>
                       {new Date(exp.endDate).getMonth()}/

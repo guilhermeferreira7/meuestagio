@@ -27,7 +27,13 @@ export class ExperiencesController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
   async add(@Body() body: CreateExperienceDto, @Req() req: ReqAuth) {
-    return await this.service.add(body, req.user.email);
+    return await this.service.add(
+      {
+        ...body,
+        endDate: body.endDate || undefined,
+      },
+      req.user.email,
+    );
   }
 
   @HasRoles(Role.STUDENT)
