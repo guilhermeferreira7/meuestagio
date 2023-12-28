@@ -1,23 +1,55 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Contact, Pencil } from "lucide-react";
-import { editContactSchema } from "../../../utils/validators/edit-profile-schema";
-import { Form } from "../../../components";
+import { ContactPageOutlined, EditOutlined } from "@mui/icons-material";
 
-type ContactData = z.infer<typeof editContactSchema>;
+import { Form } from "../../../components";
+import { notify } from "../../../components/toasts/toast";
+import { PROFILE_STUDENT_PATH } from "../../../constants/api-routes";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { api } from "../../../services/api/api";
+import { LoginResponse } from "../../../types/auth/login";
+import { errorToString } from "../../../utils/helpers/error-to-string";
+import { phoneMask } from "../../../utils/masks/phoneMask";
+import {
+  ContactData,
+  editContactSchema,
+} from "../../../utils/validators/edit-profile-schema";
 
 export default function ContactInfoForm({ initialData }: any) {
   const [formDisabled, setFormDisabled] = useState(true);
   const editContactForm = useForm<ContactData>({
+    mode: "onTouched",
     resolver: zodResolver(editContactSchema),
+    defaultValues: {
+      email: initialData.email,
+      phone: initialData.phone,
+    },
   });
 
   const { handleSubmit } = editContactForm;
 
+  const { updateUserData } = useContext(AuthContext);
+
   const editProfile = async (data: ContactData) => {
-    console.log(data);
+    if (!Object.values(data).some((v) => v)) {
+      return;
+    }
+    try {
+      const { access_token, user } = (
+        await api.patch<LoginResponse>(PROFILE_STUDENT_PATH, data)
+      ).data;
+      notify.success("Contato atualizado com sucesso!");
+      updateUserData(user, access_token);
+      setFormDisabled(!formDisabled);
+    } catch (error) {
+      notify.error(errorToString(error));
+    }
+  };
+
+  const inputPhoneChange = (e: any) => {
+    const { value } = e.target;
+    editContactForm.setValue("phone", value);
   };
 
   return (
@@ -25,15 +57,15 @@ export default function ContactInfoForm({ initialData }: any) {
       <FormProvider {...editContactForm}>
         <div className="lg:grid grid-cols-2 gap-2">
           <div className="flex justify-between col-span-2">
-            <h2 className="text-md font-semibold flex gap-1">
-              <Contact />
+            <h2 className="text-xl font-semibold flex gap-1">
+              <ContactPageOutlined />
               <span>Informações de contato</span>
             </h2>
             <div className="flex items-center gap-1">
               {!formDisabled ? (
                 <>
                   <button
-                    className="btn btn-sm btn-warning"
+                    className="text-error"
                     onClick={() => {
                       editContactForm.reset(initialData);
                       setFormDisabled(!formDisabled);
@@ -42,7 +74,7 @@ export default function ContactInfoForm({ initialData }: any) {
                     Cancelar
                   </button>
                   <button
-                    className="btn btn-sm btn-success"
+                    className="btn btn-sm btn-primary"
                     onClick={handleSubmit(editProfile)}
                   >
                     Salvar
@@ -50,27 +82,17 @@ export default function ContactInfoForm({ initialData }: any) {
                 </>
               ) : (
                 <button
-                  className="btn btn-sm btn-primary gap-1"
+                  className="flex items-center text-info"
                   onClick={() => {
                     setFormDisabled(!formDisabled);
                   }}
                 >
-                  <Pencil size={18} />
-                  <span>Editar</span>
+                  <EditOutlined />
+                  Editar
                 </button>
               )}
             </div>
           </div>
-          <Form.Field>
-            <Form.Label htmlFor="name">Nome</Form.Label>
-            <Form.InputText
-              type="text"
-              name="name"
-              disabled={formDisabled}
-              placeholder={initialData.name}
-            />
-            <Form.ErrorMessage field="name" />
-          </Form.Field>
           <Form.Field>
             <Form.Label htmlFor="email">
               <span>Email</span>
@@ -90,6 +112,7 @@ export default function ContactInfoForm({ initialData }: any) {
               name="email"
               disabled={formDisabled}
               placeholder={initialData.email}
+              defaultValue={initialData.email}
             />
             <Form.ErrorMessage field="email" />
           </Form.Field>
@@ -108,12 +131,13 @@ export default function ContactInfoForm({ initialData }: any) {
               )}
             </Form.Label>
             <Form.InputText
-              type="text"
               name="phone"
               disabled={formDisabled}
               placeholder={
                 initialData.phone ? initialData.phone + "" : "(00) 00000-0000"
               }
+              onChange={inputPhoneChange}
+              value={phoneMask(editContactForm.watch("phone") as string)}
             />
             <Form.ErrorMessage field="phone" />
           </Form.Field>

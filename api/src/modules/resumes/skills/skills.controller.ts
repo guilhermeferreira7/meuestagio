@@ -6,14 +6,18 @@ import {
   Delete,
   Param,
   UseGuards,
+  Req,
+  HttpCode,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { RolesGuard } from '../../auth/roles/roles.guard';
-import { CreateSkillDto } from './create-skill.dto';
+import { CreateSkillDto } from './create.dto';
 import { SkillsService } from './skills.service';
+import { ReqAuth } from '../../../types/auth/request';
 
 @Controller('resumes/me/skills')
 export class SkillsController {
@@ -22,21 +26,25 @@ export class SkillsController {
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
-  async addSkill(@Body() body: CreateSkillDto) {
-    return await this.service.add(body);
+  async addSkill(@Body() body: CreateSkillDto, @Req() req: ReqAuth) {
+    return await this.service.add(body, req.user.email);
   }
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get()
-  async getSkills(@Param('resumeId') id: number) {
-    return await this.service.getAll(id);
+  async getSkills(@Req() req: ReqAuth) {
+    return await this.service.getAll(req.user.email);
   }
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Delete(':id')
-  async deleteSkill(@Param('id') id: number) {
-    return await this.service.delete(id);
+  @HttpCode(204)
+  async deleteSkill(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: ReqAuth,
+  ) {
+    return await this.service.delete(id, req.user.email);
   }
 }

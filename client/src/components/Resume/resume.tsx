@@ -1,20 +1,22 @@
 import React from "react";
 import Image from "next/image";
 import {
-  Briefcase,
-  Crosshair,
-  GraduationCap,
-  LanguagesIcon,
-  Mail,
-  Map,
-  Phone,
-  School,
-} from "lucide-react";
+  HistoryEdu,
+  InfoOutlined,
+  Language,
+  MailOutline,
+  MapOutlined,
+  PhoneOutlined,
+  SchoolOutlined,
+  TipsAndUpdatesOutlined,
+  WorkOutline,
+} from "@mui/icons-material";
 import img from "../../../public/avatar.png";
 
 import AppCard from "../AppCard";
 import { Student } from "../../types/users/student";
 import { Resume } from "../../types/resume";
+import { formatDate } from "../../utils/helpers/date-helpers";
 
 type ResumeProps = {
   student: Student;
@@ -46,40 +48,43 @@ export default function ResumeView({ student, resume }: ResumeProps) {
 
   return (
     <AppCard>
-      <div className="flex items-start">
-        <div className="w-2/5 flex justify-center p-3">
+      <section className="flex items-start">
+        <div className="w-1/5 flex justify-center p-3">
           <Image src={img} alt={student.name} width={150} />
         </div>
         <div className="flex flex-1 flex-col gap-3 pl-2">
           <h2 className="text-2xl font-semibold">{student.name}</h2>
           <div className="text-xl flex flex-col gap-1">
             <span className="flex gap-1 items-center">
-              <Mail />
+              <MailOutline />
               Email: {student.email}
             </span>
             <span className="flex gap-1 items-center">
-              <Phone />
+              <PhoneOutlined />
               Telefone: {student.phone ? student.phone : "Não cadastrado"}
             </span>
             <span className="flex gap-1 items-center">
-              <GraduationCap />
+              <SchoolOutlined />
               Instituição: {student.course.name} - {student.institution.name}
             </span>
             <span className="flex gap-1 items-center">
-              <Map />
+              <MapOutlined />
               Endereço: {student.city.name} - {student.city.state}
             </span>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col items-center my-2 text-lg">
+      </section>
+      <div className="flex flex-col my-2 text-lg">
         <div className="flex flex-col gap-1 items-start">
-          <p className="text-xl font-semibold">Sobre: </p>
+          <p className="text-xl font-semibold">
+            {" "}
+            <InfoOutlined /> Sobre:{" "}
+          </p>
           <p>{student.about}</p>
         </div>
       </div>
 
-      <ResumeItem title="Habilidades" icon={<Crosshair />}>
+      <ResumeItem title="Habilidades" icon={<TipsAndUpdatesOutlined />}>
         {resume.skills?.length > 0 ? (
           resume.skills.map((skill, index) => (
             <div className="flex items-center gap-1" key={index}>
@@ -93,7 +98,7 @@ export default function ResumeView({ student, resume }: ResumeProps) {
         )}
       </ResumeItem>
 
-      <ResumeItem title="Formação" icon={<School />}>
+      <ResumeItem title="Formação" icon={<HistoryEdu />}>
         {resume.educations?.length > 0 ? (
           resume.educations.map((education, index) => (
             <div className="flex items-center gap-1" key={index}>
@@ -103,10 +108,8 @@ export default function ResumeView({ student, resume }: ResumeProps) {
                   <span>Grau: {education.degree}</span>
                   <span>Área de estudo: {education.fieldOfStudy}</span>
                   <span>
-                    Período: De {new Date(education.startDate).getMonth()}/
-                    {new Date(education.startDate).getFullYear()} até{" "}
-                    {new Date(education.endDate).getMonth()}/
-                    {new Date(education.endDate).getFullYear()}
+                    Período: De {formatDate(education.startDate)} até{" "}
+                    {formatDate(education.endDate)}
                     {index < resume.educations.length - 1 && (
                       <div className="divider my-0"></div>
                     )}
@@ -120,7 +123,7 @@ export default function ResumeView({ student, resume }: ResumeProps) {
         )}
       </ResumeItem>
 
-      <ResumeItem title="Experiência" icon={<Briefcase />}>
+      <ResumeItem title="Experiência" icon={<WorkOutline />}>
         {resume.experiences?.length > 0 ? (
           resume.experiences.map((exp, index) => (
             <div className="flex items-center gap-1" key={index}>
@@ -128,15 +131,11 @@ export default function ResumeView({ student, resume }: ResumeProps) {
                 <span>Empresa: {exp.company}</span>
                 <span>Cargo: {exp.position}</span>
                 <span>
-                  De {new Date(exp.startDate).getMonth()}/
-                  {new Date(exp.startDate).getFullYear()} até{" "}
+                  De {formatDate(exp.startDate)} até{" "}
                   {exp.currentJob ? (
-                    <span>Atualmente</span>
+                    <span>o momento</span>
                   ) : (
-                    <span>
-                      {new Date(exp.endDate).getMonth()}/
-                      {new Date(exp.endDate).getFullYear()}
-                    </span>
+                    <span>{formatDate(exp.endDate)}</span>
                   )}
                 </span>
                 {index < resume.educations.length - 1 && (
@@ -150,7 +149,7 @@ export default function ResumeView({ student, resume }: ResumeProps) {
         )}
       </ResumeItem>
 
-      <ResumeItem title="Idiomas" icon={<LanguagesIcon />}>
+      <ResumeItem title="Idiomas" icon={<Language />}>
         {resume.languages?.length > 0 ? (
           resume.languages.map((language, index) => (
             <div className="flex items-center gap-1" key={index}>

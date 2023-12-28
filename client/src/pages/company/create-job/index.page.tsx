@@ -1,36 +1,43 @@
 import React, { useState } from "react";
-import { GetServerSideProps } from "next";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-import { Loader } from "lucide-react";
+import { Loop } from "@mui/icons-material";
 
-import { createJobFormSchema } from "../../../utils/validators/create-job-schema";
-import { AREAS_PATH, JOBS_PATH } from "../../../constants/api-routes";
+import {
+  AREAS_PATH,
+  CITIES_PATH,
+  JOBS_PATH,
+} from "../../../constants/api-routes";
 import { notify } from "../../../components/toasts/toast";
 import { Form } from "../../../components";
-import { Area } from "../../../types/area";
-import { Company } from "../../../types/users/company";
 import withCompanyAuth from "../../../services/auth/withCompanyAuth";
 import { api } from "../../../services/api/api";
+import { Area } from "../../../types/area";
+import { City } from "../../../types/city";
+import { Company } from "../../../types/users/company";
+import { errorToString } from "../../../utils/helpers/error-to-string";
+import { createJobFormSchema } from "../../../utils/validators/create-job-schema";
+
+type CreateJobFormData = z.infer<typeof createJobFormSchema>;
+
+interface PageProps {
+  areas: Area[];
+  cities: City[];
+  company: Company;
+}
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
   loading: () => <p>Loading ...</p>,
 });
 
-type CreateJobFormData = z.infer<typeof createJobFormSchema>;
-
-interface PageProps {
-  areas: Area[];
-  company: Company;
-}
-
-export default function CreateJob({ areas, company }: PageProps) {
+export default function CreateJob({ areas, company, cities }: PageProps) {
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [changeCity, setChangeCity] = useState(false);
   const router = useRouter();
 
   const createJobForm = useForm<CreateJobFormData>({
@@ -40,19 +47,21 @@ export default function CreateJob({ areas, company }: PageProps) {
 
   const createJob = async (data: CreateJobFormData) => {
     setIsLoading(true);
+    if (!changeCity) data.cityId = company.cityId + "";
+
     try {
       await api.post(JOBS_PATH, {
         ...data,
-        cityId: company.cityId,
         companyId: company.id,
         description,
         regionId: company.city.regionId,
         state: company.city.state,
       });
+
       router.push("dashboard");
       notify.success("Vaga criada com sucesso!");
     } catch (error: any) {
-      notify.error(`Erro ao criar vaga! ${error.response?.data?.message}`);
+      notify.error(errorToString(error));
       setIsLoading(false);
     }
   };
@@ -68,72 +77,95 @@ export default function CreateJob({ areas, company }: PageProps) {
           onSubmit={handleSubmit(createJob)}
           className="flex flex-col w-full px-5"
         >
-          <div className="grid grid-cols-1 gap-2">
-            <div>
-              <Form.Field>
-                <Form.Label htmlFor="title">Título da Vaga</Form.Label>
-                <Form.InputText name="title" />
-                <Form.ErrorMessage field="title" />
-              </Form.Field>
-            </div>
-            <div>
-              <Form.Field>
-                <Form.Label htmlFor="areaId">Área da vaga</Form.Label>
-                <Form.InputSelect name="areaId">
-                  <option disabled value="">
-                    Escolha uma área
+          <Form.Field>
+            <Form.Label htmlFor="title">Título da Vaga</Form.Label>
+            <Form.InputText name="title" />
+            <Form.ErrorMessage field="title" />
+          </Form.Field>
+          <Form.Field>
+            <Form.Label htmlFor="areaId">Área da vaga</Form.Label>
+            <Form.InputSelect name="areaId">
+              <option disabled value="">
+                Escolha uma área
+              </option>
+              {areas.map((area) => {
+                return (
+                  <option key={area.id} value={area.id}>
+                    {area.title}
                   </option>
-                  {areas.map((area) => {
-                    return (
-                      <option key={area.id} value={area.id}>
-                        {area.title}
-                      </option>
-                    );
-                  })}
-                </Form.InputSelect>
-                <Form.ErrorMessage field="areaId" />
-              </Form.Field>
-            </div>
-            <div>
-              <Form.Field>
-                <Form.Label htmlFor="description">Descrição</Form.Label>
-                <QuillNoSSRWrapper
-                  theme="snow"
-                  value={description}
-                  onChange={setDescription}
-                  className="h-40 mb-16 sm:mb-10"
-                />
-              </Form.Field>
-            </div>
-            <div>
-              <Form.Field>
-                <Form.Label htmlFor="salary">
-                  Salário {"("}opcional{")"}
-                </Form.Label>
-                <Form.InputText name="salary" type="number" />
-                <Form.ErrorMessage field="salary" />
-              </Form.Field>
-            </div>
-            <div>
-              <Form.Field>
-                <Form.Label htmlFor="keywords">
-                  Palavras chaves {"("}separados por vírgulas{")"}
-                </Form.Label>
-                <Form.InputText name="keywords" />
-                <Form.ErrorMessage field="keywords" />
-              </Form.Field>
-            </div>
-            <div>
-              <Form.Field className="flex items-center justify-center my-2 gap-1">
-                <Form.InputCheckbox
-                  name="remote"
-                  title="remote"
-                  label="Vaga remota?"
-                />
-                <Form.ErrorMessage field="remote" />
-              </Form.Field>
-            </div>
+                );
+              })}
+            </Form.InputSelect>
+            <Form.ErrorMessage field="areaId" />
+          </Form.Field>
+          <Form.Field>
+            <Form.Label htmlFor="description">Descrição</Form.Label>
+            <QuillNoSSRWrapper
+              theme="snow"
+              value={description}
+              onChange={setDescription}
+              className="h-40 mb-16 sm:mb-10"
+            />
+          </Form.Field>
+          <Form.Field>
+            <Form.Label htmlFor="salary">
+              Salário {"("}opcional{")"}
+            </Form.Label>
+            <Form.InputText name="salary" type="number" />
+            <Form.ErrorMessage field="salary" />
+          </Form.Field>
+          <Form.Field>
+            <Form.Label htmlFor="keywords">
+              Palavras chaves {"("}separados por vírgulas{")"}
+            </Form.Label>
+            <Form.InputText name="keywords" />
+            <Form.ErrorMessage field="keywords" />
+          </Form.Field>
+          <div className="flex items-center gap-1">
+            <label className="label" htmlFor="changeCity">
+              Mudar cidade?
+            </label>
+            <input
+              id="changeCity"
+              onChange={(e) => {
+                setChangeCity(e.target.checked);
+                createJobForm.setValue("cityId", "");
+              }}
+              name="changeCity"
+              type="checkbox"
+              className="checkbox checkbox-primary"
+            />
           </div>
+          <span className="text-gray-600 text-sm">
+            Se não for marcado a cidade será a mesma da empresa
+          </span>
+          {changeCity && (
+            <Form.Field>
+              <Form.Label htmlFor="cityId">Cidade da vaga</Form.Label>
+              <Form.InputSelect
+                name="cityId"
+                defaultValue={company.cityId + ""}
+              >
+                {cities.map((city) => {
+                  return (
+                    <option key={city.id} value={city.id}>
+                      {city.name} - {city.state}
+                    </option>
+                  );
+                })}
+              </Form.InputSelect>
+              <Form.ErrorMessage field="cityId" />
+            </Form.Field>
+          )}
+
+          <Form.Field className="flex items-center justify-center my-2 gap-1">
+            <Form.InputCheckbox
+              name="remote"
+              title="remote"
+              label="Vaga remota?"
+            />
+            <Form.ErrorMessage field="remote" />
+          </Form.Field>
 
           {isLoading ? (
             <button
@@ -142,7 +174,7 @@ export default function CreateJob({ areas, company }: PageProps) {
             >
               Criando vaga...
               <span className="animate-spin ml-2">
-                <Loader />
+                <Loop />
               </span>
             </button>
           ) : (
@@ -162,9 +194,12 @@ export default function CreateJob({ areas, company }: PageProps) {
 export const getServerSideProps = withCompanyAuth(
   async (_context, company, apiClient) => {
     const areas = await apiClient.get<Area[]>(AREAS_PATH);
+    const cities = await apiClient.get<City[]>(CITIES_PATH, {
+      params: { orderBy: "name" },
+    });
 
     return {
-      props: { areas: areas.data, company },
+      props: { areas: areas.data, company, cities: cities.data },
     };
   }
 );

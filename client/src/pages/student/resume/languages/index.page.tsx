@@ -19,7 +19,8 @@ import {
   STUDENT_RESUME_LANGUAGES_PATH,
   STUDENT_RESUME_PATH,
 } from "../../../../constants/api-routes";
-import { AppCard, Form } from "../../../../components";
+import { Form, PageDefaults } from "../../../../components";
+import { WorkHistoryOutlined } from "@mui/icons-material";
 
 type LanguagePageProps = {
   resumeId: number;
@@ -88,53 +89,56 @@ export default function LanguagesPage({
 
   return (
     <>
-      <div className="w-11/12">
-        <AppCard>
-          <h2 className="text-xl text-primary font-bold mb-2 justify-between">
-            Cadastrar novo idioma
-          </h2>
-          <FormProvider {...createLanguageForm}>
-            <form
-              onSubmit={handleSubmit(createLanguage)}
-              className="flex flex-col w-full gap-1"
-            >
-              <Form.Field>
-                <Form.Label htmlFor="name">Idioma</Form.Label>
-                <Form.InputText name="name" placeholder="Idioma" />
-                <Form.ErrorMessage field="name" />
-              </Form.Field>
-              <Form.Field>
-                <Form.Label htmlFor="level">Nível</Form.Label>
-                <Form.InputSelect
-                  name="level"
-                  placeholder="Nível"
-                  defaultValue={LanguageLevel.Basic}
-                >
-                  <option value={LanguageLevel.Basic}>
-                    {LanguageLevel.Basic}
-                  </option>
-                  <option value={LanguageLevel.Intermediate}>
-                    {LanguageLevel.Intermediate}
-                  </option>
-                  <option value={LanguageLevel.Advanced}>
-                    {LanguageLevel.Advanced}
-                  </option>
-                  <option value={LanguageLevel.Fluent}>
-                    {LanguageLevel.Fluent}
-                  </option>
-                </Form.InputSelect>
-                <Form.ErrorMessage field="level" />
-              </Form.Field>
+      <PageDefaults
+        currentPage="Idiomas"
+        linksTree={[
+          {
+            name: "Currículo",
+            href: "/student/resume",
+            icon: <WorkHistoryOutlined />,
+          },
+        ]}
+      />
 
-              <button
-                type="submit"
-                className="btn btn-primary w-2/3 my-2 self-center"
+      <div className="w-full px-4">
+        <h2 className="text-xl text-primary font-bold mb-2 justify-between">
+          Cadastrar novo idioma
+        </h2>
+        <FormProvider {...createLanguageForm}>
+          <form
+            onSubmit={handleSubmit(createLanguage)}
+            className="flex flex-col w-full gap-1"
+          >
+            <Form.Field>
+              <Form.Label htmlFor="name">Idioma</Form.Label>
+              <Form.InputText name="name" placeholder="Idioma" />
+              <Form.ErrorMessage field="name" />
+            </Form.Field>
+            <Form.Field>
+              <Form.Label htmlFor="level">Nível</Form.Label>
+              <Form.InputSelect
+                name="level"
+                placeholder="Nível"
+                defaultValue={LanguageLevel.Basic}
               >
-                Salvar
-              </button>
-            </form>
-          </FormProvider>
-        </AppCard>
+                <option value={LanguageLevel.Basic}>Básico</option>
+                <option value={LanguageLevel.Intermediate}>
+                  Intermediário
+                </option>
+                <option value={LanguageLevel.Advanced}>Avançado</option>
+                <option value={LanguageLevel.Fluent}>Fluente</option>
+              </Form.InputSelect>
+              <Form.ErrorMessage field="level" />
+            </Form.Field>
+
+            <button
+              type="submit"
+              className="btn btn-primary w-2/3 my-2 self-center"
+            >
+              Salvar
+            </button>
+          </form>
+        </FormProvider>
       </div>
       <div className="w-11/12 my-3 flex flex-col gap-2 border-l border-l-gray-300">
         {languagesUpdated.length < 1 && (

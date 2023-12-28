@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AppTabs, Modal, ResumeView } from "../../../../components";
 import { notify } from "../../../../components/toasts/toast";
 import {
-  JOB_APPLICATIONS_COMPANY_PATH,
+  JOB_APPLICATIONS_BY_JOB,
   JOB_APPLICATIONS_FINISH_PATH,
   JOB_APPLICATIONS_INTERVIEW_PATH,
   PROFILE_COMPANY_PATH,
@@ -49,10 +49,7 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
         <div className="flex justify-end gap-1 mb-1">
           {currentCandidate.status === JobApplicationStatus.IN_PROGRESS ? (
             <>
-              <button
-                className="btn btn-success text-white"
-                onClick={setAproved}
-              >
+              <button className="btn btn-success" onClick={setAproved}>
                 Aceitar
               </button>
               <button className="btn btn-error" onClick={setRejected}>
@@ -168,29 +165,20 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  try {
-    const apiClient = getAPIClient(ctx);
-    await apiClient.get<Company>(PROFILE_COMPANY_PATH);
-    const jobApplications = await apiClient.get<JobApplication[]>(
-      JOB_APPLICATIONS_COMPANY_PATH,
-      {
-        params: {
-          jobId: ctx.query.id,
-        },
-      }
-    );
+  const apiClient = getAPIClient(ctx);
+  await apiClient.get<Company>(PROFILE_COMPANY_PATH);
+  const jobApplications = await apiClient.get<JobApplication[]>(
+    JOB_APPLICATIONS_BY_JOB,
+    {
+      params: {
+        jobId: ctx.query.id,
+      },
+    }
+  );
 
-    return {
-      props: {
-        jobApplications: jobApplications.data,
-      },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+  return {
+    props: {
+      jobApplications: jobApplications.data,
+    },
+  };
 };

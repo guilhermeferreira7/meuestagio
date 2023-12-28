@@ -1,8 +1,10 @@
 import * as bcrypt from 'bcryptjs';
 
+const SALT = 10;
+
 const bcryptService = {
   async hash(value: string): Promise<string> {
-    return await bcrypt.hash(value, parseInt(process.env.BCRYPT_SALT));
+    return await bcrypt.hash(value, SALT);
   },
 
   async compare(value: string, hashedValue: string): Promise<boolean> {
@@ -10,7 +12,7 @@ const bcryptService = {
   },
 
   hashSync(value: string): string {
-    return bcrypt.hashSync(value, parseInt(process.env.BCRYPT_SALT));
+    return bcrypt.hashSync(value, SALT);
   },
 
   compareSync(value: string, hashedValue: string): boolean {

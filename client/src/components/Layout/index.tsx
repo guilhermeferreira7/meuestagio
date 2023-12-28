@@ -3,7 +3,6 @@ import React, { ReactNode, useContext } from "react";
 import { AuthContext } from "@contexts/AuthContext";
 import { Role } from "@customTypes/auth/user-auth";
 
-import defaultMenu from "./menus/default-menu";
 import studentMenu from "./menus/student-menu";
 import companyMenu from "./menus/company-menu";
 import adminMenu from "./menus/admin-menu";
@@ -20,7 +19,7 @@ interface PageLayoutProps {
 export default function PageLayout({ children }: PageLayoutProps) {
   const { user } = useContext(AuthContext);
 
-  let menuItems: any = defaultMenu;
+  let menuItems: any = undefined;
 
   switch (user?.role) {
     case Role.Student:
@@ -41,9 +40,11 @@ export default function PageLayout({ children }: PageLayoutProps) {
         <div className="drawer-content flex flex-col">
           <Header />
           <div className="flex flex-1">
-            <div className="hidden lg:flex">
-              <PageMenu menuItems={menuItems} />
-            </div>
+            {user && (
+              <div className="hidden lg:flex">
+                <PageMenu menuItems={menuItems} />
+              </div>
+            )}
             <main className="flex flex-col items-center w-full my-5">
               {children}
             </main>

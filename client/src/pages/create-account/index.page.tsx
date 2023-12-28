@@ -21,6 +21,7 @@ import { Institution } from "../../types/institution";
 import { City } from "../../types/city";
 import { Role } from "../../types/auth/user-auth";
 import { createUserFormSchema } from "../../utils/validators/create-account-schema";
+import { errorToString } from "../../utils/helpers/error-to-string";
 
 type CreateAccountFormData = z.infer<typeof createUserFormSchema>;
 
@@ -35,7 +36,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
     resolver: zodResolver(createUserFormSchema),
   });
   const { handleSubmit } = createAccountForm;
-
   const { signIn } = useContext(AuthContext);
 
   const [userRole, setUserRole] = useState<Role>(Role.Student);
@@ -47,21 +47,17 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
           ...data,
         });
         notify.success("Aluno cadastrado com sucesso!");
-        setTimeout(() => {
-          signIn(data.email, data.password, data.userRole);
-        }, 2000);
+        await signIn(data.email, data.password, Role.Student);
       } catch (error: any) {
-        notify.error(error.response?.data?.message || error.message);
+        notify.error(errorToString(error));
       }
     } else if (data.userRole === Role.Company) {
       try {
         await api.post(COMPANIES_PATH, { ...data });
         notify.success("Empresa cadastrada com sucesso!");
-        setTimeout(() => {
-          signIn(data.email, data.password, data.userRole);
-        }, 2000);
+        await signIn(data.email, data.password, Role.Company);
       } catch (error: any) {
-        notify.error("" + error.response?.data?.message || error.message);
+        notify.error(errorToString(error));
       }
     } else {
       notify.warning();
@@ -88,7 +84,6 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
                 name="userRole"
                 id="student"
                 title="Aluno"
-                defaultChecked
                 onChange={() => setUserRole(Role.Student)}
               />
               <Form.InputRadio
@@ -98,6 +93,9 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
                 title="Empresa"
                 onChange={() => setUserRole(Role.Company)}
               />
+            </div>
+            <div className="text-center">
+              <Form.ErrorMessage field="userRole" />
             </div>
           </Form.Field>
 
@@ -145,10 +143,17 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apiClient = getAPIClient(ctx);
 
-  const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
-  const cities = await apiClient.get<City[]>(CITIES_PATH);
+  try {
+    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
+    const cities = await apiClient.get<City[]>(CITIES_PATH);
+    return {
+      props: { institutions: institutions.data, cities: cities.data },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
 
-  return {
-    props: { institutions: institutions.data, cities: cities.data },
-  };
+    return {
+      props: { institutions: [], cities: [] },
+    };
+  }
 };

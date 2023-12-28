@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import {
   JOBS_BY_COMPANY_PATH,
-  JOB_APPLICATIONS_COMPANY_PATH,
+  JOB_APPLICATIONS_BY_JOB,
 } from "../../../constants/api-routes";
 import withCompanyAuth from "../../../services/auth/withCompanyAuth";
 import {
@@ -25,7 +25,7 @@ export default function Candidates({ candidates }: CandidatesPageProps) {
       <div className="w-11/12">
         <div className="flex justify-end gap-1 pb-2">
           <button
-            className="btn btn-success text-white"
+            className="btn btn-success"
             onClick={() => setCurrentCandidate(null)}
           >
             Agendar entrevista
@@ -80,7 +80,7 @@ export const getServerSideProps = withCompanyAuth(
     const candidates = await Promise.all(
       jobs.data.map(async (job) => {
         return apiClient
-          .get<JobApplication[]>(JOB_APPLICATIONS_COMPANY_PATH, {
+          .get<JobApplication[]>(JOB_APPLICATIONS_BY_JOB, {
             params: {
               jobId: job.id,
             },

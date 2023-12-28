@@ -1,39 +1,32 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ResumesService } from './resume/resumes.service';
-import { ResumesController } from './resume/resumes.controller';
-import { Resume } from './resume/resume.entity';
-import { Education } from './educations/educations.entity';
-import { EducationsService } from './educations/educations.service';
+import { ResumesService } from './resumes.service';
+import { ResumesController } from './resumes.controller';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { EducationsController } from './educations/educations.controller';
-import { Experience } from './experiences/experiences.entity';
-import { ExperiencesService } from './experiences/experiences.service';
+import { EducationsService } from './educations/educations.service';
 import { ExperiencesController } from './experiences/experiences.controller';
-import { Language } from './languages/language.entity';
-import { LanguagesService } from './languages/languages.service';
+import { ExperiencesService } from './experiences/experiences.service';
 import { LanguagesController } from './languages/languages.controller';
-import { Skill } from './skills/skill.entity';
-import { SkillsService } from './skills/skills.service';
+import { LanguagesService } from './languages/languages.service';
 import { SkillsController } from './skills/skills.controller';
+import { SkillsService } from './skills/skills.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Resume, Education, Experience, Skill, Language]),
-  ],
   controllers: [
     ResumesController,
-    SkillsController,
     EducationsController,
     ExperiencesController,
     LanguagesController,
+    SkillsController,
   ],
   providers: [
     ResumesService,
-    SkillsService,
+    PrismaService,
     EducationsService,
     ExperiencesService,
     LanguagesService,
+    SkillsService,
   ],
 })
 export class ResumesModule {}

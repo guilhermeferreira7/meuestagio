@@ -8,6 +8,7 @@ import { loginSchema } from "../../../utils/validators/login-schema";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { Role } from "../../../types/auth/user-auth";
 import { Form } from "../../../components";
+import { errorToString } from "../../../utils/helpers/error-to-string";
 
 type LoginData = z.infer<typeof loginSchema>;
 
@@ -25,7 +26,7 @@ export default function AdminLogin() {
     try {
       await signIn(data.email, data.password, Role.Admin);
     } catch (error: any) {
-      setErrorLoginMessage(error.response?.data?.message);
+      setErrorLoginMessage(errorToString(error));
     }
   };
 

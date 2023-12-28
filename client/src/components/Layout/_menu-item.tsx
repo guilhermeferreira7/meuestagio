@@ -1,5 +1,4 @@
-import React, { ReactNode, useState } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import React, { ReactNode } from "react";
 import Link from "next/link";
 
 interface MenuProps {
@@ -13,30 +12,21 @@ interface MenuProps {
 }
 
 export default function MenuItem({ icon, href, label, subMenu }: MenuProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
   const SubMenu = ({ title, items }: { title: string; items: MenuProps[] }) => {
     return (
-      <details
-        className="hover:bg-base-100"
-        open={isOpen}
-        onClick={() => {
-          setIsOpen(!isOpen);
-        }}
-      >
-        <summary className="flex items-center justify-between hover:bg-gray-200">
+      <div className="hover:bg-base-100 flex flex-col items-start">
+        <div className="w-full  flex items-center gap-2 hover:cursor-default">
           {icon}
           {title}
-          {isOpen ? <ChevronDown /> : <ChevronRight />}
-        </summary>
-        <ul className="flex flex-col gap-1">
+        </div>
+        <ul className="flex flex-col gap-1 w-full">
           <li>
             {items.map((item: any, key: any) => (
               <MenuItem {...item} key={key} />
             ))}
           </li>
         </ul>
-      </details>
+      </div>
     );
   };
 

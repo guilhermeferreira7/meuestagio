@@ -1,27 +1,27 @@
+import { UserAuth } from "../auth/user-auth";
+import { City } from "../city";
+import { Course } from "../course";
+import { Institution } from "../institution";
 import { Resume } from "../resume";
 
 export type Student = {
   id: number;
   name: string;
-  about?: string;
   email: string;
-  institution: {
-    id: number;
-    name: string;
-  };
-  course: {
-    id: number;
-    name: string;
-  };
   phone?: number;
+  about?: string;
+  institution: Institution;
+  course: Course;
   emailVerified: boolean;
   phoneVerified: boolean;
-  userVerified: boolean;
-  city: {
-    id: number;
-    name: string;
-    state: string;
-  };
+  city: City;
   resume: Resume;
   resumeId: number;
+  imageUrl?: string;
+};
+
+export type StudentPatch = {
+  access_token: string;
+  user: UserAuth;
+  student: Student;
 };

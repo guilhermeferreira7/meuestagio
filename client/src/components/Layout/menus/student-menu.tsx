@@ -15,13 +15,8 @@ const studentMenu = [
   {
     icon: <Scroll />,
     subMenu: {
-      title: "Dados profissionais",
+      title: "Meu Currículo",
       menuItems: [
-        {
-          icon: <BookDown />,
-          href: "/student/resume",
-          label: "Ver Currículo",
-        },
         {
           icon: <Crosshair />,
           href: "/student/resume/skills",
@@ -35,7 +30,7 @@ const studentMenu = [
         {
           icon: <Building />,
           href: "/student/resume/experience",
-          label: "Experiência",
+          label: "Experiências",
         },
         {
           icon: <Languages />,
@@ -46,14 +41,9 @@ const studentMenu = [
     },
   },
   {
-    icon: <Briefcase />,
-    href: "/student/dashboard",
-    label: "Vagas",
-  },
-  {
     icon: <Clipboard />,
     href: "/student/applications",
-    label: "Candidaturas",
+    label: "Minhas Candidaturas",
   },
 ];
 

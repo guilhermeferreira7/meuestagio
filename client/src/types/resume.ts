@@ -18,9 +18,9 @@ export type Skill = {
 };
 
 export enum SkillLevel {
-  Basic = "Básico",
-  Intermediate = "Intermediário",
-  Advanced = "Avançado",
+  Basic = "Basico",
+  Intermediate = "Intermediario",
+  Advanced = "Avancado",
 }
 
 export type Language = {
@@ -52,15 +52,15 @@ export type Education = {
 };
 
 export enum Degree {
-  HighSchool = "Ensino Médio",
-  Technical = "Ensino Técnico",
-  Undergraduate = "Ensino Superior",
-  Postgraduate = "Pós-Graduação",
+  HighSchool = "EnsinoMedio",
+  Technical = "EnsinoTecnico",
+  Undergraduate = "EnsinoSuperior",
+  Postgraduate = "PosGraduacao",
 }
 
 export enum LanguageLevel {
-  Basic = "Básico",
-  Intermediate = "Intermediário",
-  Advanced = "Avançado",
+  Basic = "Basico",
+  Intermediate = "Intermediario",
+  Advanced = "Avancado",
   Fluent = "Fluente",
 }

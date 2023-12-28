@@ -2,6 +2,7 @@ export type Company = {
   id: number;
   name: string;
   email: string;
+  phone: string;
   cnpj: string;
   cityId: number;
   city: {
@@ -14,4 +15,6 @@ export type Company = {
     };
     state: string;
   };
+
+  imageUrl: string;
 };

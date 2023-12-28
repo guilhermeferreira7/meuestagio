@@ -13,14 +13,11 @@ interface JobCompanyCardProps {
 }
 
 export default function JobCompanyCard({ job }: JobCompanyCardProps) {
-  const closeJob = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const closeJob = async () => {
     try {
       await api.patch(JOB_CLOSE_PATH(job.id));
       notify.success("Vaga encerrada com sucesso");
       document.getElementById(`job-modal-${job.id}`)?.click();
-      location.reload();
     } catch (error) {
       notify.error(errorToString(error));
     }

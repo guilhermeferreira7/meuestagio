@@ -1,30 +1,21 @@
-FROM node:16 As development
+FROM node:18
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json .
-COPY package-lock.json .
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
-RUN npm install
-
-COPY . .
-
-RUN npm run build
-
-FROM node:16 as production
-
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
-WORKDIR /usr/src/app
-
-COPY package.json .
-COPY package-lock.json .
-
-RUN npm install --only=production
+RUN \
+    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then npm ci; \
+    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
+    # Allow install without lockfile, so example works even without Node.js installed locally
+    else echo "Warning: Lockfile not found. It is recommended to commit lockfiles to version control." && yarn install; \
+    fi
 
 COPY . .
 
-COPY --from=development /usr/src/app/dist ./dist
+RUN pnpm build
 
-CMD ["node", "dist/main"]
+# RUN pnpm seed
+
+CMD [ "pnpm", "start:prod" ]

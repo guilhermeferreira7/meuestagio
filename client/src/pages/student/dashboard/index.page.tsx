@@ -1,27 +1,26 @@
-import { JOBS_LIST_STUDENT_LIMIT } from "@constants/request";
-import { Student } from "@customTypes/users/student";
-import { Job } from "@customTypes/job";
+import Head from "next/head";
 
 import { useJobsListing } from "../../../hooks/useJobListing";
+import withStudentAuth from "../../../services/auth/withStudentAuth";
+import { Job } from "../../../types/job";
+import { Student } from "../../../types/users/student";
+
 import SearchBar from "./_search-bar";
 import JobCardStudent from "./_job-card-student";
-import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { JOBS_PATH } from "../../../constants/api-routes";
 
-interface StudentPageProps {
-  jobsData: Job[];
+interface StudentJobsProps {
   student: Student;
-  states: string[];
 }
 
-export default function StudentJobs({ jobsData, student }: StudentPageProps) {
-  const { pageData, pageFunctions } = useJobsListing({
-    jobs: jobsData,
-    student,
-  });
+export default function StudentJobs({ student }: StudentJobsProps) {
+  const { pageData, pageFunctions } = useJobsListing();
 
   return (
     <>
+      <Head>
+        <title>Vagas de estágio</title>
+      </Head>
+
       <SearchBar
         cities={pageData.cities}
         regions={pageData.regions}
@@ -29,7 +28,6 @@ export default function StudentJobs({ jobsData, student }: StudentPageProps) {
         onStateChange={pageFunctions.onStateChange}
         onRegionChange={pageFunctions.onRegionChange}
         onCityChange={pageFunctions.onCityChange}
-        setIsRemote={pageFunctions.setIsRemote}
         cleanFilters={pageFunctions.cleanFilters}
       />
 
@@ -43,14 +41,13 @@ export default function StudentJobs({ jobsData, student }: StudentPageProps) {
               : pageData.filters.region
               ? `Vagas em ${pageData.regionName} (região)`
               : "Vagas em todo o Brasil"}
-            {pageData.filters.isRemote && " (remoto)"}
-            {pageData.currentSearch && ` de ${pageData.currentSearch}`}
+            {pageData.currentSearch && ` de '${pageData.currentSearch}'`}
           </span>
         </h2>
         {pageData.jobs.length > 0 ? (
           pageData.jobs.map((job: Job) => (
             <div key={job.id}>
-              <JobCardStudent job={job} />
+              <JobCardStudent job={job} areaId={student.course.areaId} />
             </div>
           ))
         ) : (
@@ -74,17 +71,9 @@ export default function StudentJobs({ jobsData, student }: StudentPageProps) {
 }
 
 export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const jobs = await apiClient.get<Job[]>(JOBS_PATH, {
-      params: {
-        limit: JOBS_LIST_STUDENT_LIMIT,
-        city: student.city.id,
-      },
-    });
-
+  async (_context, student, _apiClient) => {
     return {
       props: {
-        jobsData: jobs.data,
         student,
       },
     };

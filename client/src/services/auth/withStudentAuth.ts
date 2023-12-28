@@ -3,6 +3,7 @@ import { isAxiosError } from "axios";
 import { getAPIClient } from "../api/clientApi";
 import { Student } from "../../types/users/student";
 import { PROFILE_STUDENT_PATH } from "../../constants/api-routes";
+import { errorToString } from "../../utils/helpers/error-to-string";
 
 export default function withStudentAuth(
   getServerSidePropsCallback: (
@@ -23,6 +24,7 @@ export default function withStudentAuth(
         );
       }
     } catch (error) {
+      console.log(errorToString(error));
       if (isAxiosError(error)) {
         if (error.response?.status === 401 || error.response?.status === 403)
           return {
