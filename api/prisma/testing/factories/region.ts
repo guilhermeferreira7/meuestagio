@@ -6,7 +6,7 @@ export const createRegion = async () => {
     data: {
       IBGECode: Number(faker.string.numeric(7)),
       name: faker.location.street(),
-      state: faker.location.state(),
+      state: faker.location.state() + faker.string.numeric(5), // avoid duplicate state names
     },
   });
 };
