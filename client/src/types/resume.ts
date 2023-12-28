@@ -52,10 +52,10 @@ export type Education = {
 };
 
 export enum Degree {
-  HighSchool = "Ensino Médio",
-  Technical = "Ensino Técnico",
-  Undergraduate = "Ensino Superior",
-  Postgraduate = "Pós-Graduação",
+  HighSchool = "EnsinoMedio",
+  Technical = "EnsinoTecnico",
+  Undergraduate = "EnsinoSuperior",
+  Postgraduate = "PosGraduacao",
 }
 
 export enum LanguageLevel {
