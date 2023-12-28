@@ -3,9 +3,9 @@ import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../../src/app.module';
 import { companyLogin, studentLogin } from '../../../helpers/login';
-import { createStudent } from '../../../../prisma/factories/student';
+import { createStudent } from '../../../../prisma/testing/factories/student';
 import { del, get } from '../../../helpers/request';
-import { createSkill } from '../../../../prisma/factories/skill';
+import { createSkill } from '../../../../prisma/testing/factories/skill';
 
 describe('[E2E] Skill', () => {
   let app: INestApplication;

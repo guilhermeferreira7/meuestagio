@@ -3,9 +3,9 @@ import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from '../../../../src/app.module';
-import { createJobWith } from '../../../../prisma/factories/job';
-import { createArea } from '../../../../prisma/factories/area';
-import { createCompany } from '../../../../prisma/factories/company';
+import { createJobWith } from '../../../../prisma/testing/factories/job';
+import { createArea } from '../../../../prisma/testing/factories/area';
+import { createCompany } from '../../../../prisma/testing/factories/company';
 import { prisma } from '../../../../prisma/prisma';
 
 describe('[E2E] Jobs query', () => {

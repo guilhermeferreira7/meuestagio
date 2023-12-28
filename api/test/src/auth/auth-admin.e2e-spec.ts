@@ -4,7 +4,7 @@ import * as request from 'supertest';
 
 import { Role } from '../../../src/modules/auth/roles/roles';
 import { AppModule } from '../../../src/app.module';
-import { createUser } from '../../../prisma/factories/user';
+import { createUser } from '../../../prisma/testing/factories/user';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Admin Auth', () => {

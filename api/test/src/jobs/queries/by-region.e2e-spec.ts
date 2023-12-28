@@ -4,11 +4,14 @@ import * as request from 'supertest';
 import { Region } from '@prisma/client';
 
 import { AppModule } from '../../../../src/app.module';
-import { createJob, createJobWith } from '../../../../prisma/factories/job';
-import { createCompany } from '../../../../prisma/factories/company';
-import { createArea } from '../../../../prisma/factories/area';
+import {
+  createJob,
+  createJobWith,
+} from '../../../../prisma/testing/factories/job';
+import { createCompany } from '../../../../prisma/testing/factories/company';
+import { createArea } from '../../../../prisma/testing/factories/area';
 
-import { createRegion } from '../../../../prisma/factories/region';
+import { createRegion } from '../../../../prisma/testing/factories/region';
 import { prisma } from '../../../../prisma/prisma';
 
 describe('[E2E] Jobs query by region', () => {

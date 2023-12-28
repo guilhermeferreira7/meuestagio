@@ -5,10 +5,10 @@ import { JobApplicationStatusEnum } from '@prisma/client';
 import { AppModule } from '../../../src/app.module';
 import { patch, post } from '../../helpers/request';
 import { adminLogin, companyLogin, studentLogin } from '../../helpers/login';
-import { createJobApplications } from '../../../prisma/factories/job-applications';
-import { createCompany } from '../../../prisma/factories/company';
-import { createJob } from '../../../prisma/factories/job';
-import { createStudent } from '../../../prisma/factories/student';
+import { createJobApplications } from '../../../prisma/testing/factories/job-applications';
+import { createCompany } from '../../../prisma/testing/factories/company';
+import { createJob } from '../../../prisma/testing/factories/job';
+import { createStudent } from '../../../prisma/testing/factories/student';
 import { CreateJobApplicationDto } from '../../../src/modules/job-applications/dtos/update';
 import { prisma } from '../../../prisma/prisma';
 

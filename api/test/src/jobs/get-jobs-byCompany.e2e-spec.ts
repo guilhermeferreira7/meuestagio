@@ -3,9 +3,9 @@ import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
-import { createCompany } from '../../../prisma/factories/company';
+import { createCompany } from '../../../prisma/testing/factories/company';
 import { companyLogin, studentLogin } from '../../helpers/login';
-import { createJob } from '../../../prisma/factories/job';
+import { createJob } from '../../../prisma/testing/factories/job';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[GET] jobs/company/:id', () => {

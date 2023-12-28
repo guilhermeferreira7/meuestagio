@@ -4,7 +4,7 @@ import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
 import { adminLogin, studentLogin } from '../../helpers/login';
-import { createInstitution } from '../../../prisma/factories/institution';
+import { createInstitution } from '../../../prisma/testing/factories/institution';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Institution', () => {

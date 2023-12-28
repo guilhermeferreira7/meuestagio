@@ -3,7 +3,10 @@ import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../src/app.module';
 import { get } from '../../helpers/request';
-import { createCity, createManyCities } from '../../../prisma/factories/city';
+import {
+  createCity,
+  createManyCities,
+} from '../../../prisma/testing/factories/city';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Cities', () => {

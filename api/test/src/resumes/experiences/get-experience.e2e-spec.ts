@@ -4,8 +4,8 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../../../../src/app.module';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { get } from '../../../helpers/request';
-import { createStudent } from '../../../../prisma/factories/student';
-import { createExperience } from '../../../../prisma/factories/experience';
+import { createStudent } from '../../../../prisma/testing/factories/student';
+import { createExperience } from '../../../../prisma/testing/factories/experience';
 
 describe('[E2E] Experience', () => {
   let app: INestApplication;

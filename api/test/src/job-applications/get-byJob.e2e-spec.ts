@@ -4,8 +4,8 @@ import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
 import { companyLogin, studentLogin } from '../../helpers/login';
-import { createJob } from '../../../prisma/factories/job';
-import { createJobApplications } from '../../../prisma/factories/job-applications';
+import { createJob } from '../../../prisma/testing/factories/job';
+import { createJobApplications } from '../../../prisma/testing/factories/job-applications';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Job Applications', () => {

@@ -5,8 +5,8 @@ import { AppModule } from '../../../../src/app.module';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { post } from '../../../helpers/request';
 import { CreateLanguageDto } from '../../../../src/modules/resumes/languages/create.dto';
-import { createStudent } from '../../../../prisma/factories/student';
-import { createLanguage } from '../../../../prisma/factories/language';
+import { createStudent } from '../../../../prisma/testing/factories/student';
+import { createLanguage } from '../../../../prisma/testing/factories/language';
 
 describe('[E2E] Language', () => {
   let app: INestApplication;

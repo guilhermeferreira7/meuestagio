@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const getRegion = () => {
   console.log('Criando região...');
   return {

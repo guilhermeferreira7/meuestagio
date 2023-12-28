@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { createStudent } from '../../prisma/factories/student';
-import { createCompany } from '../../prisma/factories/company';
-import { createUser } from '../../prisma/factories/user';
+import { createStudent } from '../../prisma/testing/factories/student';
+import { createCompany } from '../../prisma/testing/factories/company';
+import { createUser } from '../../prisma/testing/factories/user';
 
 export async function companyLogin(
   app: INestApplication,

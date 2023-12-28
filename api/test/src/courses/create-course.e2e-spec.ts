@@ -5,9 +5,9 @@ import * as request from 'supertest';
 import { AppModule } from '../../../src/app.module';
 import { CreateCourseDto } from '../../../src/modules/courses/dtos/create-course.dto';
 import { adminLogin, studentLogin } from '../../helpers/login';
-import { createCourse } from '../../../prisma/factories/course';
-import { createArea } from '../../../prisma/factories/area';
-import { createInstitution } from '../../../prisma/factories/institution';
+import { createCourse } from '../../../prisma/testing/factories/course';
+import { createArea } from '../../../prisma/testing/factories/area';
+import { createInstitution } from '../../../prisma/testing/factories/institution';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] [POST] /courses', () => {

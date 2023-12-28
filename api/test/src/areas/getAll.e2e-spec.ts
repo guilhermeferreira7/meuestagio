@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../../../src/app.module';
-import { createManyAreas } from '../../../prisma/factories/area';
+import { createManyAreas } from '../../../prisma/testing/factories/area';
 import { get } from '../../helpers/request';
 
 describe('[E2E] Areas', () => {

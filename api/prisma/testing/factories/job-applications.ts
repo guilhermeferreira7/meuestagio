@@ -1,6 +1,6 @@
 import { JobApplication } from '@prisma/client';
 import { createStudent } from './student';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 
 export const createJobApplications = async (length: number, jobId: number) => {
   const student = await createStudent();

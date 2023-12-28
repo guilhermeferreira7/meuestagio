@@ -7,8 +7,8 @@ import { AppModule } from '../../../../src/app.module';
 import { CreateCompanyDto } from '../../../../src/modules/users/companies/create-company.dto';
 import { UpdateCompanyDto } from '../../../../src/modules/users/companies/update-company.dto';
 import { companyLogin, studentLogin } from '../../../helpers/login';
-import { createCity } from '../../../../prisma/factories/city';
-import { createCompany } from '../../../../prisma/factories/company';
+import { createCity } from '../../../../prisma/testing/factories/city';
+import { createCompany } from '../../../../prisma/testing/factories/company';
 
 describe('[E2E] Company', () => {
   let app: INestApplication;

@@ -6,7 +6,7 @@ import { AppModule } from '../../../src/app.module';
 import {
   createCourse,
   createManyCourses,
-} from '../../../prisma/factories/course';
+} from '../../../prisma/testing/factories/course';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] [GET] /courses', () => {

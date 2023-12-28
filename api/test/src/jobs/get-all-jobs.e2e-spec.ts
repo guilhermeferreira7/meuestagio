@@ -3,7 +3,10 @@ import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
-import { createJob, createManyJobs } from '../../../prisma/factories/job';
+import {
+  createJob,
+  createManyJobs,
+} from '../../../prisma/testing/factories/job';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] [GET] all Jobs', () => {

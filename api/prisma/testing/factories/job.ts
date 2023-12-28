@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 import { createArea } from './area';
 import { createCity } from './city';
 import { createCompany } from './company';

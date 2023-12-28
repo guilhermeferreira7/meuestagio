@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 
 export async function createSkill(resumeId: number, name?: string) {
   return await prisma.skill.create({

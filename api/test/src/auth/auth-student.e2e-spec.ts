@@ -4,7 +4,7 @@ import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
 import { Role } from '../../../src/modules/auth/roles/roles';
-import { createStudent } from '../../../prisma/factories/student';
+import { createStudent } from '../../../prisma/testing/factories/student';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Student Auth', () => {

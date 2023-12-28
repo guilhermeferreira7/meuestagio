@@ -7,7 +7,7 @@ import { get } from '../../helpers/request';
 import {
   createManyStudents,
   createStudent,
-} from '../../../prisma/factories/student';
+} from '../../../prisma/testing/factories/student';
 
 describe('[E2E] Resume', () => {
   let app: INestApplication;

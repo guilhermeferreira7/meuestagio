@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 
 export const createExperience = async (resumeId: number, company?: string) => {
   return await prisma.experience.create({

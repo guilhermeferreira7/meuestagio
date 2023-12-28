@@ -5,9 +5,9 @@ import { JobApplicationStatusEnum, JobStatusEnum } from '@prisma/client';
 
 import { AppModule } from '../../../src/app.module';
 import { companyLogin, studentLogin } from '../../helpers/login';
-import { createCompany } from '../../../prisma/factories/company';
-import { createJob } from '../../../prisma/factories/job';
-import { createJobApplications } from '../../../prisma/factories/job-applications';
+import { createCompany } from '../../../prisma/testing/factories/company';
+import { createJob } from '../../../prisma/testing/factories/job';
+import { createJobApplications } from '../../../prisma/testing/factories/job-applications';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] [PATCH] /jobs/:id/close', () => {

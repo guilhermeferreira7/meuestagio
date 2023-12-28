@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 import NodeEnvironment from 'jest-environment-node';
 import { faker } from '@faker-js/faker';
-import { prisma } from './prisma';
+import { prisma } from '../prisma';
 require('dotenv').config();
 
 const prismaBinary = './node_modules/.bin/prisma';

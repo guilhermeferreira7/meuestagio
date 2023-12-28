@@ -6,7 +6,7 @@ import { AppModule } from '../../../src/app.module';
 import {
   createInstitution,
   createManyInstitutions,
-} from '../../../prisma/factories/institution';
+} from '../../../prisma/testing/factories/institution';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Institutions', () => {

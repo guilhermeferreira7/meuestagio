@@ -1,4 +1,4 @@
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 import { faker } from '@faker-js/faker';
 import { createRegion } from './region';
 import { Prisma } from '@prisma/client';

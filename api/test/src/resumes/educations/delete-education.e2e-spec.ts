@@ -5,8 +5,8 @@ import { AppModule } from '../../../../src/app.module';
 import { CreateEducationDto } from '../../../../src/modules/resumes/educations/create.dto';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { del, get } from '../../../helpers/request';
-import { createStudent } from '../../../../prisma/factories/student';
-import { createEducation } from '../../../../prisma/factories/education';
+import { createStudent } from '../../../../prisma/testing/factories/student';
+import { createEducation } from '../../../../prisma/testing/factories/education';
 
 describe('[E2E] Education', () => {
   let app: INestApplication;

@@ -5,7 +5,7 @@ import { AppModule } from '../../../src/app.module';
 import { CreateCityDto } from '../../../src/modules/cities/dtos/create-city.dto';
 import { adminLogin, studentLogin } from '../../helpers/login';
 import { post } from '../../helpers/request';
-import { createRegion } from '../../../prisma/factories/region';
+import { createRegion } from '../../../prisma/testing/factories/region';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Cities', () => {

@@ -6,8 +6,8 @@ import { AppModule } from '../../../src/app.module';
 import { CreateJobApplicationDto } from '../../../src/modules/job-applications/dtos/update';
 import { companyLogin, studentLogin } from '../../helpers/login';
 import { get, post } from '../../helpers/request';
-import { createJob } from '../../../prisma/factories/job';
-import { createStudent } from '../../../prisma/factories/student';
+import { createJob } from '../../../prisma/testing/factories/job';
+import { createStudent } from '../../../prisma/testing/factories/student';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] Job Applications', () => {

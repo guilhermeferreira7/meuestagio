@@ -5,8 +5,8 @@ import { AppModule } from '../../../../src/app.module';
 import { CreateExperienceDto } from '../../../../src/modules/resumes/experiences/create.dto';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { post } from '../../../helpers/request';
-import { createStudent } from '../../../../prisma/factories/student';
-import { createExperience } from '../../../../prisma/factories/experience';
+import { createStudent } from '../../../../prisma/testing/factories/student';
+import { createExperience } from '../../../../prisma/testing/factories/experience';
 
 describe('[E2E] Experience', () => {
   let app: INestApplication;

@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
 
 import { createCity } from './city';
-import bcryptService from '../../src/utils/bcriptUtils';
-import { prisma } from '../prisma';
+import bcryptService from '../../../src/utils/bcriptUtils';
+import { prisma } from '../../prisma';
 
 export const createCompany = async () => {
   const city = await createCity();

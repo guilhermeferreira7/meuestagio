@@ -4,9 +4,9 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../../../../src/app.module';
 import { companyLogin, studentLogin } from '../../../helpers/login';
 import { post } from '../../../helpers/request';
-import { createStudent } from '../../../../prisma/factories/student';
+import { createStudent } from '../../../../prisma/testing/factories/student';
 import { CreateSkillDto } from '../../../../src/modules/resumes/skills/create.dto';
-import { createSkill } from '../../../../prisma/factories/skill';
+import { createSkill } from '../../../../prisma/testing/factories/skill';
 import { prisma } from '../../../../prisma/prisma';
 
 describe('[E2E] Skill', () => {

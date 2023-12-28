@@ -5,9 +5,9 @@ import * as request from 'supertest';
 
 import { CreateJobDto } from '../../../src/modules/jobs/dtos/create-job.dto';
 import { companyLogin, studentLogin } from '../../helpers/login';
-import { createCompany } from '../../../prisma/factories/company';
-import { createArea } from '../../../prisma/factories/area';
-import { createRegion } from '../../../prisma/factories/region';
+import { createCompany } from '../../../prisma/testing/factories/company';
+import { createArea } from '../../../prisma/testing/factories/area';
+import { createRegion } from '../../../prisma/testing/factories/region';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] [POST] /jobs', () => {

@@ -1,10 +1,10 @@
 import { createCity } from './city';
 import { createInstitution } from './institution';
 import { createCourse } from './course';
-import bcryptService from '../../src/utils/bcriptUtils';
+import bcryptService from '../../../src/utils/bcriptUtils';
 import { faker } from '@faker-js/faker/locale/af_ZA';
 import { createResume } from './resume';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 
 export const createStudent = async () => {
   const city = await createCity();

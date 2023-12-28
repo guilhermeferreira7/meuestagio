@@ -4,10 +4,13 @@ import * as request from 'supertest';
 import { City } from '@prisma/client';
 
 import { AppModule } from '../../../../src/app.module';
-import { createJob, createJobWith } from '../../../../prisma/factories/job';
-import { createCity } from '../../../../prisma/factories/city';
-import { createCompany } from '../../../../prisma/factories/company';
-import { createArea } from '../../../../prisma/factories/area';
+import {
+  createJob,
+  createJobWith,
+} from '../../../../prisma/testing/factories/job';
+import { createCity } from '../../../../prisma/testing/factories/city';
+import { createCompany } from '../../../../prisma/testing/factories/company';
+import { createArea } from '../../../../prisma/testing/factories/area';
 import { prisma } from '../../../../prisma/prisma';
 
 describe('[E2E] Jobs query by city', () => {

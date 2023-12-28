@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 
 export const createEducation = async (resumeId: number, school?: string) => {
   return prisma.education.create({

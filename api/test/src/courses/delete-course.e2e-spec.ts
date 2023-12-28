@@ -7,7 +7,7 @@ import { adminLogin, studentLogin } from '../../helpers/login';
 import {
   createCourse,
   createManyCourses,
-} from '../../../prisma/factories/course';
+} from '../../../prisma/testing/factories/course';
 import { prisma } from '../../../prisma/prisma';
 
 describe('[E2E] [DELETE] /courses', () => {

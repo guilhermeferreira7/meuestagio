@@ -1,5 +1,5 @@
 import { createInstitution } from './institution';
-import { prisma } from '../prisma';
+import { prisma } from '../../prisma';
 import { faker } from '@faker-js/faker';
 import { createArea } from './area';
 
