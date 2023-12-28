@@ -121,18 +121,12 @@ export default function LanguagesPage({
                 placeholder="Nível"
                 defaultValue={LanguageLevel.Basic}
               >
-                <option value={LanguageLevel.Basic}>
-                  {LanguageLevel.Basic}
-                </option>
+                <option value={LanguageLevel.Basic}>Básico</option>
                 <option value={LanguageLevel.Intermediate}>
-                  {LanguageLevel.Intermediate}
+                  Intermediário
                 </option>
-                <option value={LanguageLevel.Advanced}>
-                  {LanguageLevel.Advanced}
-                </option>
-                <option value={LanguageLevel.Fluent}>
-                  {LanguageLevel.Fluent}
-                </option>
+                <option value={LanguageLevel.Advanced}>Avançado</option>
+                <option value={LanguageLevel.Fluent}>Fluente</option>
               </Form.InputSelect>
               <Form.ErrorMessage field="level" />
             </Form.Field>

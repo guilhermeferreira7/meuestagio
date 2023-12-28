@@ -59,8 +59,8 @@ export enum Degree {
 }
 
 export enum LanguageLevel {
-  Basic = "Básico",
-  Intermediate = "Intermediário",
-  Advanced = "Avançado",
+  Basic = "Basico",
+  Intermediate = "Intermediario",
+  Advanced = "Avancado",
   Fluent = "Fluente",
 }
