@@ -110,13 +110,9 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
             </Form.Field>
             <Form.Field className="lg:w-3/12 flex flex-col">
               <Form.InputSelect name="level" defaultValue={SkillLevel.Basic}>
-                <option value={SkillLevel.Basic}>{SkillLevel.Basic}</option>
-                <option value={SkillLevel.Intermediate}>
-                  {SkillLevel.Intermediate}
-                </option>
-                <option value={SkillLevel.Advanced}>
-                  {SkillLevel.Advanced}
-                </option>
+                <option value={SkillLevel.Basic}>Básico</option>
+                <option value={SkillLevel.Intermediate}>Intermediário</option>
+                <option value={SkillLevel.Advanced}>Avançado</option>
               </Form.InputSelect>
               <Form.ErrorMessage field="level" />
             </Form.Field>

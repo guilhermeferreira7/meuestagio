@@ -18,9 +18,9 @@ export type Skill = {
 };
 
 export enum SkillLevel {
-  Basic = "Básico",
-  Intermediate = "Intermediário",
-  Advanced = "Avançado",
+  Basic = "Basico",
+  Intermediate = "Intermediario",
+  Advanced = "Avancado",
 }
 
 export type Language = {
