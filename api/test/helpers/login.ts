@@ -1,25 +1,19 @@
 import { INestApplication } from '@nestjs/common';
-import { TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-
-import bcryptService from '../../src/utils/bcriptUtils';
-import { createCompany, createStudent } from './create-users';
+import { createStudent } from '../../prisma/testing/factories/student';
+import { createCompany } from '../../prisma/testing/factories/company';
+import { createUser } from '../../prisma/testing/factories/user';
 
 export async function companyLogin(
-  module: TestingModule,
   app: INestApplication,
+  email?: string,
 ): Promise<string> {
-  const company = {
-    name: 'Company Test',
-    email: 'company@email.com',
-    password: bcryptService.hashSync('123123'),
-  };
-  await createCompany(company, module);
+  const companyEmail = email || (await createCompany()).email;
 
   const req = await request(app.getHttpServer())
     .post('/auth/login/company')
     .send({
-      email: company.email,
+      email: companyEmail,
       password: '123123',
     });
 
@@ -27,19 +21,31 @@ export async function companyLogin(
 }
 
 export async function studentLogin(
-  module: TestingModule,
   app: INestApplication,
+  email?: string,
 ): Promise<string> {
-  const student = {
-    name: 'Student Test',
-    email: 'student@example.com',
-    password: bcryptService.hashSync('123123'),
-  };
-  await createStudent(student, module);
+  const studentEmail = email || (await createStudent()).email;
+
   const req = await request(app.getHttpServer())
     .post('/auth/login/student')
     .send({
-      email: student.email,
+      email: studentEmail,
+      password: '123123',
+    });
+
+  return req.body.access_token;
+}
+
+export async function adminLogin(
+  app: INestApplication,
+  email?: string,
+): Promise<string> {
+  const adminEmail = email || (await createUser()).email;
+
+  const req = await request(app.getHttpServer())
+    .post('/auth/login/admin')
+    .send({
+      email: adminEmail,
       password: '123123',
     });
 

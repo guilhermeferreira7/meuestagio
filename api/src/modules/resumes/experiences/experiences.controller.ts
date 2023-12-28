@@ -6,14 +6,18 @@ import {
   Delete,
   Param,
   UseGuards,
+  Req,
+  ParseIntPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { HasRoles } from '../../auth/roles/roles.decorator';
 import { Role } from '../../auth/roles/roles';
 import { RolesGuard } from '../../auth/roles/roles.guard';
-import { CreateExperienceDto } from './create-experience.dto';
+import { CreateExperienceDto } from './create.dto';
 import { ExperiencesService } from './experiences.service';
+import { ReqAuth } from '../../../types/auth/request';
 
 @Controller('resumes/me/experiences')
 export class ExperiencesController {
@@ -22,21 +26,28 @@ export class ExperiencesController {
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
-  async add(@Body() body: CreateExperienceDto) {
-    return await this.service.add(body);
+  async add(@Body() body: CreateExperienceDto, @Req() req: ReqAuth) {
+    return await this.service.add(
+      {
+        ...body,
+        endDate: body.endDate || undefined,
+      },
+      req.user.email,
+    );
   }
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get()
-  async get(@Param('resumeId') id: number) {
-    return await this.service.getAll(id);
+  async get(@Req() req: ReqAuth) {
+    return await this.service.getAll(req.user.email);
   }
 
   @HasRoles(Role.STUDENT)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number) {
-    return await this.service.delete(id);
+  @HttpCode(204)
+  async delete(@Param('id', ParseIntPipe) id: number, @Req() req: ReqAuth) {
+    return await this.service.delete(id, req.user.email);
   }
 }

@@ -13,7 +13,7 @@ import {
 } from "react-share";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
-import { Modal, ResumeView } from "../../../components";
+import { Modal, PageDefaults, ResumeView } from "../../../components";
 import ResumePdf from "../../../components/Resume/ResumePdf";
 import { STUDENT_RESUME_PATH } from "../../../constants/api-routes";
 import useClient from "../../../hooks/useClient";
@@ -31,6 +31,7 @@ export default function ResumePage({ student, resume }: PageProps) {
 
   return (
     <>
+      <PageDefaults currentPage="Currículo" />
       <div className="w-11/12 my-2">
         <h2 className="flex justify-between">
           <div className="flex items-center gap-1">

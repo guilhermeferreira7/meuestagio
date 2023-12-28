@@ -21,6 +21,7 @@ import { Institution } from "../../types/institution";
 import { City } from "../../types/city";
 import { Role } from "../../types/auth/user-auth";
 import { createUserFormSchema } from "../../utils/validators/create-account-schema";
+import { errorToString } from "../../utils/helpers/error-to-string";
 
 type CreateAccountFormData = z.infer<typeof createUserFormSchema>;
 
@@ -48,7 +49,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
         notify.success("Aluno cadastrado com sucesso!");
         await signIn(data.email, data.password, Role.Student);
       } catch (error: any) {
-        notify.error(error.response?.data?.message || error.message);
+        notify.error(errorToString(error));
       }
     } else if (data.userRole === Role.Company) {
       try {
@@ -56,7 +57,7 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
         notify.success("Empresa cadastrada com sucesso!");
         await signIn(data.email, data.password, Role.Company);
       } catch (error: any) {
-        notify.error("" + error.response?.data?.message || error.message);
+        notify.error(errorToString(error));
       }
     } else {
       notify.warning();
@@ -142,10 +143,17 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const apiClient = getAPIClient(ctx);
 
-  const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
-  const cities = await apiClient.get<City[]>(CITIES_PATH);
+  try {
+    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
+    const cities = await apiClient.get<City[]>(CITIES_PATH);
+    return {
+      props: { institutions: institutions.data, cities: cities.data },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
 
-  return {
-    props: { institutions: institutions.data, cities: cities.data },
-  };
+    return {
+      props: { institutions: [], cities: [] },
+    };
+  }
 };

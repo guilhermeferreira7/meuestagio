@@ -11,11 +11,12 @@ import {
   STUDENT_RESUME_PATH,
   STUDENT_RESUME_SKILLS_PATH,
 } from "../../../../constants/api-routes";
-import { AppCard, Form } from "../../../../components";
+import { PageDefaults, Form } from "../../../../components";
 import { createSkillSchema } from "../../../../utils/validators/edit-resume-schema";
 import { Resume, Skill, SkillLevel } from "../../../../types/resume";
 import { api } from "../../../../services/api/api";
 import { notify } from "../../../../components/toasts/toast";
+import { WorkHistoryOutlined } from "@mui/icons-material";
 
 type FormAddSkill = z.infer<typeof createSkillSchema>;
 
@@ -80,38 +81,44 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
 
   return (
     <>
-      <div className="w-11/12">
-          <h2 className="text-xl text-primary font-bold mb-2 justify-between">
-            Cadastrar nova habilidade
-          </h2>
-          <FormProvider {...createSkillForm}>
-            <form
-              onSubmit={handleSubmit(createSkill)}
-              className="flex flex-col lg:flex-row w-full gap-1"
-            >
-              <Form.Field className="lg:w-6/12 flex flex-col">
-                <Form.InputText
-                  name="name"
-                  autoComplete="off"
-                  placeholder="Habilidade..."
-                />
-                <Form.ErrorMessage field="name" />
-              </Form.Field>
-              <Form.Field className="lg:w-3/12 flex flex-col">
-                <Form.InputSelect name="level" defaultValue={SkillLevel.Basic}>
-                  <option value={SkillLevel.Basic}>{SkillLevel.Basic}</option>
-                  <option value={SkillLevel.Intermediate}>
-                    {SkillLevel.Intermediate}
-                  </option>
-                  <option value={SkillLevel.Advanced}>
-                    {SkillLevel.Advanced}
-                  </option>
-                </Form.InputSelect>
-                <Form.ErrorMessage field="level" />
-              </Form.Field>
-              <button className="lg:w-3/12 btn btn-primary">Adicionar</button>
-            </form>
-          </FormProvider>
+      <PageDefaults
+        currentPage="Habilidades"
+        linksTree={[
+          {
+            name: "Currículo",
+            href: "/student/resume",
+            icon: <WorkHistoryOutlined />,
+          },
+        ]}
+      />
+      <div className="w-full px-4">
+        <h2 className="text-xl text-primary font-bold mb-2 justify-between">
+          Cadastrar nova habilidade
+        </h2>
+        <FormProvider {...createSkillForm}>
+          <form
+            onSubmit={handleSubmit(createSkill)}
+            className="flex flex-col lg:flex-row w-full gap-1"
+          >
+            <Form.Field className="lg:w-6/12 flex flex-col">
+              <Form.InputText
+                name="name"
+                autoComplete="off"
+                placeholder="Habilidade..."
+              />
+              <Form.ErrorMessage field="name" />
+            </Form.Field>
+            <Form.Field className="lg:w-3/12 flex flex-col">
+              <Form.InputSelect name="level" defaultValue={SkillLevel.Basic}>
+                <option value={SkillLevel.Basic}>Básico</option>
+                <option value={SkillLevel.Intermediate}>Intermediário</option>
+                <option value={SkillLevel.Advanced}>Avançado</option>
+              </Form.InputSelect>
+              <Form.ErrorMessage field="level" />
+            </Form.Field>
+            <button className="lg:w-3/12 btn btn-primary">Adicionar</button>
+          </form>
+        </FormProvider>
       </div>
       <div className="w-11/12 my-3 flex flex-col gap-2 border-l border-l-gray-300">
         {skillsUpdated.length < 1 && <span>Nenhuma habilidade cadastrada</span>}

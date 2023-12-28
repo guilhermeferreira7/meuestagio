@@ -18,7 +18,8 @@ import {
   STUDENT_RESUME_EXPERIENCES_PATH,
   STUDENT_RESUME_PATH,
 } from "../../../../constants/api-routes";
-import { Form } from "../../../../components";
+import { Form, PageDefaults } from "../../../../components";
+import { WorkHistoryOutlined } from "@mui/icons-material";
 
 type ExperiencePageProps = {
   resumeId: number;
@@ -93,9 +94,19 @@ export default function ExperiencePage({
 
   return (
     <>
-      <div className="w-11/12">
+      <PageDefaults
+        currentPage="Experiência"
+        linksTree={[
+          {
+            name: "Currículo",
+            href: "/student/resume",
+            icon: <WorkHistoryOutlined />,
+          },
+        ]}
+      />
+      <div className="w-full px-4">
         <h2 className="text-xl text-primary font-bold mb-2 justify-between">
-          Cadastrar nova formação
+          Cadastrar nova experiência
         </h2>
         <FormProvider {...createExperienceForm}>
           <form
@@ -120,7 +131,7 @@ export default function ExperiencePage({
 
             <Form.Field>
               <Form.Label htmlFor="startDate">Data de início</Form.Label>
-              <Form.InputText name="startDate" />
+              <Form.InputText name="startDate" type="date" />
               <Form.ErrorMessage field="startDate" />
             </Form.Field>
             <Form.Field>
@@ -132,6 +143,7 @@ export default function ExperiencePage({
               <Form.InputText
                 disabled={createExperienceForm.watch("currentJob")}
                 name="endDate"
+                type="date"
               />
               <Form.ErrorMessage field="endDate" />
             </Form.Field>

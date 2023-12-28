@@ -16,6 +16,7 @@ import img from "../../../public/avatar.png";
 import AppCard from "../AppCard";
 import { Student } from "../../types/users/student";
 import { Resume } from "../../types/resume";
+import { formatDate } from "../../utils/helpers/date-helpers";
 
 type ResumeProps = {
   student: Student;
@@ -107,10 +108,8 @@ export default function ResumeView({ student, resume }: ResumeProps) {
                   <span>Grau: {education.degree}</span>
                   <span>Área de estudo: {education.fieldOfStudy}</span>
                   <span>
-                    Período: De {new Date(education.startDate).getMonth()}/
-                    {new Date(education.startDate).getFullYear()} até{" "}
-                    {new Date(education.endDate).getMonth()}/
-                    {new Date(education.endDate).getFullYear()}
+                    Período: De {formatDate(education.startDate)} até{" "}
+                    {formatDate(education.endDate)}
                     {index < resume.educations.length - 1 && (
                       <div className="divider my-0"></div>
                     )}
@@ -132,15 +131,11 @@ export default function ResumeView({ student, resume }: ResumeProps) {
                 <span>Empresa: {exp.company}</span>
                 <span>Cargo: {exp.position}</span>
                 <span>
-                  De {new Date(exp.startDate).getMonth()}/
-                  {new Date(exp.startDate).getFullYear()} até{" "}
+                  De {formatDate(exp.startDate)} até{" "}
                   {exp.currentJob ? (
-                    <span>Atualmente</span>
+                    <span>o momento</span>
                   ) : (
-                    <span>
-                      {new Date(exp.endDate).getMonth()}/
-                      {new Date(exp.endDate).getFullYear()}
-                    </span>
+                    <span>{formatDate(exp.endDate)}</span>
                   )}
                 </span>
                 {index < resume.educations.length - 1 && (

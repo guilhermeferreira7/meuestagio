@@ -8,7 +8,7 @@ MeuEstagio is a web application that is being developed to make the process of p
 
 Frontend: [React](https://reactjs.org/), [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), [Zod](https://zod.dev/), [Cypress](https://www.cypress.io/)
 
-Backend: [NestJS](https://nestjs.com/), [TypeORM](https://typeorm.io/), [PostgreSQL](https://www.postgresql.org/), [NestJS Testing](https://docs.nestjs.com/fundamentals/testing), [JWT](https://jwt.io/)
+Backend: [NestJS](https://nestjs.com/), [Prisma](https://https://www.prisma.io/docs/), [PostgreSQL](https://www.postgresql.org/), [NestJS Testing](https://docs.nestjs.com/fundamentals/testing), [JWT](https://jwt.io/)
 
 Both frontend and backend are written in [TypeScript](https://www.typescriptlang.org/).
 

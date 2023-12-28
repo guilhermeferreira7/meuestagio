@@ -19,7 +19,8 @@ import {
   STUDENT_RESUME_LANGUAGES_PATH,
   STUDENT_RESUME_PATH,
 } from "../../../../constants/api-routes";
-import { Form } from "../../../../components";
+import { Form, PageDefaults } from "../../../../components";
+import { WorkHistoryOutlined } from "@mui/icons-material";
 
 type LanguagePageProps = {
   resumeId: number;
@@ -88,7 +89,18 @@ export default function LanguagesPage({
 
   return (
     <>
-      <div className="w-11/12">
+      <PageDefaults
+        currentPage="Idiomas"
+        linksTree={[
+          {
+            name: "Currículo",
+            href: "/student/resume",
+            icon: <WorkHistoryOutlined />,
+          },
+        ]}
+      />
+
+      <div className="w-full px-4">
         <h2 className="text-xl text-primary font-bold mb-2 justify-between">
           Cadastrar novo idioma
         </h2>
@@ -109,18 +121,12 @@ export default function LanguagesPage({
                 placeholder="Nível"
                 defaultValue={LanguageLevel.Basic}
               >
-                <option value={LanguageLevel.Basic}>
-                  {LanguageLevel.Basic}
-                </option>
+                <option value={LanguageLevel.Basic}>Básico</option>
                 <option value={LanguageLevel.Intermediate}>
-                  {LanguageLevel.Intermediate}
+                  Intermediário
                 </option>
-                <option value={LanguageLevel.Advanced}>
-                  {LanguageLevel.Advanced}
-                </option>
-                <option value={LanguageLevel.Fluent}>
-                  {LanguageLevel.Fluent}
-                </option>
+                <option value={LanguageLevel.Advanced}>Avançado</option>
+                <option value={LanguageLevel.Fluent}>Fluente</option>
               </Form.InputSelect>
               <Form.ErrorMessage field="level" />
             </Form.Field>

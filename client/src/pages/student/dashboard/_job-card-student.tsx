@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import {
   AttachMoney,
   InfoOutlined,
@@ -28,7 +27,7 @@ export default function JobCardStudent({ job, areaId }: JobCardStudentProps) {
               data-tip={tooltipText}
               className={`font-semibold text-2xl ${
                 job.areaId === areaId &&
-                "text-primary tooltip tooltip-primary tooltip-top"
+                "text-primary tooltip tooltip-primary tooltip-right"
               }`}
             >
               {job.title}

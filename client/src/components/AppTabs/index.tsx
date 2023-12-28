@@ -1,4 +1,5 @@
 import React from "react";
+import { JobApplicationStatus } from "../../types/job-application";
 
 type TabsProps = {
   tabs: string[];
@@ -18,7 +19,7 @@ export default function AppTabs({ tabs, activeTab, setActiveTab }: TabsProps) {
           id={tab}
           onClick={() => setActiveTab(tab)}
         >
-          {tab}
+          {tab === JobApplicationStatus.IN_PROGRESS ? "Em andamento" : tab}
         </a>
       ))}
     </div>

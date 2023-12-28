@@ -3,48 +3,70 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 
-import { Skill } from './skill.entity';
-import { CreateSkillDto } from './create-skill.dto';
+import { CreateSkillDto } from './create.dto';
+import { PrismaService } from '../../../../prisma/prisma.service';
 
 @Injectable()
 export class SkillsService {
-  constructor(
-    @InjectRepository(Skill)
-    private readonly repository: Repository<Skill>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async add(body: CreateSkillDto): Promise<Skill> {
-    const skillExists = await this.repository.findOne({
+  async add(body: CreateSkillDto, email: string) {
+    const resumeId = await this.validateSkill(body, email);
+
+    return await this.prisma.skill.create({
+      data: {
+        name: body.name,
+        level: body.level,
+        resumeId,
+      },
+    });
+  }
+
+  async getAll(email: string) {
+    const { id } = await this.getResume(email);
+    return await this.prisma.skill.findMany({
+      where: { resumeId: id },
+    });
+  }
+
+  async delete(id: number, email: string) {
+    const resume = await this.getResume(email);
+    const skill = await this.prisma.skill.findFirst({
       where: {
-        resumeId: body.resumeId,
+        id,
+        resumeId: resume.id,
+      },
+    });
+
+    if (!skill) throw new NotFoundException('Habilidade não encontrada');
+
+    await this.prisma.skill.delete({
+      where: { id },
+    });
+  }
+
+  private async getResume(email: string) {
+    return await this.prisma.student
+      .findUnique({
+        where: { email },
+      })
+      .resume();
+  }
+
+  private async validateSkill(body: CreateSkillDto, email: string) {
+    const { id } = await this.getResume(email);
+    if (!id) throw new NotFoundException('Currículo não encontrado');
+
+    const skill = await this.prisma.skill.findFirst({
+      where: {
+        resumeId: id,
         name: body.name,
       },
     });
-    if (skillExists) {
-      throw new ConflictException('Habilidade já cadastrada');
-    }
-    const skill = this.repository.create(body);
-    await this.repository.save(skill);
-    return skill;
-  }
 
-  async getAll(resumeId: number): Promise<Skill[]> {
-    return await this.repository.find({
-      where: { resumeId },
-    });
-  }
+    if (skill) throw new ConflictException('Habilidade já cadastrada');
 
-  async delete(id: number): Promise<void> {
-    const skill = await this.repository.find({
-      where: { id },
-    });
-    if (!skill) {
-      throw new NotFoundException('Habilidade não encontrada');
-    }
-
-    await this.repository.delete(id);
+    return id;
   }
 }

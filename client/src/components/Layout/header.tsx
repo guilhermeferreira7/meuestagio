@@ -12,12 +12,14 @@ export default function Header() {
 
   return (
     <>
-      <div className="bg-base-100 w-full navbar drop-shadow-lg flex items-center justify-between px-4">
-        <div className="flex-none lg:hidden">
-          <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
-            <Menu className="text-primary" />
-          </label>
-        </div>
+      <header className="bg-base-100 w-full navbar drop-shadow-lg flex items-center justify-between px-4 z-10">
+        {user && (
+          <div className="flex-none lg:hidden">
+            <label htmlFor="my-drawer" className="btn btn-square btn-ghost">
+              <Menu className="text-primary" />
+            </label>
+          </div>
+        )}
         <div className="flex-1 px-2">
           <Link
             href={route}
@@ -71,7 +73,7 @@ export default function Header() {
             </Link>
           </div>
         )}
-      </div>
+      </header>
     </>
   );
 }
