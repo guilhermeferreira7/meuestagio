@@ -28,6 +28,15 @@ export class ProfessorsService {
     });
   }
 
+  async findOneWithAllData(email: string) {
+    return await this.prisma.professor.findUnique({
+      where: {
+        email,
+      },
+      include: { course: { include: { institution: true } } },
+    });
+  }
+
   private async validateCreate(body: CreateProfessorDto) {
     const professor = await this.prisma.professor.findUnique({
       where: {
