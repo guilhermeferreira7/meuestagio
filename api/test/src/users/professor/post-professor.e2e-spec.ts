@@ -1,16 +1,12 @@
 import { Test } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { faker } from '@faker-js/faker';
 import * as request from 'supertest';
 
 import { AppModule } from '../../../../src/app.module';
-import {
-  adminLogin,
-  professorLogin,
-  studentLogin,
-} from '../../../helpers/login';
+import { adminLogin, studentLogin } from '../../../helpers/login';
 import { CreateProfessorDto } from '../../../../src/modules/users/professors/professor-create.dto';
 import { createCourse } from '../../../../prisma/testing/factories/course';
-import { faker } from '@faker-js/faker';
 import bcryptService from '../../../../src/utils/bcriptUtils';
 
 describe('[E2E] [POST] Professor /professors', () => {

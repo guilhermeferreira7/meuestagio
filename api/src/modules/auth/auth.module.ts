@@ -13,6 +13,8 @@ import { LocalCompanyStrategy } from './strategies/company.strategy';
 import { AuthAdminService } from './services/auth-admin.service';
 import { LocalAdminStrategy } from './strategies/admin.strategy';
 import { jwtConstants } from '../../constants/jwt';
+import { AuthProfessorService } from './services/auth-professor.service';
+import { LocalProfessorStrategy } from './strategies/professor.strategy';
 
 @Global()
 @Module({
@@ -21,7 +23,7 @@ import { jwtConstants } from '../../constants/jwt';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '14d' },
+      signOptions: { expiresIn: '7d' },
     }),
   ],
   providers: [
@@ -29,9 +31,11 @@ import { jwtConstants } from '../../constants/jwt';
     AuthStudentService,
     AuthCompanyService,
     AuthAdminService,
+    AuthProfessorService,
     LocalAdminStrategy,
     LocalStudentStrategy,
     LocalCompanyStrategy,
+    LocalProfessorStrategy,
     JwtStrategy,
   ],
   controllers: [AuthController],

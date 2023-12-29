@@ -27,6 +27,6 @@ import { ProfessorsService } from './professors/professors.service';
     AdminController,
     ProfessorsController,
   ],
-  exports: [StudentsService, CompaniesService, AdminService],
+  exports: [StudentsService, CompaniesService, AdminService, ProfessorsService],
 })
 export class UsersModule {}

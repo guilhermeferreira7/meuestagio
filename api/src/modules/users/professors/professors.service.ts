@@ -20,6 +20,14 @@ export class ProfessorsService {
     });
   }
 
+  async findOne(email: string) {
+    return await this.prisma.professor.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
   private async validateCreate(body: CreateProfessorDto) {
     const professor = await this.prisma.professor.findUnique({
       where: {
