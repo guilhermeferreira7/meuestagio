@@ -1,10 +1,7 @@
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-import { isAxiosError } from "axios";
 import { parseCookies } from "nookies";
 
-import { errorToString } from "../../utils/helpers/error-to-string";
 import { Role, UserAuth } from "@customTypes/auth/user-auth";
-import { redirect } from "next/dist/server/api-utils";
 
 export default function withStudentAuth(
   getServerSidePropsCallback: (

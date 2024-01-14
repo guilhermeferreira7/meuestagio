@@ -1,20 +1,22 @@
-import React, { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
 import { Loop } from "@mui/icons-material";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { z } from "zod";
 
+import { getAPIClient } from "@services/api/clientApi";
+import { Form } from "../../../components";
+import { notify } from "../../../components/toasts/toast";
 import {
   AREAS_PATH,
   CITIES_PATH,
   JOBS_PATH,
+  PROFILE_COMPANY_PATH,
 } from "../../../constants/api-routes";
-import { notify } from "../../../components/toasts/toast";
-import { Form } from "../../../components";
-import withCompanyAuth from "../../../services/auth/withCompanyAuth";
 import { api } from "../../../services/api/api";
+import withCompanyAuth from "../../../services/auth/withCompanyAuth";
 import { Area } from "../../../types/area";
 import { City } from "../../../types/city";
 import { Company } from "../../../types/users/company";
@@ -191,15 +193,17 @@ export default function CreateJob({ areas, company, cities }: PageProps) {
   );
 }
 
-export const getServerSideProps = withCompanyAuth(
-  async (_context, company, apiClient) => {
-    const areas = await apiClient.get<Area[]>(AREAS_PATH);
-    const cities = await apiClient.get<City[]>(CITIES_PATH, {
-      params: { orderBy: "name" },
-    });
+export const getServerSideProps = withCompanyAuth(async (context, user) => {
+  const apiClient = getAPIClient(context);
 
-    return {
-      props: { areas: areas.data, company, cities: cities.data },
-    };
-  }
-);
+  const { data: company } = await apiClient.get<Company>(PROFILE_COMPANY_PATH);
+
+  const areas = await apiClient.get<Area[]>(AREAS_PATH);
+  const cities = await apiClient.get<City[]>(CITIES_PATH, {
+    params: { orderBy: "name" },
+  });
+
+  return {
+    props: { areas: areas.data, company, cities: cities.data },
+  };
+});

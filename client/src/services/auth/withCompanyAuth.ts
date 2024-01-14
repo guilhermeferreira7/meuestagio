@@ -1,37 +1,26 @@
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-import { isAxiosError } from "axios";
-import { getAPIClient } from "../api/clientApi";
-import { Company } from "../../types/users/company";
-import { PROFILE_COMPANY_PATH } from "../../constants/api-routes";
+import { parseCookies } from "nookies";
+
+import { Role, UserAuth } from "@customTypes/auth/user-auth";
 
 export default function withCompanyAuth(
   getServerSidePropsCallback: (
     context: GetServerSidePropsContext,
-    company: Company,
-    apiClient: ReturnType<typeof getAPIClient>
+    user: UserAuth
   ) => Promise<GetServerSidePropsResult<unknown>>
 ) {
-  return async (context: any) => {
-    try {
-      const apiClient = getAPIClient(context);
-      const company = await apiClient.get<Company>(PROFILE_COMPANY_PATH);
-      if (company.data) {
-        return await getServerSidePropsCallback(
-          context,
-          company.data,
-          getAPIClient(context)
-        );
-      }
-    } catch (error) {
-      if (isAxiosError(error)) {
-        if (error.response?.status === 401 || error.response?.status === 403)
-          return {
-            notFound: true,
-          };
-      }
+  return async (context: GetServerSidePropsContext) => {
+    const { ["meuestagio.user"]: cookie } = parseCookies(context);
+    const user: UserAuth | undefined = cookie ? JSON.parse(cookie) : undefined;
 
+    if (user?.role === Role.Company) {
+      return await getServerSidePropsCallback(context, user);
+    } else {
       return {
-        props: {},
+        redirect: {
+          permanent: false,
+          destination: "/",
+        },
       };
     }
   };

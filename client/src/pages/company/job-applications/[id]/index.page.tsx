@@ -1,26 +1,24 @@
-import { GetServerSideProps } from "next";
-import React, { useState } from "react";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
+import withCompanyAuth from "@services/auth/withCompanyAuth";
 import { AppTabs, Modal, ResumeView } from "../../../../components";
 import { notify } from "../../../../components/toasts/toast";
 import {
   JOB_APPLICATIONS_BY_JOB,
   JOB_APPLICATIONS_FINISH_PATH,
   JOB_APPLICATIONS_INTERVIEW_PATH,
-  PROFILE_COMPANY_PATH,
 } from "../../../../constants/api-routes";
 import { useJobApplications } from "../../../../hooks/useFilterJobApplications";
+import { api } from "../../../../services/api/api";
 import { getAPIClient } from "../../../../services/api/clientApi";
 import {
   JobApplication,
   JobApplicationStatus,
 } from "../../../../types/job-application";
-import { Company } from "../../../../types/users/company";
-import Candidate from "./_candidate";
-import { api } from "../../../../services/api/api";
 import { errorToString } from "../../../../utils/helpers/error-to-string";
+import Candidate from "./_candidate";
 
 interface ApplicationsProps {
   jobApplications: JobApplication[];
@@ -164,14 +162,14 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
-  await apiClient.get<Company>(PROFILE_COMPANY_PATH);
+export const getServerSideProps = withCompanyAuth(async (context, _user) => {
+  const apiClient = getAPIClient(context);
+
   const jobApplications = await apiClient.get<JobApplication[]>(
     JOB_APPLICATIONS_BY_JOB,
     {
       params: {
-        jobId: ctx.query.id,
+        jobId: context.query.id,
       },
     }
   );
@@ -181,4 +179,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       jobApplications: jobApplications.data,
     },
   };
-};
+});

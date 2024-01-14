@@ -1,16 +1,17 @@
 import { useState } from "react";
 
+import { getAPIClient } from "@services/api/clientApi";
+import { AppCard, ResumeView } from "../../../components";
 import {
   JOBS_BY_COMPANY_PATH,
   JOB_APPLICATIONS_BY_JOB,
 } from "../../../constants/api-routes";
 import withCompanyAuth from "../../../services/auth/withCompanyAuth";
+import { Job } from "../../../types/job";
 import {
   JobApplication,
   JobApplicationStatus,
 } from "../../../types/job-application";
-import { Job } from "../../../types/job";
-import { AppCard, ResumeView } from "../../../components";
 
 type CandidatesPageProps = {
   candidates: JobApplication[];
@@ -73,31 +74,33 @@ export default function Candidates({ candidates }: CandidatesPageProps) {
   );
 }
 
-export const getServerSideProps = withCompanyAuth(
-  async (_context, company, apiClient) => {
-    const jobs = await apiClient.get<Job[]>(JOBS_BY_COMPANY_PATH(company.id));
+export const getServerSideProps = withCompanyAuth(async (context, user) => {
+  const apiClient = getAPIClient(context);
 
-    const candidates = await Promise.all(
-      jobs.data.map(async (job) => {
-        return apiClient
-          .get<JobApplication[]>(JOB_APPLICATIONS_BY_JOB, {
-            params: {
-              jobId: job.id,
-            },
-          })
-          .then((res) => {
-            return res.data.filter(
-              (jobApplication) =>
-                jobApplication.status === JobApplicationStatus.INTERVIEW
-            );
-          });
-      })
-    );
+  const jobs = await apiClient.get<Job[]>(
+    JOBS_BY_COMPANY_PATH(Number(user.sub))
+  );
 
-    return {
-      props: {
-        candidates: candidates.flat(),
-      },
-    };
-  }
-);
+  const candidates = await Promise.all(
+    jobs.data.map(async (job) => {
+      return apiClient
+        .get<JobApplication[]>(JOB_APPLICATIONS_BY_JOB, {
+          params: {
+            jobId: job.id,
+          },
+        })
+        .then((res) => {
+          return res.data.filter(
+            (jobApplication) =>
+              jobApplication.status === JobApplicationStatus.INTERVIEW
+          );
+        });
+    })
+  );
+
+  return {
+    props: {
+      candidates: candidates.flat(),
+    },
+  };
+});

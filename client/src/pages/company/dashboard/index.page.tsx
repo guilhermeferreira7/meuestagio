@@ -1,15 +1,10 @@
-import { GetServerSideProps } from "next";
-
-import { Company } from "@customTypes/users/company";
 import { Job, JobStatus } from "@customTypes/job";
 import { getAPIClient } from "@services/api/clientApi";
-import JobCompanyCard from "./_job-card";
+import withCompanyAuth from "@services/auth/withCompanyAuth";
 import { useEffect, useState } from "react";
-import {
-  JOBS_BY_COMPANY_PATH,
-  PROFILE_COMPANY_PATH,
-} from "../../../constants/api-routes";
 import { AppTabs } from "../../../components";
+import { JOBS_BY_COMPANY_PATH } from "../../../constants/api-routes";
+import JobCompanyCard from "./_job-card";
 
 interface CompanyJobsProps {
   jobs: Job[];
@@ -60,27 +55,16 @@ export default function CompanyJobs({ jobs }: CompanyJobsProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  try {
-    const apiClient = getAPIClient(ctx);
+export const getServerSideProps = withCompanyAuth(async (context, user) => {
+  const apiClient = getAPIClient(context);
 
-    const company = await apiClient.get<Company>(PROFILE_COMPANY_PATH);
-    const jobs = await apiClient.get<Job[]>(
-      JOBS_BY_COMPANY_PATH(company.data.id)
-    );
+  const jobs = await apiClient.get<Job[]>(
+    JOBS_BY_COMPANY_PATH(Number(user.sub))
+  );
 
-    return {
-      props: {
-        company: company.data,
-        jobs: jobs.data,
-      },
-    };
-  } catch (error) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-};
+  return {
+    props: {
+      jobs: jobs.data,
+    },
+  };
+});
