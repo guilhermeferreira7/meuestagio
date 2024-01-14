@@ -5,16 +5,18 @@ import {
   CITIES_PATH,
   COURSES_PATH,
   INSTITUTIONS_PATH,
+  PROFILE_STUDENT_PATH,
 } from "../../../constants/api-routes";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { Student } from "../../../types/users/student";
 import { City } from "../../../types/city";
 import { Course } from "../../../types/course";
 import { Institution } from "../../../types/institution";
+import { Student } from "../../../types/users/student";
 
+import { getAPIClient } from "@services/api/clientApi";
+import AddressForm from "./_address-form";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
-import AddressForm from "./_address-form";
 import PersonalDataForm from "./_personal-data-form";
 
 interface StudentProfileProps {
@@ -65,23 +67,25 @@ export default function StudentProfile({
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const cities = await apiClient.get<City[]>(CITIES_PATH);
-    const courses = await apiClient.get<Course[]>(COURSES_PATH, {
-      params: {
-        institutionId: student.institution.id,
-      },
-    });
-    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
+export const getServerSideProps = withStudentAuth(async (context, _user) => {
+  const apiClient = getAPIClient(context);
 
-    return {
-      props: {
-        student: student,
-        cities: cities.data,
-        courses: courses.data,
-        institutions: institutions.data,
-      },
-    };
-  }
-);
+  const { data: student } = await apiClient.get<Student>(PROFILE_STUDENT_PATH);
+
+  const cities = await apiClient.get<City[]>(CITIES_PATH);
+  const courses = await apiClient.get<Course[]>(COURSES_PATH, {
+    params: {
+      institutionId: student.institution.id,
+    },
+  });
+  const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
+
+  return {
+    props: {
+      student: student,
+      cities: cities.data,
+      courses: courses.data,
+      institutions: institutions.data,
+    },
+  };
+});

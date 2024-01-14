@@ -7,6 +7,8 @@ import { Student } from "../../../types/users/student";
 
 import SearchBar from "./_search-bar";
 import JobCardStudent from "./_job-card-student";
+import { PROFILE_STUDENT_PATH } from "@constants/api-routes";
+import { getAPIClient } from "@services/api/clientApi";
 
 interface StudentJobsProps {
   student: Student;
@@ -70,12 +72,13 @@ export default function StudentJobs({ student }: StudentJobsProps) {
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, _apiClient) => {
-    return {
-      props: {
-        student,
-      },
-    };
-  }
-);
+export const getServerSideProps = withStudentAuth(async (context, _user) => {
+  const api = getAPIClient(context);
+  const student = await api.get<Student>(PROFILE_STUDENT_PATH);
+
+  return {
+    props: {
+      student: student.data,
+    },
+  };
+});

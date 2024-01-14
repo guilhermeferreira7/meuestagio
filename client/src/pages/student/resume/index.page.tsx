@@ -1,4 +1,5 @@
 import { Download, Share, WorkHistoryOutlined } from "@mui/icons-material";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import {
   EmailIcon,
   EmailShareButton,
@@ -11,15 +12,18 @@ import {
   WhatsappIcon,
   WhatsappShareButton,
 } from "react-share";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 
+import { getAPIClient } from "@services/api/clientApi";
 import { Modal, PageDefaults, ResumeView } from "../../../components";
 import ResumePdf from "../../../components/Resume/ResumePdf";
-import { STUDENT_RESUME_PATH } from "../../../constants/api-routes";
+import {
+  PROFILE_STUDENT_PATH,
+  STUDENT_RESUME_PATH,
+} from "../../../constants/api-routes";
 import useClient from "../../../hooks/useClient";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { Student } from "../../../types/users/student";
 import { Resume } from "../../../types/resume";
+import { Student } from "../../../types/users/student";
 
 interface PageProps {
   student: Student;
@@ -86,14 +90,15 @@ export default function ResumePage({ student, resume }: PageProps) {
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
-    return {
-      props: {
-        student,
-        resume: resume.data,
-      },
-    };
-  }
-);
+export const getServerSideProps = withStudentAuth(async (context, _user) => {
+  const apiClient = getAPIClient(context);
+  const { data: student } = await apiClient.get<Student>(PROFILE_STUDENT_PATH);
+
+  const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+  return {
+    props: {
+      student,
+      resume: resume.data,
+    },
+  };
+});

@@ -18,7 +18,10 @@ import {
   JOB_APPLICATIONS_APPLY,
   JOB_APPLICATIONS_STUDENT_PATH,
   JOB_PATH,
+  PROFILE_STUDENT_PATH,
 } from "../../../constants/api-routes";
+import { getAPIClient } from "@services/api/clientApi";
+import { Student } from "@customTypes/users/student";
 
 type JobDetailsPageProps = {
   studentId: number;
@@ -152,32 +155,33 @@ export default function JobDetailsPage({
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (context, student, apiClient) => {
-    const jobApplications = await apiClient.get<JobApplication[]>(
-      JOB_APPLICATIONS_STUDENT_PATH,
-      {
-        params: {
-          studentId: student.id,
-        },
-      }
-    );
-    const job = await apiClient.get<Job>(JOB_PATH(Number(context.query.id)));
+export const getServerSideProps = withStudentAuth(async (context, _user) => {
+  const apiClient = getAPIClient(context);
+  const { data: student } = await apiClient.get<Student>(PROFILE_STUDENT_PATH);
 
-    let applied = false;
-    jobApplications.data.forEach((jobApplication) => {
-      if (jobApplication.job.id === Number(context.query.id)) {
-        applied = true;
-      }
-    });
-
-    return {
-      props: {
+  const jobApplications = await apiClient.get<JobApplication[]>(
+    JOB_APPLICATIONS_STUDENT_PATH,
+    {
+      params: {
         studentId: student.id,
-        resumeId: student.resumeId,
-        job: job.data,
-        applied,
       },
-    };
-  }
-);
+    }
+  );
+  const job = await apiClient.get<Job>(JOB_PATH(Number(context.query.id)));
+
+  let applied = false;
+  jobApplications.data.forEach((jobApplication) => {
+    if (jobApplication.job.id === Number(context.query.id)) {
+      applied = true;
+    }
+  });
+
+  return {
+    props: {
+      studentId: student.id,
+      resumeId: student.resumeId,
+      job: job.data,
+      applied,
+    },
+  };
+});

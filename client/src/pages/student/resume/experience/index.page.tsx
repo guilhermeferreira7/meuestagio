@@ -1,25 +1,26 @@
-import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
 import { Trash } from "lucide-react";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { Experience, Resume } from "../../../../types/resume";
 
+import { WorkHistoryOutlined } from "@mui/icons-material";
+import { getAPIClient } from "@services/api/clientApi";
+import { Form, PageDefaults } from "../../../../components";
 import { notify } from "../../../../components/toasts/toast";
-import { api } from "../../../../services/api/api";
-import withStudentAuth from "../../../../services/auth/withStudentAuth";
-import {
-  FormAddExperience,
-  createExperienceSchema,
-} from "../../../../utils/validators/experience-schema";
-import { errorToString } from "../../../../utils/helpers/error-to-string";
 import {
   EXPERIENCE_PATH,
   STUDENT_RESUME_EXPERIENCES_PATH,
   STUDENT_RESUME_PATH,
 } from "../../../../constants/api-routes";
-import { Form, PageDefaults } from "../../../../components";
-import { WorkHistoryOutlined } from "@mui/icons-material";
+import { api } from "../../../../services/api/api";
+import withStudentAuth from "../../../../services/auth/withStudentAuth";
+import { errorToString } from "../../../../utils/helpers/error-to-string";
+import {
+  FormAddExperience,
+  createExperienceSchema,
+} from "../../../../utils/validators/experience-schema";
 
 type ExperiencePageProps = {
   resumeId: number;
@@ -173,14 +174,14 @@ export default function ExperiencePage({
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
-    return {
-      props: {
-        resumeId: student.resumeId,
-        experiences: resume.data.experiences || [],
-      },
-    };
-  }
-);
+export const getServerSideProps = withStudentAuth(async (context, _user) => {
+  const apiClient = getAPIClient(context);
+  const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+
+  return {
+    props: {
+      resumeId: resume.id,
+      experiences: resume.experiences || [],
+    },
+  };
+});

@@ -1,8 +1,8 @@
-import { FormProvider } from "react-hook-form";
 import { WorkHistoryOutlined } from "@mui/icons-material";
+import { FormProvider } from "react-hook-form";
 
-import { notify } from "../../../../components/toasts/toast";
 import { Form, PageDefaults } from "../../../../components";
+import { notify } from "../../../../components/toasts/toast";
 import {
   STUDENT_RESUME_EDUCATIONS_PATH,
   STUDENT_RESUME_PATH,
@@ -10,11 +10,12 @@ import {
 import { api } from "../../../../services/api/api";
 import withStudentAuth from "../../../../services/auth/withStudentAuth";
 import { Degree, Education, Resume } from "../../../../types/resume";
-import { FormAddEducation } from "../../../../utils/validators/edit-resume-schema";
 import { errorToString } from "../../../../utils/helpers/error-to-string";
+import { FormAddEducation } from "../../../../utils/validators/edit-resume-schema";
 
-import { useEducationForm } from "./useEducationForm";
+import { getAPIClient } from "@services/api/clientApi";
 import EducationItem from "./_education-item";
+import { useEducationForm } from "./useEducationForm";
 
 type PageAddEducationProps = {
   resumeId: number;
@@ -136,14 +137,14 @@ export default function PageAddEducation({
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
-    return {
-      props: {
-        resumeId: student.resumeId,
-        educations: resume.data.educations || [],
-      },
-    };
-  }
-);
+export const getServerSideProps = withStudentAuth(async (context, _user) => {
+  const apiClient = getAPIClient(context);
+  const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+
+  return {
+    props: {
+      resumeId: resume.id,
+      educations: resume.educations || [],
+    },
+  };
+});

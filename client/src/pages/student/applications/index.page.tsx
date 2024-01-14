@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import { getAPIClient } from "@services/api/clientApi";
+import { AppCard, AppTabs } from "../../../components";
 import { notify } from "../../../components/toasts/toast";
+import {
+  JOB_APPLICATIONS_FINISH_PATH,
+  JOB_APPLICATIONS_STUDENT_PATH,
+} from "../../../constants/api-routes";
 import { useJobApplications } from "../../../hooks/useFilterJobApplications";
 import { api } from "../../../services/api/api";
 import withStudentAuth from "../../../services/auth/withStudentAuth";
@@ -10,11 +16,6 @@ import {
   JobApplicationStatus,
 } from "../../../types/job-application";
 import { errorToString } from "../../../utils/helpers/error-to-string";
-import {
-  JOB_APPLICATIONS_FINISH_PATH,
-  JOB_APPLICATIONS_STUDENT_PATH,
-} from "../../../constants/api-routes";
-import { AppCard, AppTabs } from "../../../components";
 
 interface JobApplicationsProps {
   jobApplications: JobApplication[];
@@ -105,17 +106,20 @@ export default function JobApplicationsPage({
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const jobApplications = await apiClient.get(JOB_APPLICATIONS_STUDENT_PATH, {
+export const getServerSideProps = withStudentAuth(async (context, user) => {
+  const apiClient = getAPIClient(context);
+
+  const jobApplications = await apiClient.get<JobApplication[]>(
+    JOB_APPLICATIONS_STUDENT_PATH,
+    {
       params: {
-        studentId: student.id,
+        studentId: user.sub,
       },
-    });
-    return {
-      props: {
-        jobApplications: jobApplications.data,
-      },
-    };
-  }
-);
+    }
+  );
+  return {
+    props: {
+      jobApplications: jobApplications.data,
+    },
+  };
+});

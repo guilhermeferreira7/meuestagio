@@ -1,26 +1,26 @@
-import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { ToastContainer } from "react-toastify";
 import { Trash } from "lucide-react";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { Language, LanguageLevel, Resume } from "../../../../types/resume";
 
+import { WorkHistoryOutlined } from "@mui/icons-material";
+import { getAPIClient } from "@services/api/clientApi";
+import { Form, PageDefaults } from "../../../../components";
 import { notify } from "../../../../components/toasts/toast";
-import { api } from "../../../../services/api/api";
-import withStudentAuth from "../../../../services/auth/withStudentAuth";
-import {
-  FormAddLanguage,
-  createLanguageSchema,
-} from "../../../../utils/validators/language-schema";
-import { errorToString } from "../../../../utils/helpers/error-to-string";
 import {
   LANGUAGE_PATH,
   STUDENT_RESUME_LANGUAGES_PATH,
   STUDENT_RESUME_PATH,
 } from "../../../../constants/api-routes";
-import { Form, PageDefaults } from "../../../../components";
-import { WorkHistoryOutlined } from "@mui/icons-material";
+import { api } from "../../../../services/api/api";
+import withStudentAuth from "../../../../services/auth/withStudentAuth";
+import { errorToString } from "../../../../utils/helpers/error-to-string";
+import {
+  FormAddLanguage,
+  createLanguageSchema,
+} from "../../../../utils/validators/language-schema";
 
 type LanguagePageProps = {
   resumeId: number;
@@ -156,14 +156,13 @@ export default function LanguagesPage({
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
-    return {
-      props: {
-        resumeId: student.resumeId,
-        languages: resume.data.languages || [],
-      },
-    };
-  }
-);
+export const getServerSideProps = withStudentAuth(async (context, _user) => {
+  const apiClient = getAPIClient(context);
+  const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+  return {
+    props: {
+      resumeId: resume.id,
+      languages: resume.languages || [],
+    },
+  };
+});
