@@ -1,5 +1,3 @@
-import React from "react";
-import Image from "next/image";
 import {
   HistoryEdu,
   InfoOutlined,
@@ -11,19 +9,21 @@ import {
   TipsAndUpdatesOutlined,
   WorkOutline,
 } from "@mui/icons-material";
-import img from "../../../public/avatar.png";
+import Image from "next/image";
+import React from "react";
 
-import AppCard from "../AppCard";
-import { Student } from "../../types/users/student";
-import { Resume } from "../../types/resume";
-import { formatDate } from "../../utils/helpers/date-helpers";
+import { AppCard } from "components";
+import { Resume, Student } from "types";
+import { formatDate } from "utils";
+
+import img from "../../../public/avatar.png";
 
 type ResumeProps = {
   student: Student;
   resume: Resume;
 };
 
-export default function ResumeView({ student, resume }: ResumeProps) {
+export function ResumeView({ student, resume }: ResumeProps) {
   const ResumeItem = ({
     title,
     children,
