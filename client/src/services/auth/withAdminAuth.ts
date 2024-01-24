@@ -3,7 +3,7 @@ import { parseCookies } from "nookies";
 
 import { Role, UserAuth } from "types";
 
-export function withStudentAuth(
+export function withAdminAuth(
   getServerSidePropsCallback: (
     context: GetServerSidePropsContext,
     user: UserAuth
@@ -13,7 +13,7 @@ export function withStudentAuth(
     const { ["meuestagio.user"]: cookie } = parseCookies(context);
     const user: UserAuth | undefined = cookie ? JSON.parse(cookie) : undefined;
 
-    if (user?.role === Role.Student) {
+    if (user?.role === Role.Admin) {
       return await getServerSidePropsCallback(context, user);
     } else {
       return {

@@ -3,18 +3,18 @@ import { parseCookies } from "nookies";
 
 import { Role, UserAuth } from "types";
 
-export function withStudentAuth(
+export function withProfessorAuth(
   getServerSidePropsCallback: (
     context: GetServerSidePropsContext,
-    user: UserAuth
+    professor: any
   ) => Promise<GetServerSidePropsResult<unknown>>
 ) {
-  return async (context: GetServerSidePropsContext) => {
+  return async (context: any) => {
     const { ["meuestagio.user"]: cookie } = parseCookies(context);
     const user: UserAuth | undefined = cookie ? JSON.parse(cookie) : undefined;
 
-    if (user?.role === Role.Student) {
-      return await getServerSidePropsCallback(context, user);
+    if (user?.role === Role.Professor) {
+      return getServerSidePropsCallback(context, user);
     } else {
       return {
         redirect: {

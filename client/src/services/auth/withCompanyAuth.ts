@@ -1,9 +1,9 @@
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { parseCookies } from "nookies";
 
-import { Role, UserAuth } from "@customTypes/auth/user-auth";
+import { Role, UserAuth } from "types";
 
-export default function withCompanyAuth(
+export function withCompanyAuth(
   getServerSidePropsCallback: (
     context: GetServerSidePropsContext,
     user: UserAuth

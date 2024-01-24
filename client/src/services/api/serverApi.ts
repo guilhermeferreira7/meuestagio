@@ -1,8 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 import { parseCookies } from "nookies";
-import { API_BASE_URL_CLIENT, API_BASE_URL_SERVER } from "../../constants/api";
+import { API_BASE_URL_CLIENT, API_BASE_URL_SERVER } from "app-constants";
 
-export function getAPIClient(ctx?: any) {
+export function serverApi(ctx?: any) {
   const { "meuestagio.token": token } = parseCookies(ctx);
 
   let api: AxiosInstance = axios.create({});

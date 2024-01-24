@@ -1,5 +1,5 @@
-import { getAPIClient } from "./clientApi";
+import { serverApi } from "./serverApi";
 
-export const api = getAPIClient();
+export const api = serverApi();
 
 // use this in browser
