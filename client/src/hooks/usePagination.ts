@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { api } from "../services/api/api";
-import { notify } from "../components/toasts/toast";
+
+import { notify } from "components";
+import { api } from "services";
 
 type PaginationProps<T> = {
   data: T[];

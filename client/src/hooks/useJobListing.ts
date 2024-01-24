@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
 import { parseCookies, setCookie } from "nookies";
+import { useEffect, useState } from "react";
 
-import { notify } from "../components/toasts/toast";
-import { CITIES_PATH, JOBS_PATH, REGIONS_PATH } from "../constants/api-routes";
-import { JOBS_LIST_STUDENT_LIMIT } from "../constants/request";
-import { api } from "../services/api/api";
-import { Job } from "../types/job";
-import { City } from "../types/city";
-import { Region } from "../types/region";
-import { errorToString } from "../utils/helpers/error-to-string";
+import {
+  CITIES_PATH,
+  JOBS_LIST_STUDENT_LIMIT,
+  JOBS_PATH,
+  REGIONS_PATH,
+} from "app-constants";
+import { notify } from "components";
+import { api } from "services";
+import { City, Job, Region } from "types";
+import { errorToString } from "utils";
 
 export function useJobsListing() {
   const [state, setState] = useState<string | undefined>("");
@@ -68,7 +70,7 @@ export function useJobsListing() {
         }
       );
     }
-  }, [filters, currentSearch]);
+  }, [filters, currentSearch, cityName, regionName]);
 
   function cleanFilters() {
     setFilters({});

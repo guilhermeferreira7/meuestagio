@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { JobApplication } from "../types/job-application";
+
+import { JobApplication } from "types";
 
 type Props = {
   jobApplications: JobApplication[];
