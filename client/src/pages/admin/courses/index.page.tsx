@@ -1,108 +1,101 @@
-import React, { useState } from "react";
-import { GetServerSideProps } from "next";
-import { Plus, X } from "lucide-react";
+import { Add, Delete, Edit } from "@mui/icons-material";
+import Link from "next/link";
 
-import CreateCourseForm from "./_form-create";
-import ListCourses from "./_list";
-import { AppCard } from "../../../components";
-import {
-  AREAS_PATH,
-  CITIES_PATH,
-  COURSES_PATH,
-  INSTITUTIONS_PATH,
-  PROFILE_ADMIN_PATH,
-} from "../../../constants/api-routes";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { Institution } from "../../../types/institution";
-import { Area } from "../../../types/area";
-import { Course } from "../../../types/course";
-import { City } from "../../../types/city";
-import { User } from "../../../types/users/user";
+import { COURSES_PATH } from "app-constants";
+import { Modal } from "components";
+import { serverApi, withAdminAuth } from "services";
+import { Course } from "types";
+import { errorToString } from "utils";
+
+import { useActions } from "./_useActions";
 
 interface CreateCourseFormProps {
-  institutions: Institution[];
-  areas: Area[];
   courses: Course[];
 }
 
-export default function RegisterCourses({
-  institutions,
-  areas,
-  courses,
-}: CreateCourseFormProps) {
-  const [create, setCreate] = useState(false);
-  const [coursesUpdated, setCoursesUpdated] = useState<Course[]>(courses);
+export default function RegisterCourses({ courses }: CreateCourseFormProps) {
+  const { courseSelected, coursesUpdated, handleDelete, setCourseSelected } =
+    useActions(courses);
 
   return (
     <>
-      <div className="w-11/12 flex flex-col gap-2">
-        {create ? (
-          <AppCard>
-            <h2 className="text-xl font-bold mb-2 flex items-center justify-between">
-              <span>Novo curso</span>
-              <button
-                className="btn btn-error"
-                onClick={() => {
-                  setCreate(false);
-                }}
-              >
-                <X />
-                Cancelar
-              </button>
-            </h2>
-            <CreateCourseForm institutions={institutions} areas={areas} />
-          </AppCard>
-        ) : (
-          <AppCard>
-            <h2 className="text-xl font-bold mb-2 flex items-center justify-between">
-              <span>Cursos cadastrados</span>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setCreate(true);
-                }}
-              >
-                <Plus />
-                Novo curso
-              </button>
-            </h2>
-            <ListCourses courses={coursesUpdated} />
-          </AppCard>
-        )}
-      </div>
+      <h2 className="text-xl font-bold mb-2 flex justify-between items-center w-full px-10">
+        <span className="text-primary">Cursos cadastrados</span>
+        <Link
+          href="courses/new"
+          className="btn btn-primary btn-md flex items-center"
+        >
+          <Add /> Novo curso
+        </Link>
+      </h2>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Curso</th>
+            <th>Instituição</th>
+            <th>Área</th>
+            <th className="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {coursesUpdated.map((course) => (
+            <tr key={course.id}>
+              <td>{course.id}</td>
+              <td>{course.name}</td>
+              <td>{course.institution.name}</td>
+              <td>{course.area.title}</td>
+              <td className="flex gap-2">
+                <Modal.Button id="edit" type="warning" size="sm">
+                  <Edit />
+                </Modal.Button>
+                <Modal.Button
+                  id="delete"
+                  type="error"
+                  size="sm"
+                  onClick={() => {
+                    setCourseSelected(course);
+                  }}
+                >
+                  <Delete />
+                </Modal.Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <Modal.Content
+        id="delete"
+        confirmText="Excluir"
+        confirmAction={() => handleDelete(courseSelected!)}
+        buttonType="error"
+      >
+        <span>
+          Tem certeza que deseja excluir o curso {courseSelected?.name}
+        </span>
+      </Modal.Content>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
+export const getServerSideProps = withAdminAuth(async (ctx) => {
+  const apiClient = serverApi(ctx);
 
   try {
-    await apiClient.get<User>(PROFILE_ADMIN_PATH);
-
-    const cities = await apiClient.get<City[]>(CITIES_PATH, {
-      params: { orderBy: "name" },
-    });
-    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
-    const areas = await apiClient.get<Area[]>(AREAS_PATH);
-    const courses = await apiClient.get<Course[]>(COURSES_PATH, {
+    const { data: courses } = await apiClient.get<Course[]>(COURSES_PATH, {
       params: { orderBy: "id", order: "DESC", limit: 10 },
     });
 
     return {
       props: {
-        cities: cities.data,
-        institutions: institutions.data,
-        areas: areas.data,
-        courses: courses.data,
+        courses,
       },
     };
-  } catch (error: any) {
+  } catch (error) {
+    console.log(errorToString(error));
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
+      props: {},
     };
   }
-};
+});
