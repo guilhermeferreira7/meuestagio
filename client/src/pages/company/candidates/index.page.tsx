@@ -1,17 +1,10 @@
 import { useState } from "react";
 
-import { getAPIClient } from "@services/api/clientApi";
-import { AppCard, ResumeView } from "../../../components";
-import {
-  JOBS_BY_COMPANY_PATH,
-  JOB_APPLICATIONS_BY_JOB,
-} from "../../../constants/api-routes";
-import withCompanyAuth from "../../../services/auth/withCompanyAuth";
-import { Job } from "../../../types/job";
-import {
-  JobApplication,
-  JobApplicationStatus,
-} from "../../../types/job-application";
+import { JOBS_BY_COMPANY_PATH, JOB_APPLICATIONS_BY_JOB } from "app-constants";
+import { AppCard, ResumeView } from "components";
+import { serverApi, withCompanyAuth } from "services";
+import { Job, JobApplication, JobApplicationStatus } from "types";
+import { errorToString } from "utils";
 
 type CandidatesPageProps = {
   candidates: JobApplication[];
@@ -75,32 +68,37 @@ export default function Candidates({ candidates }: CandidatesPageProps) {
 }
 
 export const getServerSideProps = withCompanyAuth(async (context, user) => {
-  const apiClient = getAPIClient(context);
+  const apiClient = serverApi(context);
 
-  const jobs = await apiClient.get<Job[]>(
-    JOBS_BY_COMPANY_PATH(Number(user.sub))
-  );
+  try {
+    const jobs = await apiClient.get<Job[]>(
+      JOBS_BY_COMPANY_PATH(Number(user.sub))
+    );
 
-  const candidates = await Promise.all(
-    jobs.data.map(async (job) => {
-      return apiClient
-        .get<JobApplication[]>(JOB_APPLICATIONS_BY_JOB, {
-          params: {
-            jobId: job.id,
-          },
-        })
-        .then((res) => {
-          return res.data.filter(
-            (jobApplication) =>
-              jobApplication.status === JobApplicationStatus.INTERVIEW
-          );
-        });
-    })
-  );
+    const candidates = await Promise.all(
+      jobs.data.map(async (job) => {
+        return apiClient
+          .get<JobApplication[]>(JOB_APPLICATIONS_BY_JOB, {
+            params: {
+              jobId: job.id,
+            },
+          })
+          .then((res) => {
+            return res.data.filter(
+              (jobApplication) =>
+                jobApplication.status === JobApplicationStatus.INTERVIEW
+            );
+          });
+      })
+    );
 
-  return {
-    props: {
-      candidates: candidates.flat(),
-    },
-  };
+    return {
+      props: {
+        candidates: candidates.flat(),
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
+  }
 });

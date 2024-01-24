@@ -1,16 +1,12 @@
 import { InfoOutlined } from "@mui/icons-material";
 import { useState } from "react";
 
-import { AppCard } from "../../../components";
-import {
-  CITIES_PATH,
-  PROFILE_COMPANY_PATH,
-} from "../../../constants/api-routes";
-import withCompanyAuth from "../../../services/auth/withCompanyAuth";
-import { City } from "../../../types/city";
-import { Company } from "../../../types/users/company";
+import { CITIES_PATH, PROFILE_COMPANY_PATH } from "app-constants";
+import { AppCard } from "components";
+import { serverApi, withCompanyAuth } from "services";
+import { City, Company } from "types";
+import { errorToString } from "utils";
 
-import { getAPIClient } from "@services/api/clientApi";
 import ImageForm from "./_image-form";
 import InfoForm from "./_info-form";
 
@@ -52,21 +48,27 @@ export default function CompanyProfile({
 }
 
 export const getServerSideProps = withCompanyAuth(async (context, _user) => {
-  const apiClient = getAPIClient(context);
+  const apiClient = serverApi(context);
+  try {
+    const { data: company } = await apiClient.get<Company>(
+      PROFILE_COMPANY_PATH
+    );
 
-  const { data: company } = await apiClient.get<Company>(PROFILE_COMPANY_PATH);
+    const cities = await apiClient.get(CITIES_PATH);
+    const states = new Set<string>(cities.data.map((city: any) => city.state));
+    const initialCities = cities.data.filter(
+      (city: City) => city.state === company.city.state
+    );
 
-  const cities = await apiClient.get(CITIES_PATH);
-  const states = new Set<string>(cities.data.map((city: any) => city.state));
-  const initialCities = cities.data.filter(
-    (city: City) => city.state === company.city.state
-  );
-
-  return {
-    props: {
-      company,
-      states: Array.from(states),
-      initialCities,
-    },
-  };
+    return {
+      props: {
+        company,
+        states: Array.from(states),
+        initialCities,
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
+  }
 });

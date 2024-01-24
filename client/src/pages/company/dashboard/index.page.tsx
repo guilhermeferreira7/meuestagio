@@ -1,9 +1,11 @@
-import { Job, JobStatus } from "@customTypes/job";
-import { getAPIClient } from "@services/api/clientApi";
-import withCompanyAuth from "@services/auth/withCompanyAuth";
 import { useEffect, useState } from "react";
-import { AppTabs } from "../../../components";
-import { JOBS_BY_COMPANY_PATH } from "../../../constants/api-routes";
+
+import { JOBS_BY_COMPANY_PATH } from "app-constants";
+import { AppTabs } from "components";
+import { serverApi, withCompanyAuth } from "services";
+import { Job, JobStatus } from "types";
+import { errorToString } from "utils";
+
 import JobCompanyCard from "./_job-card";
 
 interface CompanyJobsProps {
@@ -56,15 +58,19 @@ export default function CompanyJobs({ jobs }: CompanyJobsProps) {
 }
 
 export const getServerSideProps = withCompanyAuth(async (context, user) => {
-  const apiClient = getAPIClient(context);
+  const apiClient = serverApi(context);
+  try {
+    const { data: jobs } = await apiClient.get<Job[]>(
+      JOBS_BY_COMPANY_PATH(Number(user.sub))
+    );
 
-  const jobs = await apiClient.get<Job[]>(
-    JOBS_BY_COMPANY_PATH(Number(user.sub))
-  );
-
-  return {
-    props: {
-      jobs: jobs.data,
-    },
-  };
+    return {
+      props: {
+        jobs,
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
+  }
 });

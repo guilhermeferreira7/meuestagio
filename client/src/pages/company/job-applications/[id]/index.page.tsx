@@ -2,22 +2,17 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import withCompanyAuth from "@services/auth/withCompanyAuth";
-import { AppTabs, Modal, ResumeView } from "../../../../components";
-import { notify } from "../../../../components/toasts/toast";
 import {
   JOB_APPLICATIONS_BY_JOB,
   JOB_APPLICATIONS_FINISH_PATH,
   JOB_APPLICATIONS_INTERVIEW_PATH,
-} from "../../../../constants/api-routes";
-import { useJobApplications } from "../../../../hooks/useFilterJobApplications";
-import { api } from "../../../../services/api/api";
-import { getAPIClient } from "../../../../services/api/clientApi";
-import {
-  JobApplication,
-  JobApplicationStatus,
-} from "../../../../types/job-application";
-import { errorToString } from "../../../../utils/helpers/error-to-string";
+} from "app-constants";
+import { AppTabs, Modal, ResumeView, notify } from "components";
+import { useJobApplications } from "hooks";
+import { api, serverApi, withCompanyAuth } from "services";
+import { JobApplication, JobApplicationStatus } from "types";
+import { errorToString } from "utils";
+
 import Candidate from "./_candidate";
 
 interface ApplicationsProps {
@@ -162,21 +157,25 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
   );
 }
 
-export const getServerSideProps = withCompanyAuth(async (context, _user) => {
-  const apiClient = getAPIClient(context);
+export const getServerSideProps = withCompanyAuth(async (context) => {
+  const apiClient = serverApi(context);
+  try {
+    const { data: jobApplications } = await apiClient.get<JobApplication[]>(
+      JOB_APPLICATIONS_BY_JOB,
+      {
+        params: {
+          jobId: context.query.id,
+        },
+      }
+    );
 
-  const jobApplications = await apiClient.get<JobApplication[]>(
-    JOB_APPLICATIONS_BY_JOB,
-    {
-      params: {
-        jobId: context.query.id,
+    return {
+      props: {
+        jobApplications,
       },
-    }
-  );
-
-  return {
-    props: {
-      jobApplications: jobApplications.data,
-    },
-  };
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
+  }
 });
