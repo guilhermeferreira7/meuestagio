@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const createUserFormSchema = z
+// TODO refactor
+export const CreateUserFormSchema = z
   .object({
     userRole: z.enum(["student", "company"], {
       errorMap: (issue) => ({ message: "Selecione o tipo de conta" }),
@@ -69,3 +70,5 @@ export const createUserFormSchema = z
       path: ["courseId"],
     }
   );
+
+export type CreateUserFormSchema = z.infer<typeof CreateUserFormSchema>;

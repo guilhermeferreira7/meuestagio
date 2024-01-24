@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createExperienceSchema = z
+export const CreateExperienceSchema = z
   .object({
     company: z
       .string()
@@ -34,4 +34,4 @@ export const createExperienceSchema = z
     }
   );
 
-export type FormAddExperience = z.infer<typeof createExperienceSchema>;
+export type CreateExperienceSchema = z.infer<typeof CreateExperienceSchema>;

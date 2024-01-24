@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const editContactSchema = z.object({
+export const EditContactSchema = z.object({
   email: z.string().nonempty({ message: "Email é obrigatório" }).email(),
   phone: z.string().optional(),
 });
 
-export type ContactData = z.infer<typeof editContactSchema>;
+export type EditContactSchema = z.infer<typeof EditContactSchema>;
 
-export const editEducationSchema = z
+export const EditEducationSchema = z
   .object({
     institutionId: z
       .string({ required_error: "Selecione uma instituição" })
@@ -25,9 +25,9 @@ export const editEducationSchema = z
     { message: "Selecione uma instituição e um curso", path: ["institutionId"] }
   );
 
-export type EducationData = z.infer<typeof editEducationSchema>;
+export type EditEducationSchema = z.infer<typeof EditEducationSchema>;
 
-export const editAddressSchema = z
+export const EditAddressSchema = z
   .object({
     city: z.string().min(1).max(255),
     state: z.string().min(1).max(255),
@@ -40,4 +40,4 @@ export const editAddressSchema = z
     { message: "Selecione uma cidade e um estado", path: ["city"] }
   );
 
-export type AddressData = z.infer<typeof editAddressSchema>;
+export type EditAddressSchema = z.infer<typeof EditAddressSchema>;

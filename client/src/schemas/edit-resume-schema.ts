@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-export const createSkillSchema = z.object({
+export const CreateSkillSchema = z.object({
   name: z.string().min(2, "Deve conter no mínimo 2 caracteres"),
   level: z.enum(["Basico", "Intermediario", "Avancado"]),
 });
 
-export const createEducationSchema = z
+export const CreateEducationSchema = z
   .object({
     school: z.string().min(2, "Deve conter no mínimo 2 caracteres"),
     degree: z.enum([
@@ -28,4 +28,6 @@ export const createEducationSchema = z
     }
   );
 
-export type FormAddEducation = z.infer<typeof createEducationSchema>;
+export type CreateEducationSchema = z.infer<typeof CreateEducationSchema>;
+
+export type CreateSkillSchema = z.infer<typeof CreateSkillSchema>;

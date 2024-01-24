@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createJobFormSchema = z.object({
+export const CreateJobFormSchema = z.object({
   title: z.string().min(3, "O título precisa de pelo menos 3 caracteres"),
   salary: z
     .string()
@@ -26,3 +26,5 @@ export const createJobFormSchema = z.object({
   }),
   cityId: z.string().optional(),
 });
+
+export type CreateJobFormSchema = z.infer<typeof CreateJobFormSchema>;
