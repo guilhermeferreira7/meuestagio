@@ -1,29 +1,23 @@
-import { useContext, useState } from "react";
-import { GetServerSideProps } from "next";
-import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { GetServerSideProps } from "next";
+import { useContext, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import CreateStudentForm from "./_student-form";
-import CreateCompanyForm from "./_company-form";
-import { notify } from "../../components/toasts/toast";
-import { Form } from "../../components";
 import {
   CITIES_PATH,
   COMPANIES_PATH,
   INSTITUTIONS_PATH,
   STUDENTS_PATH,
-} from "../../constants/api-routes";
-import { AuthContext } from "../../contexts/AuthContext";
-import { api } from "../../services/api/api";
-import { getAPIClient } from "../../services/api/clientApi";
-import { Institution } from "../../types/institution";
-import { City } from "../../types/city";
-import { Role } from "../../types/auth/user-auth";
-import { createUserFormSchema } from "../../utils/validators/create-account-schema";
-import { errorToString } from "../../utils/helpers/error-to-string";
+} from "app-constants";
+import { Form, notify } from "components";
+import { AuthContext } from "contexts/AuthContext";
+import { CreateUserFormSchema } from "schemas";
+import { api, serverApi } from "services";
+import { City, Institution, Role } from "types";
+import { errorToString } from "utils";
 
-type CreateAccountFormData = z.infer<typeof createUserFormSchema>;
+import CreateCompanyForm from "./_company-form";
+import CreateStudentForm from "./_student-form";
 
 interface PageProps {
   institutions: Institution[];
@@ -31,16 +25,16 @@ interface PageProps {
 }
 
 export default function CreateAccount({ institutions, cities }: PageProps) {
-  const createAccountForm = useForm<CreateAccountFormData>({
+  const createAccountForm = useForm<CreateUserFormSchema>({
     mode: "all",
-    resolver: zodResolver(createUserFormSchema),
+    resolver: zodResolver(CreateUserFormSchema),
   });
   const { handleSubmit } = createAccountForm;
   const { signIn } = useContext(AuthContext);
 
   const [userRole, setUserRole] = useState<Role>(Role.Student);
 
-  async function createAccount(data: CreateAccountFormData) {
+  async function createAccount(data: CreateUserFormSchema) {
     if (data.userRole === Role.Student) {
       try {
         await api.post(STUDENTS_PATH, {
@@ -141,19 +135,18 @@ export default function CreateAccount({ institutions, cities }: PageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
+  const apiClient = serverApi(ctx);
 
   try {
-    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
-    const cities = await apiClient.get<City[]>(CITIES_PATH);
+    const { data: institutions } = await apiClient.get<Institution[]>(
+      INSTITUTIONS_PATH
+    );
+    const { data: cities } = await apiClient.get<City[]>(CITIES_PATH);
     return {
-      props: { institutions: institutions.data, cities: cities.data },
+      props: { institutions, cities },
     };
   } catch (error) {
     console.log(errorToString(error));
-
-    return {
-      props: { institutions: [], cities: [] },
-    };
+    return { props: { institutions: [], cities: [] } };
   }
 };

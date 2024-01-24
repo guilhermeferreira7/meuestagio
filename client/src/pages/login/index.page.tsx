@@ -1,17 +1,14 @@
-import { useContext, useState } from "react";
-import Link from "next/link";
-import { AlertCircle } from "lucide-react";
-import { z } from "zod";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle } from "lucide-react";
+import Link from "next/link";
 import { parseCookies } from "nookies";
+import { useContext, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import { loginSchema } from "../../utils/validators/login-schema";
-import { AuthContext } from "../../contexts/AuthContext";
-import { AppCard, Form } from "../../components";
-import { Role, UserAuth } from "../../types/auth/user-auth";
-
-type LoginData = z.infer<typeof loginSchema>;
+import { AppCard, Form } from "components";
+import { AuthContext } from "contexts/AuthContext";
+import { LoginSchema } from "schemas";
+import { Role, UserAuth } from "types";
 
 export default function Login() {
   const { signIn } = useContext(AuthContext);
@@ -19,13 +16,13 @@ export default function Login() {
   const { ["meuestagio.user"]: cookie } = parseCookies();
   const user: UserAuth | undefined = cookie ? JSON.parse(cookie) : null;
 
-  const loginForm = useForm<LoginData>({
-    resolver: zodResolver(loginSchema),
+  const loginForm = useForm<LoginSchema>({
+    resolver: zodResolver(LoginSchema),
   });
 
   const { handleSubmit } = loginForm;
 
-  const handleLogin = async (data: LoginData) => {
+  const handleLogin = async (data: LoginSchema) => {
     try {
       await signIn(data.email, data.password, data.userRole, data.rememberMe);
     } catch (error: any) {
