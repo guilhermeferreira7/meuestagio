@@ -1,22 +1,14 @@
-import { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditOutlined, MapOutlined } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import { notify } from "../../../components/toasts/toast";
-import { Form } from "../../../components";
-import {
-  CITIES_PATH,
-  PROFILE_STUDENT_PATH,
-} from "../../../constants/api-routes";
-import { api } from "../../../services/api/api";
-import { City } from "../../../types/city";
-import { Student } from "../../../types/users/student";
-import {
-  AddressData,
-  editAddressSchema,
-} from "../../../utils/validators/edit-profile-schema";
-import { errorToString } from "../../../utils/helpers/error-to-string";
+import { CITIES_PATH, PROFILE_STUDENT_PATH } from "app-constants";
+import { Form, notify } from "components";
+import { EditAddressSchema } from "schemas";
+import { api } from "services";
+import { City, Student } from "types";
+import { errorToString } from "utils";
 
 type AddressFormProps = {
   student: Student;
@@ -29,8 +21,8 @@ export default function AddressForm({ student, cities }: AddressFormProps) {
 
   const [citiesFiltered, setCitiesFiltered] = useState<City[]>(cities);
 
-  const editAddressForm = useForm<AddressData>({
-    resolver: zodResolver(editAddressSchema),
+  const editAddressForm = useForm<EditAddressSchema>({
+    resolver: zodResolver(EditAddressSchema),
     defaultValues: {
       city: student.city.name,
       state: student.city.state,
@@ -49,7 +41,7 @@ export default function AddressForm({ student, cities }: AddressFormProps) {
     });
   }, [cities]);
 
-  const editProfile = async (data: AddressData) => {
+  const editProfile = async (data: EditAddressSchema) => {
     try {
       const response = await api.patch(PROFILE_STUDENT_PATH, {
         cityId: data.city,

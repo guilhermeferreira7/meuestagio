@@ -10,7 +10,7 @@ import {
 import { AppTabs, Modal, ResumeView, notify } from "components";
 import { useJobApplications } from "hooks";
 import { api, serverApi, withCompanyAuth } from "services";
-import { JobApplication, JobApplicationStatus } from "types";
+import { JobApplication, JobApplicationStatus, JobStatus } from "types";
 import { errorToString } from "utils";
 
 import Candidate from "./_candidate";
@@ -23,7 +23,7 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
   const router = useRouter();
   const [currentCandidate, setCurrentCandidate] =
     useState<JobApplication | null>(null);
-  const { jobs, activeTab, setActiveTab } = useJobApplications({
+  const { jobs, activeTab, setActiveTab, setJobs } = useJobApplications({
     jobApplications,
     defaultTab: JobApplicationStatus.IN_PROGRESS,
   });
@@ -96,11 +96,19 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
     )
       return;
     try {
-      api.post(JOB_APPLICATIONS_INTERVIEW_PATH, {
+      api.patch(JOB_APPLICATIONS_INTERVIEW_PATH, {
         jobApplicationId: currentCandidate?.id,
       });
       notify.success("Candidatura aprovada com sucesso!");
-      router.reload();
+      const jobsUpdated = jobs.map((job) => {
+        if (job.id === currentCandidate?.id) {
+          job.status = JobApplicationStatus.INTERVIEW;
+          return job;
+        } else {
+          return job;
+        }
+      });
+      setJobs(jobsUpdated);
     } catch (error) {
       notify.error(errorToString(error));
     }
@@ -114,11 +122,19 @@ export default function Applications({ jobApplications }: ApplicationsProps) {
     )
       return;
     try {
-      api.post(JOB_APPLICATIONS_FINISH_PATH, {
+      api.patch(JOB_APPLICATIONS_FINISH_PATH, {
         jobApplicationId: currentCandidate?.id,
       });
       notify.success("Candidatura rejeitada com sucesso!");
-      router.reload();
+      const jobsUpdated = jobs.map((job) => {
+        if (job.id === currentCandidate?.id) {
+          job.status = JobApplicationStatus.FINISHED;
+          return job;
+        } else {
+          return job;
+        }
+      });
+      setJobs(jobsUpdated);
     } catch (error) {
       notify.error(errorToString(error));
     }

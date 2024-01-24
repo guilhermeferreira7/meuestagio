@@ -1,4 +1,3 @@
-import { parseCookies, setCookie } from "nookies";
 import { useEffect, useState } from "react";
 
 import {
@@ -26,18 +25,6 @@ export function useJobsListing() {
   const [currentSearch, setCurrentSearch] = useState<string>("");
 
   useEffect(() => {
-    const { ["meuestagio.filter"]: cookie } = parseCookies();
-
-    if (cookie) {
-      const filter = JSON.parse(cookie);
-      setFilters(filter);
-      if (filter.state) setState(filter.state);
-      if (filter.cityName) setCityName(filter.cityName);
-      if (filter.regionName) setRegionName(filter.regionName);
-    }
-  }, []);
-
-  useEffect(() => {
     async function updateJobs() {
       try {
         const response = await api.get<Job[]>(JOBS_PATH, {
@@ -54,22 +41,6 @@ export function useJobsListing() {
       }
     }
     updateJobs();
-
-    if (filters) {
-      setCookie(
-        undefined,
-        "meuestagio.filter",
-        JSON.stringify({
-          ...filters,
-          regionName,
-          cityName,
-        }),
-        {
-          maxAge: 60 * 60 * 24 * 7, // 7 days
-          path: "/",
-        }
-      );
-    }
   }, [filters, currentSearch, cityName, regionName]);
 
   function cleanFilters() {

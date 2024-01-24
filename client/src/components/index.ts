@@ -9,4 +9,5 @@ export { Error } from "./Error";
 export { Form } from "./Form";
 export { ImageInput } from "./ImageInput/ImageInput";
 export { ResumeView } from "./Resume/resume";
+export { ResumePdf } from "./Resume/ResumePdf";
 export { notify } from "./toasts";

@@ -1,14 +1,13 @@
 import Head from "next/head";
 
-import { useJobsListing } from "../../../hooks/useJobListing";
-import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { Job } from "../../../types/job";
-import { Student } from "../../../types/users/student";
+import { PROFILE_STUDENT_PATH } from "app-constants";
+import { useJobsListing } from "hooks";
+import { serverApi, withStudentAuth } from "services";
+import { Job, Student } from "types";
+import { errorToString } from "utils";
 
-import SearchBar from "./_search-bar";
 import JobCardStudent from "./_job-card-student";
-import { PROFILE_STUDENT_PATH } from "@constants/api-routes";
-import { getAPIClient } from "@services/api/clientApi";
+import SearchBar from "./_search-bar";
 
 interface StudentJobsProps {
   student: Student;
@@ -73,12 +72,20 @@ export default function StudentJobs({ student }: StudentJobsProps) {
 }
 
 export const getServerSideProps = withStudentAuth(async (context, _user) => {
-  const api = getAPIClient(context);
-  const student = await api.get<Student>(PROFILE_STUDENT_PATH);
+  const apiClient = serverApi(context);
 
-  return {
-    props: {
-      student: student.data,
-    },
-  };
+  try {
+    const student = await apiClient.get<Student>(PROFILE_STUDENT_PATH);
+
+    return {
+      props: {
+        student: student.data,
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return {
+      props: {},
+    };
+  }
 });

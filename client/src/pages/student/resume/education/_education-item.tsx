@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { Remove } from "@mui/icons-material";
+import { useState } from "react";
 
-import { notify } from "../../../../components/toasts/toast";
-import { EDUCATION_PATH } from "../../../../constants/api-routes";
-import { Education } from "../../../../types/resume";
-import { api } from "../../../../services/api/api";
+import { EDUCATION_PATH } from "app-constants";
+import { notify } from "components";
+import { api } from "services";
+import { Education } from "types";
 
 type EducationItemProps = {
   educations: Education[];

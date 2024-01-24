@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { REGIONS_PATH } from "../../../constants/api-routes";
-import { api } from "../../../services/api/api";
-import { Region } from "../../../types/region";
-import { City } from "../../../types/city";
+import { REGIONS_PATH } from "app-constants";
+import { api } from "services";
+import { City, Region } from "types";
 
 type SearchBarProps = {
   regions: Region[];

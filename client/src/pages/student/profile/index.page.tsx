@@ -1,19 +1,17 @@
 import Head from "next/head";
 
-import { AppCard } from "../../../components";
 import {
   CITIES_PATH,
   COURSES_PATH,
   INSTITUTIONS_PATH,
   PROFILE_STUDENT_PATH,
-} from "../../../constants/api-routes";
-import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { City } from "../../../types/city";
-import { Course } from "../../../types/course";
-import { Institution } from "../../../types/institution";
-import { Student } from "../../../types/users/student";
+} from "app-constants";
+import { AppCard } from "components";
+import { withStudentAuth } from "services";
+import { City, Course, Institution, Student } from "types";
+import { errorToString } from "utils";
 
-import { getAPIClient } from "@services/api/clientApi";
+import { serverApi } from "services/api/serverApi";
 import AddressForm from "./_address-form";
 import ContactInfoForm from "./_contact-form";
 import EducationForm from "./_education-form";
@@ -67,25 +65,33 @@ export default function StudentProfile({
   );
 }
 
-export const getServerSideProps = withStudentAuth(async (context, _user) => {
-  const apiClient = getAPIClient(context);
+export const getServerSideProps = withStudentAuth(async (context) => {
+  const apiClient = serverApi(context);
 
-  const { data: student } = await apiClient.get<Student>(PROFILE_STUDENT_PATH);
+  try {
+    const { data: student } = await apiClient.get<Student>(
+      PROFILE_STUDENT_PATH
+    );
+    const { data: cities } = await apiClient.get<City[]>(CITIES_PATH);
+    const { data: courses } = await apiClient.get<Course[]>(COURSES_PATH, {
+      params: {
+        institutionId: student.institution.id,
+      },
+    });
+    const { data: institutions } = await apiClient.get<Institution[]>(
+      INSTITUTIONS_PATH
+    );
 
-  const cities = await apiClient.get<City[]>(CITIES_PATH);
-  const courses = await apiClient.get<Course[]>(COURSES_PATH, {
-    params: {
-      institutionId: student.institution.id,
-    },
-  });
-  const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH);
-
-  return {
-    props: {
-      student: student,
-      cities: cities.data,
-      courses: courses.data,
-      institutions: institutions.data,
-    },
-  };
+    return {
+      props: {
+        student,
+        cities,
+        courses,
+        institutions,
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
+  }
 });

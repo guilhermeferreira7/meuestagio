@@ -8,7 +8,7 @@ type ResumePdfProps = {
   resume: Resume;
 };
 
-export default function ResumePdf({ student, resume }: ResumePdfProps) {
+export function ResumePdf({ student, resume }: ResumePdfProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>

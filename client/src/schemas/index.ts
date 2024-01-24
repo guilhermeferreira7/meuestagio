@@ -7,7 +7,7 @@ export {
   EditContactSchema,
   EditEducationSchema,
 } from "./edit-profile-schema";
-export { CreateSkillSchema } from "./edit-resume-schema";
+export { CreateSkillSchema, CreateEducationSchema } from "./edit-resume-schema";
 export { CreateExperienceSchema } from "./experience-schema";
 export { CreateInstitutionFormSchema } from "./institution-schema";
 export { CreateLanguageSchema } from "./language-schema";

@@ -3,24 +3,16 @@ import { Trash } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Language, LanguageLevel, Resume } from "../../../../types/resume";
-
-import { WorkHistoryOutlined } from "@mui/icons-material";
-import { getAPIClient } from "@services/api/clientApi";
-import { Form, PageDefaults } from "../../../../components";
-import { notify } from "../../../../components/toasts/toast";
 import {
   LANGUAGE_PATH,
   STUDENT_RESUME_LANGUAGES_PATH,
   STUDENT_RESUME_PATH,
-} from "../../../../constants/api-routes";
-import { api } from "../../../../services/api/api";
-import withStudentAuth from "../../../../services/auth/withStudentAuth";
-import { errorToString } from "../../../../utils/helpers/error-to-string";
-import {
-  FormAddLanguage,
-  createLanguageSchema,
-} from "../../../../utils/validators/language-schema";
+} from "app-constants";
+import { Form, notify } from "components";
+import { CreateLanguageSchema } from "schemas";
+import { api, serverApi, withStudentAuth } from "services";
+import { Language, LanguageLevel, Resume } from "types";
+import { errorToString } from "utils";
 
 type LanguagePageProps = {
   resumeId: number;
@@ -32,13 +24,13 @@ export default function LanguagesPage({
   languages,
 }: LanguagePageProps) {
   const [languagesUpdated, setLanguages] = useState<Language[]>(languages);
-  const createLanguageForm = useForm<FormAddLanguage>({
+  const createLanguageForm = useForm<CreateLanguageSchema>({
     mode: "all",
-    resolver: zodResolver(createLanguageSchema),
+    resolver: zodResolver(CreateLanguageSchema),
   });
   const { handleSubmit } = createLanguageForm;
 
-  const createLanguage = async (data: FormAddLanguage) => {
+  const createLanguage = async (data: CreateLanguageSchema) => {
     try {
       const language = await api.post<Language>(STUDENT_RESUME_LANGUAGES_PATH, {
         resumeId,
@@ -89,17 +81,6 @@ export default function LanguagesPage({
 
   return (
     <>
-      <PageDefaults
-        currentPage="Idiomas"
-        linksTree={[
-          {
-            name: "Currículo",
-            href: "/student/resume",
-            icon: <WorkHistoryOutlined />,
-          },
-        ]}
-      />
-
       <div className="w-full px-4">
         <h2 className="text-xl text-primary font-bold mb-2 justify-between">
           Cadastrar novo idioma
@@ -156,13 +137,20 @@ export default function LanguagesPage({
   );
 }
 
-export const getServerSideProps = withStudentAuth(async (context, _user) => {
-  const apiClient = getAPIClient(context);
-  const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
-  return {
-    props: {
-      resumeId: resume.id,
-      languages: resume.languages || [],
-    },
-  };
+export const getServerSideProps = withStudentAuth(async (context) => {
+  const apiClient = serverApi(context);
+  try {
+    const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+    return {
+      props: {
+        resumeId: resume.id,
+        languages: resume.languages || [],
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return {
+      props: {},
+    };
+  }
 });

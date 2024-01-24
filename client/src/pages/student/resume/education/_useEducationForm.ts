@@ -1,18 +1,15 @@
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Education } from "../../../../types/resume";
-import {
-  FormAddEducation,
-  createEducationSchema,
-} from "../../../../utils/validators/edit-resume-schema";
+import { CreateEducationSchema } from "schemas";
+import { Education } from "types";
 
 export function useEducationForm(educations: Education[]) {
   const [educationsUpdated, setEducations] = useState<Education[]>(educations);
-  const createEducationForm = useForm<FormAddEducation>({
+  const createEducationForm = useForm<CreateEducationSchema>({
     mode: "all",
-    resolver: zodResolver(createEducationSchema),
+    resolver: zodResolver(CreateEducationSchema),
   });
   const { handleSubmit } = createEducationForm;
 

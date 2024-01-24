@@ -3,24 +3,16 @@ import { Trash } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Experience, Resume } from "../../../../types/resume";
-
-import { WorkHistoryOutlined } from "@mui/icons-material";
-import { getAPIClient } from "@services/api/clientApi";
-import { Form, PageDefaults } from "../../../../components";
-import { notify } from "../../../../components/toasts/toast";
 import {
   EXPERIENCE_PATH,
   STUDENT_RESUME_EXPERIENCES_PATH,
   STUDENT_RESUME_PATH,
-} from "../../../../constants/api-routes";
-import { api } from "../../../../services/api/api";
-import withStudentAuth from "../../../../services/auth/withStudentAuth";
-import { errorToString } from "../../../../utils/helpers/error-to-string";
-import {
-  FormAddExperience,
-  createExperienceSchema,
-} from "../../../../utils/validators/experience-schema";
+} from "app-constants";
+import { Error, Form, notify } from "components";
+import { CreateExperienceSchema } from "schemas";
+import { api, serverApi, withStudentAuth } from "services";
+import { Experience, Resume } from "types";
+import { errorToString } from "utils";
 
 type ExperiencePageProps = {
   resumeId: number;
@@ -33,13 +25,13 @@ export default function ExperiencePage({
 }: ExperiencePageProps) {
   const [experiencesUpdated, setExperiences] =
     useState<Experience[]>(experiences);
-  const createExperienceForm = useForm<FormAddExperience>({
+  const createExperienceForm = useForm<CreateExperienceSchema>({
     mode: "all",
-    resolver: zodResolver(createExperienceSchema),
+    resolver: zodResolver(CreateExperienceSchema),
   });
   const { handleSubmit } = createExperienceForm;
 
-  const createExperience = async (data: FormAddExperience) => {
+  const createExperience = async (data: CreateExperienceSchema) => {
     try {
       const experience = await api.post<Experience>(
         STUDENT_RESUME_EXPERIENCES_PATH,
@@ -95,16 +87,6 @@ export default function ExperiencePage({
 
   return (
     <>
-      <PageDefaults
-        currentPage="Experiência"
-        linksTree={[
-          {
-            name: "Currículo",
-            href: "/student/resume",
-            icon: <WorkHistoryOutlined />,
-          },
-        ]}
-      />
       <div className="w-full px-4">
         <h2 className="text-xl text-primary font-bold mb-2 justify-between">
           Cadastrar nova experiência
@@ -174,14 +156,21 @@ export default function ExperiencePage({
   );
 }
 
-export const getServerSideProps = withStudentAuth(async (context, _user) => {
-  const apiClient = getAPIClient(context);
-  const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+export const getServerSideProps = withStudentAuth(async (context) => {
+  const apiClient = serverApi(context);
+  try {
+    const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
 
-  return {
-    props: {
-      resumeId: resume.id,
-      experiences: resume.experiences || [],
-    },
-  };
+    return {
+      props: {
+        resumeId: resume.id,
+        experiences: resume.experiences || [],
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return {
+      props: {},
+    };
+  }
 });

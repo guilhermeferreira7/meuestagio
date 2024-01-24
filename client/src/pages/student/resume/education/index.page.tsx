@@ -1,21 +1,17 @@
-import { WorkHistoryOutlined } from "@mui/icons-material";
 import { FormProvider } from "react-hook-form";
 
-import { Form, PageDefaults } from "../../../../components";
-import { notify } from "../../../../components/toasts/toast";
 import {
   STUDENT_RESUME_EDUCATIONS_PATH,
   STUDENT_RESUME_PATH,
-} from "../../../../constants/api-routes";
-import { api } from "../../../../services/api/api";
-import withStudentAuth from "../../../../services/auth/withStudentAuth";
-import { Degree, Education, Resume } from "../../../../types/resume";
-import { errorToString } from "../../../../utils/helpers/error-to-string";
-import { FormAddEducation } from "../../../../utils/validators/edit-resume-schema";
+} from "app-constants";
+import { Form, notify } from "components";
+import { CreateEducationSchema } from "schemas";
+import { api, serverApi, withStudentAuth } from "services";
+import { Degree, Education, Resume } from "types";
+import { errorToString } from "utils";
 
-import { getAPIClient } from "@services/api/clientApi";
 import EducationItem from "./_education-item";
-import { useEducationForm } from "./useEducationForm";
+import { useEducationForm } from "./_useEducationForm";
 
 type PageAddEducationProps = {
   resumeId: number;
@@ -33,7 +29,7 @@ export default function PageAddEducation({
     setEducations,
   } = useEducationForm(educations);
 
-  const createEducation = async (data: FormAddEducation) => {
+  const createEducation = async (data: CreateEducationSchema) => {
     try {
       const education = await api.post<Education>(
         STUDENT_RESUME_EDUCATIONS_PATH,
@@ -51,17 +47,6 @@ export default function PageAddEducation({
 
   return (
     <>
-      <PageDefaults
-        currentPage="Formação"
-        linksTree={[
-          {
-            name: "Currículo",
-            href: "/student/resume",
-            icon: <WorkHistoryOutlined />,
-          },
-        ]}
-      />
-
       <div className="w-full px-4">
         <h2 className="text-xl text-primary font-bold mb-2 justify-between">
           Cadastrar nova formação
@@ -137,14 +122,21 @@ export default function PageAddEducation({
   );
 }
 
-export const getServerSideProps = withStudentAuth(async (context, _user) => {
-  const apiClient = getAPIClient(context);
-  const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+export const getServerSideProps = withStudentAuth(async (context) => {
+  const apiClient = serverApi(context);
+  try {
+    const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
 
-  return {
-    props: {
-      resumeId: resume.id,
-      educations: resume.educations || [],
-    },
-  };
+    return {
+      props: {
+        resumeId: resume.id,
+        educations: resume.educations || [],
+      },
+    };
+  } catch (error) {
+    console.log(errorToString(error));
+    return {
+      props: {},
+    };
+  }
 });
