@@ -7,7 +7,7 @@ import {
   Scroll,
 } from "lucide-react";
 
-const studentMenu = [
+export const studentMenu = [
   {
     icon: <Scroll />,
     subMenu: {
@@ -42,5 +42,3 @@ const studentMenu = [
     label: "Minhas Candidaturas",
   },
 ];
-
-export default studentMenu;

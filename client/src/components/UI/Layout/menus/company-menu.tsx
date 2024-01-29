@@ -1,6 +1,6 @@
 import { Add, GroupOutlined, WorkOutline } from "@mui/icons-material";
 
-const companyMenu = [
+export const companyMenu = [
   {
     icon: <WorkOutline />,
     href: "/company/dashboard",
@@ -17,5 +17,3 @@ const companyMenu = [
     label: "Candidatos para entrevista",
   },
 ];
-
-export default companyMenu;

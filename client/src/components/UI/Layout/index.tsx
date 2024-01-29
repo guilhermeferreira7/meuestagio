@@ -7,10 +7,8 @@ import { Role } from "types";
 import MenuItem from "./_menu-item";
 import Footer from "./footer";
 import Header from "./header";
-import adminMenu from "./menus/admin-menu";
-import companyMenu from "./menus/company-menu";
-import studentMenu from "./menus/student-menu";
 import PageMenu from "./page-menu";
+import { adminMenu, companyMenu, professorMenu, studentMenu } from "./menus";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -30,6 +28,9 @@ export function PageLayout({ children }: PageLayoutProps) {
       break;
     case Role.Admin:
       menuItems = adminMenu;
+      break;
+    case Role.Professor:
+      menuItems = professorMenu;
       break;
   }
 

@@ -1,6 +1,6 @@
 import { Add, HomeOutlined } from "@mui/icons-material";
 
-const adminMenu = [
+export const adminMenu = [
   {
     icon: <HomeOutlined />,
     href: "/admin/dashboard",
@@ -27,5 +27,3 @@ const adminMenu = [
     label: "Cadastrar professores",
   },
 ];
-
-export default adminMenu;
