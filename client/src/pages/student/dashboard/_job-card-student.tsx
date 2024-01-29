@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   AttachMoney,
   InfoOutlined,
@@ -6,9 +5,10 @@ import {
   SchoolOutlined,
   WorkOutline,
 } from "@mui/icons-material";
+import Link from "next/link";
 
-import { AppCard } from "../../../components";
-import { Job } from "../../../types/job";
+import { AppCard } from "components";
+import { Job } from "types";
 
 interface JobCardStudentProps {
   job: Job;
@@ -20,7 +20,7 @@ export default function JobCardStudent({ job, areaId }: JobCardStudentProps) {
 
   return (
     <>
-      <AppCard>
+      <AppCard highlighOnHover>
         <h2 className="flex justify-between items-center">
           <div className="flex items-center gap-1">
             <span

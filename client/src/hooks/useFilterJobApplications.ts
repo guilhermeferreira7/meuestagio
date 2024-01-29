@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { JobApplication } from "../types/job-application";
+
+import { JobApplication } from "types";
 
 type Props = {
   jobApplications: JobApplication[];
@@ -17,5 +18,5 @@ export function useJobApplications({ jobApplications, defaultTab }: Props) {
     setJobs(filteredJobs);
   }, [activeTab, jobApplications]);
 
-  return { jobs, activeTab, setActiveTab };
+  return { jobs, activeTab, setActiveTab, setJobs };
 }

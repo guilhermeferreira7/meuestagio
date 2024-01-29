@@ -5,7 +5,7 @@ type ImageInputProps = {
   key?: string;
 };
 
-export default function ImageInput({ setFile, key }: ImageInputProps) {
+export function ImageInput({ setFile, key }: ImageInputProps) {
   return (
     <>
       <label

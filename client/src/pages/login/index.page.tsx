@@ -1,35 +1,32 @@
-import { useContext, useState } from "react";
-import Link from "next/link";
-import { AlertCircle } from "lucide-react";
-import { z } from "zod";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle } from "lucide-react";
+import Link from "next/link";
 import { parseCookies } from "nookies";
+import { useContext, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import { loginSchema } from "../../utils/validators/login-schema";
-import { AuthContext } from "../../contexts/AuthContext";
-import { AppCard, Form } from "../../components";
-import { Role, UserAuth } from "../../types/auth/user-auth";
-
-type LoginData = z.infer<typeof loginSchema>;
+import { AppCard, Form, notify } from "components";
+import { AuthContext } from "contexts/AuthContext";
+import { LoginSchema } from "schemas";
+import { Role, UserAuth } from "types";
+import { errorToString } from "utils";
 
 export default function Login() {
   const { signIn } = useContext(AuthContext);
-  const [errorLoginMessage, setErrorLoginMessage] = useState("");
   const { ["meuestagio.user"]: cookie } = parseCookies();
   const user: UserAuth | undefined = cookie ? JSON.parse(cookie) : null;
 
-  const loginForm = useForm<LoginData>({
-    resolver: zodResolver(loginSchema),
+  const loginForm = useForm<LoginSchema>({
+    resolver: zodResolver(LoginSchema),
   });
 
   const { handleSubmit } = loginForm;
 
-  const handleLogin = async (data: LoginData) => {
+  const handleLogin = async (data: LoginSchema) => {
     try {
       await signIn(data.email, data.password, data.userRole, data.rememberMe);
-    } catch (error: any) {
-      setErrorLoginMessage(error.response?.data?.message);
+    } catch (error) {
+      notify.error(errorToString(error));
     }
   };
 
@@ -93,12 +90,6 @@ export default function Login() {
               <Form.Field>
                 <Form.InputCheckbox label="Lembrar-me" name="rememberMe" />
               </Form.Field>
-              {errorLoginMessage && (
-                <div className="flex items-center gap-2 text-error">
-                  <AlertCircle size={24} />
-                  <span>{errorLoginMessage}</span>
-                </div>
-              )}
               <button className="btn btn-primary">Login</button>
             </form>
           </FormProvider>

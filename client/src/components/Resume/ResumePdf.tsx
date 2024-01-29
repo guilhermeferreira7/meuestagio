@@ -1,14 +1,14 @@
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
-import { Degree, LanguageLevel, Resume, SkillLevel } from "../../types/resume";
-import { Student } from "../../types/users/student";
-import { formatDate } from "../../utils/helpers/date-helpers";
+import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+
+import { Degree, LanguageLevel, Resume, SkillLevel, Student } from "types";
+import { formatDate } from "utils";
 
 type ResumePdfProps = {
   student: Student;
   resume: Resume;
 };
 
-export default function ResumePdf({ student, resume }: ResumePdfProps) {
+export function ResumePdf({ student, resume }: ResumePdfProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>

@@ -1,20 +1,14 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 
-import { notify } from "../../../components/toasts/toast";
-import { useJobApplications } from "../../../hooks/useFilterJobApplications";
-import { api } from "../../../services/api/api";
-import withStudentAuth from "../../../services/auth/withStudentAuth";
-import {
-  JobApplication,
-  JobApplicationStatus,
-} from "../../../types/job-application";
-import { errorToString } from "../../../utils/helpers/error-to-string";
 import {
   JOB_APPLICATIONS_FINISH_PATH,
   JOB_APPLICATIONS_STUDENT_PATH,
-} from "../../../constants/api-routes";
-import { AppCard, AppTabs } from "../../../components";
+} from "app-constants";
+import { AppCard, AppTabs, notify } from "components";
+import { useJobApplications } from "hooks";
+import { api, serverApi, withStudentAuth } from "services";
+import { JobApplication, JobApplicationStatus } from "types";
+import { errorToString } from "utils";
 
 interface JobApplicationsProps {
   jobApplications: JobApplication[];
@@ -23,32 +17,29 @@ interface JobApplicationsProps {
 export default function JobApplicationsPage({
   jobApplications,
 }: JobApplicationsProps) {
-  const { jobs, activeTab, setActiveTab } = useJobApplications({
+  const { jobs, activeTab, setActiveTab, setJobs } = useJobApplications({
     jobApplications,
     defaultTab: JobApplicationStatus.IN_PROGRESS,
   });
 
-  const router = useRouter();
-
-  const cancel = (jobApplication: JobApplication) => {
+  const cancel = async (jobApplication: JobApplication) => {
     if (
       !confirm(
         "Deseja realmente desistir dessa vaga? \nEsta ação é irreversível!"
       )
     )
       return;
-
-    api
-      .post(JOB_APPLICATIONS_FINISH_PATH, {
+    try {
+      await api.patch(JOB_APPLICATIONS_FINISH_PATH, {
         jobApplicationId: jobApplication.id,
-      })
-      .then(() => {
-        notify.success("Candidatura desistida com sucesso");
-        router.reload();
-      })
-      .catch((error) => {
-        notify.error(errorToString(error));
       });
+      notify.success("Candidatura desistida");
+      const jobsUpdate = jobs.filter((job) => job.id !== jobApplication.id);
+
+      setJobs(jobsUpdate);
+    } catch (error) {
+      notify.error(errorToString(error));
+    }
   };
 
   return (
@@ -105,17 +96,20 @@ export default function JobApplicationsPage({
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const jobApplications = await apiClient.get(JOB_APPLICATIONS_STUDENT_PATH, {
-      params: {
-        studentId: student.id,
-      },
-    });
+export const getServerSideProps = withStudentAuth(async (context) => {
+  const apiClient = serverApi(context);
+
+  try {
+    const { data: jobApplications } = await apiClient.get<JobApplication[]>(
+      JOB_APPLICATIONS_STUDENT_PATH
+    );
     return {
       props: {
-        jobApplications: jobApplications.data,
+        jobApplications,
       },
     };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
   }
-);
+});

@@ -1,28 +1,25 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle } from "lucide-react";
 import { useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { AlertCircle } from "lucide-react";
 
-import { loginSchema } from "../../../utils/validators/login-schema";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { Role } from "../../../types/auth/user-auth";
-import { Form } from "../../../components";
-import { errorToString } from "../../../utils/helpers/error-to-string";
-
-type LoginData = z.infer<typeof loginSchema>;
+import { Form } from "components";
+import { AuthContext } from "contexts/AuthContext";
+import { LoginSchema } from "schemas";
+import { Role } from "types";
+import { errorToString } from "utils";
 
 export default function AdminLogin() {
   const { signIn } = useContext(AuthContext);
   const [errorLoginMessage, setErrorLoginMessage] = useState("");
 
-  const loginForm = useForm<LoginData>({
-    resolver: zodResolver(loginSchema),
+  const loginForm = useForm<LoginSchema>({
+    resolver: zodResolver(LoginSchema),
   });
 
   const { handleSubmit } = loginForm;
 
-  const handleLogin = async (data: LoginData) => {
+  const handleLogin = async (data: LoginSchema) => {
     try {
       await signIn(data.email, data.password, Role.Admin);
     } catch (error: any) {

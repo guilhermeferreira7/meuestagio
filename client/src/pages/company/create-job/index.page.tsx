@@ -1,27 +1,21 @@
-import React, { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
 import { Loop } from "@mui/icons-material";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
 import {
   AREAS_PATH,
   CITIES_PATH,
   JOBS_PATH,
-} from "../../../constants/api-routes";
-import { notify } from "../../../components/toasts/toast";
-import { Form } from "../../../components";
-import withCompanyAuth from "../../../services/auth/withCompanyAuth";
-import { api } from "../../../services/api/api";
-import { Area } from "../../../types/area";
-import { City } from "../../../types/city";
-import { Company } from "../../../types/users/company";
-import { errorToString } from "../../../utils/helpers/error-to-string";
-import { createJobFormSchema } from "../../../utils/validators/create-job-schema";
-
-type CreateJobFormData = z.infer<typeof createJobFormSchema>;
+  PROFILE_COMPANY_PATH,
+} from "app-constants";
+import { Form, notify } from "components";
+import { CreateJobFormSchema } from "schemas";
+import { api, serverApi, withCompanyAuth } from "services";
+import { Area, City, Company } from "types";
+import { errorToString } from "utils";
 
 interface PageProps {
   areas: Area[];
@@ -40,12 +34,12 @@ export default function CreateJob({ areas, company, cities }: PageProps) {
   const [changeCity, setChangeCity] = useState(false);
   const router = useRouter();
 
-  const createJobForm = useForm<CreateJobFormData>({
-    resolver: zodResolver(createJobFormSchema),
+  const createJobForm = useForm<CreateJobFormSchema>({
+    resolver: zodResolver(CreateJobFormSchema),
   });
   const { handleSubmit } = createJobForm;
 
-  const createJob = async (data: CreateJobFormData) => {
+  const createJob = async (data: CreateJobFormSchema) => {
     setIsLoading(true);
     if (!changeCity) data.cityId = company.cityId + "";
 
@@ -191,15 +185,23 @@ export default function CreateJob({ areas, company, cities }: PageProps) {
   );
 }
 
-export const getServerSideProps = withCompanyAuth(
-  async (_context, company, apiClient) => {
-    const areas = await apiClient.get<Area[]>(AREAS_PATH);
-    const cities = await apiClient.get<City[]>(CITIES_PATH, {
+export const getServerSideProps = withCompanyAuth(async (context) => {
+  const apiClient = serverApi(context);
+  try {
+    const { data: company } = await apiClient.get<Company>(
+      PROFILE_COMPANY_PATH
+    );
+
+    const { data: areas } = await apiClient.get<Area[]>(AREAS_PATH);
+    const { data: cities } = await apiClient.get<City[]>(CITIES_PATH, {
       params: { orderBy: "name" },
     });
 
     return {
-      props: { areas: areas.data, company, cities: cities.data },
+      props: { areas, company, cities },
     };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
   }
-);
+});

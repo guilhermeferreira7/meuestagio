@@ -1,5 +1,5 @@
-import { Area } from "@customTypes/area";
-import { Institution } from "@customTypes/institution";
+import { Area } from "types/area";
+import { Institution } from "types/institution";
 
 export type Course = {
   id: number;

@@ -1,24 +1,18 @@
-import React, { useState } from "react";
-import { z } from "zod";
-import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash } from "lucide-react";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import withStudentAuth from "../../../../services/auth/withStudentAuth";
-import { errorToString } from "../../../../utils/helpers/error-to-string";
 import {
   SKILL_PATH,
   STUDENT_RESUME_PATH,
   STUDENT_RESUME_SKILLS_PATH,
-} from "../../../../constants/api-routes";
-import { PageDefaults, Form } from "../../../../components";
-import { createSkillSchema } from "../../../../utils/validators/edit-resume-schema";
-import { Resume, Skill, SkillLevel } from "../../../../types/resume";
-import { api } from "../../../../services/api/api";
-import { notify } from "../../../../components/toasts/toast";
-import { WorkHistoryOutlined } from "@mui/icons-material";
-
-type FormAddSkill = z.infer<typeof createSkillSchema>;
+} from "app-constants";
+import { Form, notify } from "components";
+import { CreateSkillSchema } from "schemas";
+import { api, serverApi, withStudentAuth } from "services";
+import { Resume, Skill, SkillLevel } from "types";
+import { errorToString } from "utils";
 
 interface FormAddSkillProps {
   resumeId: number;
@@ -27,13 +21,13 @@ interface FormAddSkillProps {
 
 export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
   const [skillsUpdated, setSkills] = useState<Skill[]>(skills);
-  const createSkillForm = useForm<FormAddSkill>({
+  const createSkillForm = useForm<CreateSkillSchema>({
     mode: "onTouched",
-    resolver: zodResolver(createSkillSchema),
+    resolver: zodResolver(CreateSkillSchema),
   });
   const { handleSubmit } = createSkillForm;
 
-  const createSkill = async (data: FormAddSkill) => {
+  const createSkill = async (data: CreateSkillSchema) => {
     try {
       const response = await api.post<Skill>(STUDENT_RESUME_SKILLS_PATH, {
         ...data,
@@ -81,16 +75,6 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
 
   return (
     <>
-      <PageDefaults
-        currentPage="Habilidades"
-        linksTree={[
-          {
-            name: "Currículo",
-            href: "/student/resume",
-            icon: <WorkHistoryOutlined />,
-          },
-        ]}
-      />
       <div className="w-full px-4">
         <h2 className="text-xl text-primary font-bold mb-2 justify-between">
           Cadastrar nova habilidade
@@ -134,14 +118,21 @@ export default function PageAddSkill({ resumeId, skills }: FormAddSkillProps) {
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+export const getServerSideProps = withStudentAuth(async (context) => {
+  const apiClient = serverApi(context);
+  try {
+    const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+
     return {
       props: {
-        resumeId: student.resumeId,
-        skills: resume.data.skills || [],
+        resumeId: resume.id,
+        skills: resume.skills || [],
       },
     };
+  } catch (error) {
+    console.log(errorToString(error));
+    return {
+      props: {},
+    };
   }
-);
+});

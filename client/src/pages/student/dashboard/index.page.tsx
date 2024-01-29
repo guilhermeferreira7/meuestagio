@@ -1,12 +1,13 @@
 import Head from "next/head";
 
-import { useJobsListing } from "../../../hooks/useJobListing";
-import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { Job } from "../../../types/job";
-import { Student } from "../../../types/users/student";
+import { PROFILE_STUDENT_PATH } from "app-constants";
+import { useJobsListing } from "hooks";
+import { serverApi, withStudentAuth } from "services";
+import { Job, Student } from "types";
+import { errorToString } from "utils";
 
-import SearchBar from "./_search-bar";
 import JobCardStudent from "./_job-card-student";
+import SearchBar from "./_search-bar";
 
 interface StudentJobsProps {
   student: Student;
@@ -70,12 +71,21 @@ export default function StudentJobs({ student }: StudentJobsProps) {
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, _apiClient) => {
+export const getServerSideProps = withStudentAuth(async (context, _user) => {
+  const apiClient = serverApi(context);
+
+  try {
+    const student = await apiClient.get<Student>(PROFILE_STUDENT_PATH);
+
     return {
       props: {
-        student,
+        student: student.data,
       },
     };
+  } catch (error) {
+    console.log(errorToString(error));
+    return {
+      props: {},
+    };
   }
-);
+});

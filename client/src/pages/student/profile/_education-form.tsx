@@ -1,23 +1,14 @@
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditOutlined, SchoolOutlined } from "@mui/icons-material";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import { notify } from "../../../components/toasts/toast";
-import { Form } from "../../../components";
-import {
-  COURSES_PATH,
-  PROFILE_STUDENT_PATH,
-} from "../../../constants/api-routes";
-import { api } from "../../../services/api/api";
-import { Institution } from "../../../types/institution";
-import { Course } from "../../../types/course";
-import { Student } from "../../../types/users/student";
-import { errorToString } from "../../../utils/helpers/error-to-string";
-import {
-  EducationData,
-  editEducationSchema,
-} from "../../../utils/validators/edit-profile-schema";
+import { COURSES_PATH, PROFILE_STUDENT_PATH } from "app-constants";
+import { Form, notify } from "components";
+import { EditEducationSchema } from "schemas";
+import { api } from "services";
+import { Course, Institution, Student } from "types";
+import { errorToString } from "utils";
 
 type EducationFormProps = {
   student: Student;
@@ -33,8 +24,8 @@ export default function EducationForm({
   const [coursesUpdated, setCoursesUpdated] = useState<Course[]>(courses);
 
   const [formDisabled, setFormDisabled] = useState(true);
-  const editEducationForm = useForm<EducationData>({
-    resolver: zodResolver(editEducationSchema),
+  const editEducationForm = useForm<EditEducationSchema>({
+    resolver: zodResolver(EditEducationSchema),
     defaultValues: {
       institutionId: student.institution.name,
       courseId: student.course.name,
@@ -68,7 +59,7 @@ export default function EducationForm({
     setFormDisabled(true);
   };
 
-  const editProfile = async (data: EducationData) => {
+  const editProfile = async (data: EditEducationSchema) => {
     try {
       const student = await api.patch(PROFILE_STUDENT_PATH, data);
       resetForm(

@@ -1,24 +1,22 @@
-import { useState } from "react";
-import Image from "next/image";
 import {
   AttachMoney,
   PlaceOutlined,
   PsychologyOutlined,
   Tag,
 } from "@mui/icons-material";
+import Image from "next/image";
+import { useState } from "react";
 
-import { notify } from "../../../components/toasts/toast";
-import { PageDefaults, Modal } from "../../../components";
-import { api } from "../../../services/api/api";
-import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { Job } from "../../../types/job";
-import { JobApplication } from "../../../types/job-application";
-import { errorToString } from "../../../utils/helpers/error-to-string";
 import {
   JOB_APPLICATIONS_APPLY,
   JOB_APPLICATIONS_STUDENT_PATH,
   JOB_PATH,
-} from "../../../constants/api-routes";
+  PROFILE_STUDENT_PATH,
+} from "app-constants";
+import { Modal, notify } from "components";
+import { api, serverApi, withStudentAuth } from "services";
+import { Job, JobApplication, Student } from "types";
+import { errorToString } from "utils";
 
 type JobDetailsPageProps = {
   studentId: number;
@@ -54,7 +52,6 @@ export default function JobDetailsPage({
 
   return (
     <>
-      <PageDefaults currentPage={job.title} />
       <div className="w-full px-6">
         <div className="flex justify-between">
           <h2 className="text-2xl font-bold py-3">
@@ -152,9 +149,15 @@ export default function JobDetailsPage({
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (context, student, apiClient) => {
-    const jobApplications = await apiClient.get<JobApplication[]>(
+export const getServerSideProps = withStudentAuth(async (context) => {
+  const apiClient = serverApi(context);
+
+  try {
+    const { data: student } = await apiClient.get<Student>(
+      PROFILE_STUDENT_PATH
+    );
+
+    const { data: jobApplications } = await apiClient.get<JobApplication[]>(
       JOB_APPLICATIONS_STUDENT_PATH,
       {
         params: {
@@ -162,10 +165,12 @@ export const getServerSideProps = withStudentAuth(
         },
       }
     );
-    const job = await apiClient.get<Job>(JOB_PATH(Number(context.query.id)));
+    const { data: job } = await apiClient.get<Job>(
+      JOB_PATH(Number(context.query.id))
+    );
 
     let applied = false;
-    jobApplications.data.forEach((jobApplication) => {
+    jobApplications.forEach((jobApplication) => {
       if (jobApplication.job.id === Number(context.query.id)) {
         applied = true;
       }
@@ -175,9 +180,12 @@ export const getServerSideProps = withStudentAuth(
       props: {
         studentId: student.id,
         resumeId: student.resumeId,
-        job: job.data,
+        job,
         applied,
       },
     };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
   }
-);
+});

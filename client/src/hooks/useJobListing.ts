@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { parseCookies, setCookie } from "nookies";
 
-import { notify } from "../components/toasts/toast";
-import { CITIES_PATH, JOBS_PATH, REGIONS_PATH } from "../constants/api-routes";
-import { JOBS_LIST_STUDENT_LIMIT } from "../constants/request";
-import { api } from "../services/api/api";
-import { Job } from "../types/job";
-import { City } from "../types/city";
-import { Region } from "../types/region";
-import { errorToString } from "../utils/helpers/error-to-string";
+import {
+  CITIES_PATH,
+  JOBS_LIST_STUDENT_LIMIT,
+  JOBS_PATH,
+  REGIONS_PATH,
+} from "app-constants";
+import { notify } from "components";
+import { api } from "services";
+import { City, Job, Region } from "types";
+import { errorToString } from "utils";
 
 export function useJobsListing() {
   const [state, setState] = useState<string | undefined>("");
@@ -22,18 +23,6 @@ export function useJobsListing() {
   const [hasMoreJobs, setHasMoreJobs] = useState<boolean>(false);
 
   const [currentSearch, setCurrentSearch] = useState<string>("");
-
-  useEffect(() => {
-    const { ["meuestagio.filter"]: cookie } = parseCookies();
-
-    if (cookie) {
-      const filter = JSON.parse(cookie);
-      setFilters(filter);
-      if (filter.state) setState(filter.state);
-      if (filter.cityName) setCityName(filter.cityName);
-      if (filter.regionName) setRegionName(filter.regionName);
-    }
-  }, []);
 
   useEffect(() => {
     async function updateJobs() {
@@ -52,23 +41,7 @@ export function useJobsListing() {
       }
     }
     updateJobs();
-
-    if (filters) {
-      setCookie(
-        undefined,
-        "meuestagio.filter",
-        JSON.stringify({
-          ...filters,
-          regionName,
-          cityName,
-        }),
-        {
-          maxAge: 60 * 60 * 24 * 7, // 7 days
-          path: "/",
-        }
-      );
-    }
-  }, [filters, currentSearch]);
+  }, [filters, currentSearch, cityName, regionName]);
 
   function cleanFilters() {
     setFilters({});

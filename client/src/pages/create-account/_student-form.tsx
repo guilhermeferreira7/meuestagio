@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-import { notify } from "../../components/toasts/toast";
-import { COURSES_PATH } from "../../constants/api-routes";
-import { api } from "../../services/api/api";
-import { Institution } from "../../types/institution";
-import { Course } from "../../types/course";
-import { errorToString } from "../../utils/helpers/error-to-string";
-import { Form } from "../../components";
+import { COURSES_PATH } from "app-constants";
+import { Form, notify } from "components";
+import { api } from "services";
+import { Course, Institution } from "types";
+import { errorToString } from "utils";
 
 interface CreateStudentFormProps {
   institutions: Institution[];

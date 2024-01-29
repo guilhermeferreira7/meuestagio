@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { Form } from "../../components";
-import { cnpjMask } from "../../utils/masks/cnpjMask";
-import { City } from "../../types/city";
+import { Form } from "components";
+import { City } from "types";
+import { cnpjMask } from "utils";
 
 interface CreateCompanyFormProps {
   cities: City[];

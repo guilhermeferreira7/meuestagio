@@ -1,12 +1,12 @@
 import { Loop, PhotoOutlined } from "@mui/icons-material";
-import React, { useState } from "react";
-import { Company } from "../../../types/users/company";
-import { api } from "../../../services/api/api";
-import { notify } from "../../../components/toasts/toast";
-import { errorToString } from "../../../utils/helpers/error-to-string";
 import Image from "next/image";
-import { ImageInput } from "../../../components";
-import { COMPANY_PROFILE_PICTURE_PATH } from "../../../constants/api-routes";
+import { useState } from "react";
+
+import { COMPANY_PROFILE_PICTURE_PATH } from "app-constants";
+import { ImageInput, notify } from "components";
+import { api } from "services";
+import { Company } from "types";
+import { errorToString } from "utils";
 
 type ImageFormProps = {
   company: Company;

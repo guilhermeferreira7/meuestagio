@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import { ImageOutlined, PersonOutline } from "@mui/icons-material";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import defaultImage from "../../../../public/avatar.png";
 
-import { ImageInput } from "../../../components";
-import { notify } from "../../../components/toasts/toast";
 import {
   PROFILE_STUDENT_PATH,
   STUDENT_PROFILE_PICTURE_PATH,
-} from "../../../constants/api-routes";
-import { api } from "../../../services/api/api";
-import { Student, StudentPatch } from "../../../types/users/student";
-import { errorToString } from "../../../utils/helpers/error-to-string";
+} from "app-constants";
+import { ImageInput, notify } from "components";
+import { api } from "services";
+import { Student, StudentPatch } from "types";
+import { errorToString } from "utils";
 
 type PersonalDataFormProps = {
   student: Student;
@@ -37,7 +36,7 @@ export default function PersonalDataForm({ student }: PersonalDataFormProps) {
     )
       setIsEditing(true);
     else setIsEditing(false);
-  }, [file, formData]);
+  }, [file, formData, studentUpdated.name, studentUpdated.about]);
 
   const upload = async () => {
     if (!file) return;

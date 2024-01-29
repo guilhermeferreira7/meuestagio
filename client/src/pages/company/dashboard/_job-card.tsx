@@ -1,16 +1,14 @@
-import React from "react";
 import Link from "next/link";
 
-import { Job, JobStatus } from "@customTypes/job";
-import { api } from "../../../services/api/api";
-import { notify } from "../../../components/toasts/toast";
-import { errorToString } from "../../../utils/helpers/error-to-string";
-import { JOB_CLOSE_PATH } from "../../../constants/api-routes";
-import { AppCard, Modal } from "../../../components";
+import { JOB_CLOSE_PATH } from "app-constants";
+import { AppCard, Modal, notify } from "components";
+import { api } from "services";
+import { Job, JobStatus } from "types";
+import { errorToString } from "utils";
 
-interface JobCompanyCardProps {
+type JobCompanyCardProps = {
   job: Job;
-}
+};
 
 export default function JobCompanyCard({ job }: JobCompanyCardProps) {
   const closeJob = async () => {

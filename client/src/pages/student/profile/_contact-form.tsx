@@ -1,26 +1,21 @@
-import { useContext, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ContactPageOutlined, EditOutlined } from "@mui/icons-material";
+import { useContext, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
-import { Form } from "../../../components";
-import { notify } from "../../../components/toasts/toast";
-import { PROFILE_STUDENT_PATH } from "../../../constants/api-routes";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { api } from "../../../services/api/api";
-import { LoginResponse } from "../../../types/auth/login";
-import { errorToString } from "../../../utils/helpers/error-to-string";
-import { phoneMask } from "../../../utils/masks/phoneMask";
-import {
-  ContactData,
-  editContactSchema,
-} from "../../../utils/validators/edit-profile-schema";
+import { PROFILE_STUDENT_PATH } from "app-constants";
+import { Form, notify } from "components";
+import { AuthContext } from "contexts/AuthContext";
+import { EditContactSchema } from "schemas";
+import { api } from "services";
+import { LoginResponse } from "types";
+import { errorToString, phoneMask } from "utils";
 
 export default function ContactInfoForm({ initialData }: any) {
   const [formDisabled, setFormDisabled] = useState(true);
-  const editContactForm = useForm<ContactData>({
+  const editContactForm = useForm<EditContactSchema>({
     mode: "onTouched",
-    resolver: zodResolver(editContactSchema),
+    resolver: zodResolver(EditContactSchema),
     defaultValues: {
       email: initialData.email,
       phone: initialData.phone,
@@ -31,7 +26,7 @@ export default function ContactInfoForm({ initialData }: any) {
 
   const { updateUserData } = useContext(AuthContext);
 
-  const editProfile = async (data: ContactData) => {
+  const editProfile = async (data: EditContactSchema) => {
     if (!Object.values(data).some((v) => v)) {
       return;
     }

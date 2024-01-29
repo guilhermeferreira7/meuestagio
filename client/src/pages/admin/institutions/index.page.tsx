@@ -1,78 +1,114 @@
-import { useState } from "react";
-import { GetServerSideProps } from "next";
-
-import { getAPIClient } from "@services/api/clientApi";
-import { Institution } from "@customTypes/institution";
-import { User } from "@customTypes/users/user";
-import { Area } from "@customTypes/area";
-import { City } from "@customTypes/city";
-
-import { AppCard } from "../../../components";
-import CreateInstitutionForm from "./_form-create";
-import ListInstitutions from "./_list-institutions";
-import { Plus, X } from "lucide-react";
 import {
-  AREAS_PATH,
-  CITIES_PATH,
-  INSTITUTIONS_PATH,
-  PROFILE_ADMIN_PATH,
-} from "../../../constants/api-routes";
+  Add,
+  ArrowBack,
+  ArrowForward,
+  Delete,
+  Edit,
+} from "@mui/icons-material";
+import Link from "next/link";
+import { useState } from "react";
+
+import { INSTITUTIONS_PATH } from "app-constants";
+import { Modal } from "components";
+import { serverApi, withAdminAuth } from "services";
+import { Institution } from "types";
+import { errorToString } from "utils";
+
+import { useActions } from "./_useActions";
 
 interface CreateCourseFormProps {
-  cities: City[];
   institutions: Institution[];
 }
 
 export default function RegisterInstitutions({
-  cities,
   institutions,
 }: CreateCourseFormProps) {
-  const [create, setCreate] = useState(false);
+  const { institutionsUpdated, nextPage, prevPage, page, handleDelete } =
+    useActions(institutions);
+
+  const [institutionSelected, setInstitutionSelected] = useState<
+    Institution | undefined
+  >();
+
   return (
     <>
-      <div className="w-11/12 flex flex-col gap-2">
-        {create ? (
-          <AppCard>
-            <h2 className="text-xl font-bold mb-2 flex items-center justify-between">
-              <span>Cadastrar instituição</span>
-              <button
-                className="btn btn-error gap-1 flex items-center"
-                onClick={() => setCreate(false)}
-              >
-                <X />
-                Cancelar
-              </button>
-            </h2>
-            <CreateInstitutionForm cities={cities} />
-          </AppCard>
-        ) : (
-          <AppCard>
-            <h2 className="text-xl font-bold mb-2 flex items-center justify-between">
-              <span>Instituições cadastradas</span>
-              <button
-                className="btn btn-primary gap-1 flex items-center"
-                onClick={() => setCreate(true)}
-              >
-                <Plus />
-                Nova instituição
-              </button>
-            </h2>
-            <ListInstitutions institutions={institutions} />
-          </AppCard>
-        )}
+      <h2 className="text-xl font-bold mb-2 flex justify-between items-center w-full px-10">
+        <span className="text-primary">Instituições cadastradas</span>
+        <Link
+          href="institutions/new"
+          className="btn btn-primary btn-md flex items-center"
+        >
+          <Add /> Nova instituição
+        </Link>
+      </h2>
+
+      <div className="w-4/5">
+        <table className="table min-w-full">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Instituição</th>
+              <th>Cidade</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {institutionsUpdated.map((institution) => (
+              <tr key={institution.id}>
+                <td>{institution.id}</td>
+                <td>{institution.name}</td>
+                <td>{institution.city.name}</td>
+                <td className="flex gap-2">
+                  <Modal.Button id="edit" type="warning" size="sm">
+                    <Edit />
+                  </Modal.Button>
+                  <Modal.Button
+                    id="delete"
+                    type="error"
+                    size="sm"
+                    onClick={() => {
+                      setInstitutionSelected(institution);
+                    }}
+                  >
+                    <Delete />
+                  </Modal.Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+
+      <div className="col-span-3 flex justify-center items-center">
+        <button className="btn btn-sm btn-primary" onClick={prevPage}>
+          <ArrowBack />
+        </button>
+        <span className="p-2">{page}</span>
+        <button className="btn btn-sm btn-primary" onClick={nextPage}>
+          <ArrowForward />
+        </button>
+      </div>
+
+      <Modal.Content
+        id="delete"
+        confirmText="Excluir"
+        confirmAction={() => handleDelete(institutionSelected!)}
+        buttonType="error"
+      >
+        <span>
+          Tem certeza que deseja excluir a instituição{" "}
+          {institutionSelected?.name}
+        </span>
+      </Modal.Content>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps = withAdminAuth(async (context, _user) => {
+  const apiServer = serverApi(context);
+
   try {
-    const apiClient = getAPIClient(ctx);
-    await apiClient.get<User>(PROFILE_ADMIN_PATH);
-    const cities = await apiClient.get<City[]>(CITIES_PATH, {
-      params: { orderBy: "name" },
-    });
-    const institutions = await apiClient.get<Institution[]>(INSTITUTIONS_PATH, {
+    const institutions = await apiServer.get<Institution[]>(INSTITUTIONS_PATH, {
       params: {
         page: 0,
         limit: 10,
@@ -80,20 +116,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         order: "ASC",
       },
     });
-    const areas = await apiClient.get<Area[]>(AREAS_PATH);
+
     return {
       props: {
-        cities: cities.data,
         institutions: institutions.data,
-        areas: areas.data,
       },
     };
-  } catch (error: any) {
+  } catch (error) {
+    console.log(errorToString(error));
+
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
+      props: {},
     };
   }
-};
+});

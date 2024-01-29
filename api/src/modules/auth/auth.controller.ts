@@ -25,4 +25,10 @@ export class AuthController {
   async loginAdmin(@Request() req: ReqAuth) {
     return await this.authService.signJwt({ ...req.user });
   }
+
+  @UseGuards(AuthGuard('professor'))
+  @Post('professor')
+  async loginProfessor(@Request() req: ReqAuth) {
+    return await this.authService.signJwt({ ...req.user });
+  }
 }

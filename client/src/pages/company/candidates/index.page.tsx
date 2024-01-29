@@ -1,16 +1,10 @@
 import { useState } from "react";
 
-import {
-  JOBS_BY_COMPANY_PATH,
-  JOB_APPLICATIONS_BY_JOB,
-} from "../../../constants/api-routes";
-import withCompanyAuth from "../../../services/auth/withCompanyAuth";
-import {
-  JobApplication,
-  JobApplicationStatus,
-} from "../../../types/job-application";
-import { Job } from "../../../types/job";
-import { AppCard, ResumeView } from "../../../components";
+import { JOBS_BY_COMPANY_PATH, JOB_APPLICATIONS_BY_JOB } from "app-constants";
+import { AppCard, ResumeView } from "components";
+import { serverApi, withCompanyAuth } from "services";
+import { Job, JobApplication, JobApplicationStatus } from "types";
+import { errorToString } from "utils";
 
 type CandidatesPageProps = {
   candidates: JobApplication[];
@@ -73,9 +67,13 @@ export default function Candidates({ candidates }: CandidatesPageProps) {
   );
 }
 
-export const getServerSideProps = withCompanyAuth(
-  async (_context, company, apiClient) => {
-    const jobs = await apiClient.get<Job[]>(JOBS_BY_COMPANY_PATH(company.id));
+export const getServerSideProps = withCompanyAuth(async (context, user) => {
+  const apiClient = serverApi(context);
+
+  try {
+    const jobs = await apiClient.get<Job[]>(
+      JOBS_BY_COMPANY_PATH(Number(user.sub))
+    );
 
     const candidates = await Promise.all(
       jobs.data.map(async (job) => {
@@ -99,5 +97,8 @@ export const getServerSideProps = withCompanyAuth(
         candidates: candidates.flat(),
       },
     };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
   }
-);
+});

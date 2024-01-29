@@ -1,28 +1,15 @@
-import {
-  CancelOutlined,
-  Clear,
-  ContactPageOutlined,
-  Edit,
-} from "@mui/icons-material";
-import React, { ChangeEvent, useContext, useState } from "react";
-import {
-  UpdateCompanyData,
-  updateCompanySchema,
-} from "../../../utils/validators/company-schema";
-import { Company } from "../../../types/users/company";
-import { City } from "../../../types/city";
-import { api } from "../../../services/api/api";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  CITIES_PATH,
-  PROFILE_COMPANY_PATH,
-} from "../../../constants/api-routes";
-import { errorToString } from "../../../utils/helpers/error-to-string";
-import { notify } from "../../../components/toasts/toast";
-import { Form } from "../../../components";
-import { phoneMask } from "../../../utils/masks/phoneMask";
+import { Clear, ContactPageOutlined, Edit } from "@mui/icons-material";
+import { ChangeEvent, useContext, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+
+import { CITIES_PATH, PROFILE_COMPANY_PATH } from "app-constants";
+import { Form, notify } from "components";
+import { AuthContext } from "contexts/AuthContext";
+import { UpdateCompanySchema } from "schemas";
+import { api } from "services";
+import { City, Company } from "types";
+import { errorToString, phoneMask } from "utils";
 
 type InfoFormProps = {
   company: Company;
@@ -41,8 +28,8 @@ export default function InfoForm({
   const { updateUserData } = useContext(AuthContext);
   const [formDisabled, setFormDisabled] = useState(true);
 
-  const updateCompanyForm = useForm<UpdateCompanyData>({
-    resolver: zodResolver(updateCompanySchema),
+  const updateCompanyForm = useForm<UpdateCompanySchema>({
+    resolver: zodResolver(UpdateCompanySchema),
     mode: "all",
     defaultValues: {
       name: company.name,
@@ -69,7 +56,7 @@ export default function InfoForm({
     setFormDisabled(!formDisabled);
   };
 
-  const updateCompany = async (data: UpdateCompanyData) => {
+  const updateCompany = async (data: UpdateCompanySchema) => {
     try {
       const response = await api.patch(PROFILE_COMPANY_PATH, {
         name: data.name ? data.name : company.name,

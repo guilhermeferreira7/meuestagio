@@ -1,4 +1,5 @@
 import { Download, Share, WorkHistoryOutlined } from "@mui/icons-material";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import {
   EmailIcon,
   EmailShareButton,
@@ -11,15 +12,13 @@ import {
   WhatsappIcon,
   WhatsappShareButton,
 } from "react-share";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 
-import { Modal, PageDefaults, ResumeView } from "../../../components";
-import ResumePdf from "../../../components/Resume/ResumePdf";
-import { STUDENT_RESUME_PATH } from "../../../constants/api-routes";
-import useClient from "../../../hooks/useClient";
-import withStudentAuth from "../../../services/auth/withStudentAuth";
-import { Student } from "../../../types/users/student";
-import { Resume } from "../../../types/resume";
+import { PROFILE_STUDENT_PATH, STUDENT_RESUME_PATH } from "app-constants";
+import { Modal, ResumePdf, ResumeView } from "components";
+import { useClient } from "hooks";
+import { serverApi, withStudentAuth } from "services";
+import { Resume, Student } from "types";
+import { errorToString } from "utils";
 
 interface PageProps {
   student: Student;
@@ -31,7 +30,6 @@ export default function ResumePage({ student, resume }: PageProps) {
 
   return (
     <>
-      <PageDefaults currentPage="Currículo" />
       <div className="w-11/12 my-2">
         <h2 className="flex justify-between">
           <div className="flex items-center gap-1">
@@ -86,14 +84,22 @@ export default function ResumePage({ student, resume }: PageProps) {
   );
 }
 
-export const getServerSideProps = withStudentAuth(
-  async (_context, student, apiClient) => {
-    const resume = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
+export const getServerSideProps = withStudentAuth(async (context) => {
+  const apiClient = serverApi(context);
+  try {
+    const { data: student } = await apiClient.get<Student>(
+      PROFILE_STUDENT_PATH
+    );
+
+    const { data: resume } = await apiClient.get<Resume>(STUDENT_RESUME_PATH);
     return {
       props: {
         student,
-        resume: resume.data,
+        resume,
       },
     };
+  } catch (error) {
+    console.log(errorToString(error));
+    return { props: {} };
   }
-);
+});

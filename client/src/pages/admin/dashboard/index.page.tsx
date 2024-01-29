@@ -1,10 +1,7 @@
 import { GetServerSideProps } from "next";
-import React from "react";
 
-import { User } from "@customTypes/users/user";
-import { getAPIClient } from "../../../services/api/clientApi";
-import { City } from "@customTypes/city";
-import { PROFILE_ADMIN_PATH } from "../../../constants/api-routes";
+import { City } from "types";
+import { errorToString } from "utils";
 
 interface AdminDashboardProps {
   cities: City[];
@@ -21,18 +18,14 @@ export default function AdminDashboard({ cities }: AdminDashboardProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const apiClient = getAPIClient(ctx);
   try {
-    await apiClient.get<User>(PROFILE_ADMIN_PATH);
     return {
       props: {},
     };
-  } catch (error: any) {
+  } catch (error) {
+    console.log(errorToString(error));
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
+      props: {},
     };
   }
 };
