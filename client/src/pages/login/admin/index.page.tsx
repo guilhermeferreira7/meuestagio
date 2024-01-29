@@ -1,9 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Form } from "components";
+import { Form, notify } from "components";
 import { AuthContext } from "contexts/AuthContext";
 import { LoginSchema } from "schemas";
 import { Role } from "types";
@@ -11,7 +10,6 @@ import { errorToString } from "utils";
 
 export default function AdminLogin() {
   const { signIn } = useContext(AuthContext);
-  const [errorLoginMessage, setErrorLoginMessage] = useState("");
 
   const loginForm = useForm<LoginSchema>({
     resolver: zodResolver(LoginSchema),
@@ -22,8 +20,8 @@ export default function AdminLogin() {
   const handleLogin = async (data: LoginSchema) => {
     try {
       await signIn(data.email, data.password, Role.Admin);
-    } catch (error: any) {
-      setErrorLoginMessage(errorToString(error));
+    } catch (error) {
+      notify.error(errorToString(error));
     }
   };
 
@@ -55,12 +53,6 @@ export default function AdminLogin() {
             <Form.InputText type="password" name="password" />
             <Form.ErrorMessage field="password" />
           </Form.Field>
-          {errorLoginMessage && (
-            <div className="flex items-center gap-2 text-error">
-              <AlertCircle size={24} />
-              <span>{errorLoginMessage}</span>
-            </div>
-          )}
           <button className="btn btn-primary">Login</button>
         </form>
       </FormProvider>

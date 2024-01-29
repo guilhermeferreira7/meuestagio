@@ -12,3 +12,7 @@ export { CreateExperienceSchema } from "./experience-schema";
 export { CreateInstitutionFormSchema } from "./institution-schema";
 export { CreateLanguageSchema } from "./language-schema";
 export { LoginSchema } from "./login-schema";
+export {
+  type CreateProfessorData,
+  createProfessorSchema,
+} from "./professor-schema";

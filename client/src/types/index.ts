@@ -21,3 +21,6 @@ export { type Language } from "./resume";
 export { LanguageLevel } from "./resume";
 export { type Skill } from "./resume";
 export { SkillLevel } from "./resume";
+
+// zod schemas
+export { Professor } from "./users/professor";
