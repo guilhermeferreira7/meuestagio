@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { CreateProfessorDto } from './professor-create.dto';
+import bcryptService from 'src/utils/bcriptUtils';
 
 @Injectable()
 export class ProfessorsService {
@@ -13,9 +14,12 @@ export class ProfessorsService {
   async create(body: CreateProfessorDto) {
     await this.validateCreate(body);
 
+    const password = await bcryptService.hash(body.password);
+
     return await this.prisma.professor.create({
       data: {
         ...body,
+        password,
       },
     });
   }

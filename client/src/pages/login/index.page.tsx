@@ -5,14 +5,14 @@ import { parseCookies } from "nookies";
 import { useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { AppCard, Form } from "components";
+import { AppCard, Form, notify } from "components";
 import { AuthContext } from "contexts/AuthContext";
 import { LoginSchema } from "schemas";
 import { Role, UserAuth } from "types";
+import { errorToString } from "utils";
 
 export default function Login() {
   const { signIn } = useContext(AuthContext);
-  const [errorLoginMessage, setErrorLoginMessage] = useState("");
   const { ["meuestagio.user"]: cookie } = parseCookies();
   const user: UserAuth | undefined = cookie ? JSON.parse(cookie) : null;
 
@@ -25,8 +25,8 @@ export default function Login() {
   const handleLogin = async (data: LoginSchema) => {
     try {
       await signIn(data.email, data.password, data.userRole, data.rememberMe);
-    } catch (error: any) {
-      setErrorLoginMessage(error.response?.data?.message);
+    } catch (error) {
+      notify.error(errorToString(error));
     }
   };
 
@@ -90,12 +90,6 @@ export default function Login() {
               <Form.Field>
                 <Form.InputCheckbox label="Lembrar-me" name="rememberMe" />
               </Form.Field>
-              {errorLoginMessage && (
-                <div className="flex items-center gap-2 text-error">
-                  <AlertCircle size={24} />
-                  <span>{errorLoginMessage}</span>
-                </div>
-              )}
               <button className="btn btn-primary">Login</button>
             </form>
           </FormProvider>

@@ -7,6 +7,8 @@ export const PROFILE_STUDENT_PATH = "/students/profile";
 export const PROFILE_COMPANY_PATH = "/companies/profile";
 export const PROFILE_ADMIN_PATH = "/admin/profile";
 
+export const PROFESSORS_PATH = "/professors";
+
 export const JOBS_PATH = "/jobs";
 export const JOB_PATH = (id: number) => `/jobs/${id}`;
 export const JOB_CLOSE_PATH = (id: number) => `/jobs/${id}/close`;

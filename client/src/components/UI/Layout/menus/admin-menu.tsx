@@ -21,6 +21,11 @@ const adminMenu = [
     href: "/admin/courses",
     label: "Cadastrar cursos",
   },
+  {
+    icon: <Add />,
+    href: "/admin/professors",
+    label: "Cadastrar professores",
+  },
 ];
 
 export default adminMenu;
