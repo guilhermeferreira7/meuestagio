@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { CITIES_PATH, REGIONS_PATH } from "app-constants";
-import { Error, notify } from "components";
-import { api, ibgeApi, serverApi, withAdminAuth } from "services";
+import { notify } from "components";
+import { api, ibgeApi, withAdminAuth } from "services";
 import { errorToString } from "utils";
 
 type NewCityPageProps = {

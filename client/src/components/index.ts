@@ -5,7 +5,6 @@ export { AppTabs } from "./UI/AppTabs";
 export { PageLayout } from "./UI/Layout";
 export { DropDown } from "./UI/MUI/DropDown";
 
-export { Error } from "./Error";
 export { Form } from "./Form";
 export { ImageInput } from "./ImageInput/ImageInput";
 export { ResumeView } from "./Resume/resume";
