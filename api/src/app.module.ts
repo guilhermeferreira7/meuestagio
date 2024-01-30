@@ -10,6 +10,7 @@ import { JobApplicationModule } from './modules/job-applications/job-application
 import { ImagesModule } from './modules/images/images.module';
 import { AppController } from './app.controller';
 import { ResumesModule } from './modules/resumes/resumes.module';
+import { ContractsModule } from './modules/contracts/contracts.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ResumesModule } from './modules/resumes/resumes.module';
     JobApplicationModule,
     ResumesModule,
     ImagesModule,
+    ContractsModule,
   ],
   controllers: [AppController],
 })
