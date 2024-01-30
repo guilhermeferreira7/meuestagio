@@ -20,6 +20,7 @@ export class CreateExperienceDto {
   startDate: Date;
 
   @IsOptional()
-  @Transform(({ value }) => (value ? new Date(value) : null))
+  @IsDate()
+  @Type(() => Date)
   endDate: Date;
 }
