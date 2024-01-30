@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { CreateProfessorDto } from './professor-create.dto';
-import bcryptService from 'src/utils/bcriptUtils';
+import bcryptService from '../../../utils/bcriptUtils';
 
 @Injectable()
 export class ProfessorsService {

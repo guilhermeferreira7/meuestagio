@@ -37,9 +37,9 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
       `DROP SCHEMA IF EXISTS "${this.schema}" CASCADE`,
     );
 
-    const connections =
-      await prisma.$executeRaw`SELECT * FROM pg_stat_activity`;
-    console.log('connections', connections);
+    // const connections =
+    //   await prisma.$executeRaw`SELECT * FROM pg_stat_activity`;
+    // console.log('connections', connections);
 
     await prisma.$executeRaw`
       SELECT
