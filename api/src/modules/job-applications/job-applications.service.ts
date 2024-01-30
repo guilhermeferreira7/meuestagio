@@ -44,7 +44,7 @@ export class JobApplicationsService {
 
   async findByJobId(jobId: number) {
     return await this.prisma.jobApplication.findMany({
-      where: { jobId },
+      where: { jobId, status: JobApplicationStatusEnum.EmAndamento },
       include: {
         student: {
           select: { name: true, course: true, institution: true, city: true },

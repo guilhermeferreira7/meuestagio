@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@nestjs-modules/mailer':
     specifier: ^1.9.1
-    version: 1.9.1(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(nodemailer@6.9.7)
+    version: 1.9.1(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(nodemailer@6.9.8)
   '@nestjs/common':
     specifier: ^9.0.1
     version: 9.4.3(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
@@ -1440,7 +1440,7 @@ packages:
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
     engines: {node: '>=8'}
 
-  /@nestjs-modules/mailer@1.9.1(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(nodemailer@6.9.7):
+  /@nestjs-modules/mailer@1.9.1(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(nodemailer@6.9.8):
     resolution: {integrity: sha512-9kSDgg4qA6+2BXOzfY4IltL70uMGXDeE8u/dhkzM2gnCCOKu8Y+wIxWmh8xyLGYcrFHQ3Mke+ap0O1T98Tyjaw==}
     peerDependencies:
       '@nestjs/common': ^7.0.9 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -1452,7 +1452,7 @@ packages:
       glob: 10.3.3
       inline-css: 4.0.2
       mjml: 4.14.1
-      nodemailer: 6.9.7
+      nodemailer: 6.9.8
       preview-email: 3.0.19
     optionalDependencies:
       '@types/ejs': 3.1.5
@@ -6074,6 +6074,11 @@ packages:
 
   /nodemailer@6.9.7:
     resolution: {integrity: sha512-rUtR77ksqex/eZRLmQ21LKVH5nAAsVicAtAYudK7JgwenEDZ0UIQ1adUGqErz7sMkWYxWTTU1aeP2Jga6WQyJw==}
+    engines: {node: '>=6.0.0'}
+    dev: false
+
+  /nodemailer@6.9.8:
+    resolution: {integrity: sha512-cfrYUk16e67Ks051i4CntM9kshRYei1/o/Gi8K1d+R34OIs21xdFnW7Pt7EucmVKA0LKtqUGNcjMZ7ehjl49mQ==}
     engines: {node: '>=6.0.0'}
     dev: false
 

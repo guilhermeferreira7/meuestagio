@@ -53,6 +53,7 @@ export class JobsService {
         id: 'desc',
       },
       where: {
+        status: JobStatusEnum.open,
         cityId: city,
         regionId: region,
         state: state,
@@ -113,6 +114,7 @@ export class JobsService {
       throw new BadRequestException('Cidade é obrigatória.');
   }
 
+  // TODO refactor with fulltextseach
   private async searchJobs(
     search: string,
     page: number,
@@ -128,6 +130,7 @@ export class JobsService {
       skip: page,
       take: limit,
       where: {
+        status: JobStatusEnum.open,
         OR: [
           { title: { contains: search, mode: 'insensitive' } },
           { description: { contains: search, mode: 'insensitive' } },

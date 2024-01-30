@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateExperienceDto {
@@ -22,5 +22,5 @@ export class CreateExperienceDto {
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  endDate: Date;
+  endDate?: Date;
 }
