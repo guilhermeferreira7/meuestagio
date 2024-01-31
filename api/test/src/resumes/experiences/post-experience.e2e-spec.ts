@@ -39,8 +39,22 @@ describe('[E2E] Experience', () => {
             'currentJob must be a boolean value',
             'startDate must be a Date instance',
             'startDate should not be empty',
+          ],
+          error: 'Bad Request',
+        });
+
+        await post(path, app, studentToken, {
+          endDate: 'notadate',
+        }).expect({
+          statusCode: 400,
+          message: [
+            'company should not be empty',
+            'position should not be empty',
+            'description should not be empty',
+            'currentJob must be a boolean value',
+            'startDate must be a Date instance',
+            'startDate should not be empty',
             'endDate must be a Date instance',
-            'endDate should not be empty',
           ],
           error: 'Bad Request',
         });

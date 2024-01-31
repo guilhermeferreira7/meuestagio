@@ -65,9 +65,9 @@ describe('[E2E] [POST] Professor /professors', () => {
             .expect({
               statusCode: 400,
               message: [
-                'name should not be empty',
-                'email should not be empty',
-                'password should not be empty',
+                'O nome precisa ter pelo menos 3 caracteres',
+                'Email inválido',
+                'A senha precisa no mínimo 6 caracteres',
                 'courseId must be a number conforming to the specified constraints',
                 'courseId should not be empty',
               ],

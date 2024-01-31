@@ -37,10 +37,11 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
       `DROP SCHEMA IF EXISTS "${this.schema}" CASCADE`,
     );
 
-    const connections =
-      await prisma.$executeRaw`SELECT * FROM pg_stat_activity`;
-    console.log('connections', connections);
+    // const connections =
+    //   await prisma.$executeRaw`SELECT * FROM pg_stat_activity`;
+    // console.log('connections', connections);
 
+    // close connections in 'idle' to avoid 'too many clients already'
     await prisma.$executeRaw`
       SELECT
         pg_terminate_backend ( pg_stat_activity.pid )

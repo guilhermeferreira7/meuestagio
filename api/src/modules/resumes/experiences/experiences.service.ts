@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -14,12 +15,22 @@ export class ExperiencesService {
   async add(body: CreateExperienceDto, email: string) {
     const resume = await this.validateExperience(body, email);
 
+    if (body.endDate && !this.isValidDates(body.startDate, body.endDate)) {
+      throw new BadRequestException(
+        'A data de início não pode ser depois da final',
+      );
+    }
+
     return await this.prisma.experience.create({
       data: {
         ...body,
         resumeId: resume.id,
       },
     });
+  }
+
+  private isValidDates(startDate: Date, endDate: Date) {
+    return endDate >= startDate;
   }
 
   async getAll(email: string) {

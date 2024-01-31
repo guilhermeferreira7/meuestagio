@@ -8,7 +8,7 @@ import {
   STUDENT_RESUME_EXPERIENCES_PATH,
   STUDENT_RESUME_PATH,
 } from "app-constants";
-import { Error, Form, notify } from "components";
+import { Form, notify } from "components";
 import { CreateExperienceSchema } from "schemas";
 import { api, serverApi, withStudentAuth } from "services";
 import { Experience, Resume } from "types";

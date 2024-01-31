@@ -47,8 +47,22 @@ model Company {
   phoneVerified Boolean?
   imageUrl      String?   @db.VarChar
   jobs          Job[]
+  contracts     Contract[]
 
   @@map("company")
+}
+
+model Contract {
+  id            Int         @id() @default(autoincrement())
+  createdAt     DateTime    @default(now())
+  studentId     Int         @unique
+  companyId     Int
+  company       Company     @relation(fields: [companyId], references: [id])
+  student       Student     @relation(fields: [studentId], references: [id])
+  isEnded       Boolean
+  activities    String      @db.VarChar
+  startDate     DateTime
+  endDate       DateTime
 }
 
 model Course {
@@ -212,6 +226,8 @@ model Student {
   resume           Resume?          @relation(fields: [resumeId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_43fa98877aae7cb691a3ab1dc1b")
   imageUrl         String?          @db.VarChar
   job_applications JobApplication[]
+  contractId       Int?
+  contract         Contract?
 
   @@map("student")
 }
