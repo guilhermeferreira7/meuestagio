@@ -1,30 +1,32 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateContractDto } from './dtos/create';
+
+import { CreateContractDto } from './dtos/create.dto';
 import { PrismaService } from '../../../prisma/prisma.service';
+
+type CreateContract = CreateContractDto & { companyId: number };
 
 @Injectable()
 export class ContractsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateContractDto) {
-    if (!this.isValid(dto)) throw new BadRequestException();
+  async create(data: CreateContract) {
+    if (!this.isValid(data)) throw new BadRequestException();
 
     return this.prisma.contract.create({
       data: {
-        ...dto,
+        ...data,
         isEnded: false,
       },
     });
   }
 
-  private isValid(dto: CreateContractDto) {
-    if (
-      !this.studentExists(dto.studentId) ||
-      !this.companyExists(dto.companyId)
-    )
-      throw new BadRequestException();
+  private isValid(data: CreateContract) {
+    const student = this.studentExists(data.studentId);
+    const company = this.companyExists(data.companyId);
 
-    if (!this.isDatesValid(dto.startDate, dto.endDate)) {
+    if (!student || !company) throw new BadRequestException();
+
+    if (!this.isDatesValid(data.startDate, data.endDate)) {
       throw new BadRequestException(
         'A final precisa ser depois da data inicial',
       );
@@ -49,7 +51,7 @@ export class ContractsService {
     });
   }
 
-  private isDatesValid(startDate: Date, endDate: Date) {
+  private isDatesValid(startDate: Date | string, endDate: Date | string) {
     return endDate > startDate;
   }
 }

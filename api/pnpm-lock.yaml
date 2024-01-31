@@ -33,8 +33,8 @@ dependencies:
     specifier: ^6.3.0
     version: 6.3.0(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)
   '@prisma/client':
-    specifier: ^5.6.0
-    version: 5.6.0(prisma@5.6.0)
+    specifier: ^5.9.0
+    version: 5.9.0(prisma@5.6.0)
   '@types/multer':
     specifier: ^1.4.8
     version: 1.4.11
@@ -1749,8 +1749,8 @@ packages:
     dev: false
     optional: true
 
-  /@prisma/client@5.6.0(prisma@5.6.0):
-    resolution: {integrity: sha512-mUDefQFa1wWqk4+JhKPYq8BdVoFk9NFMBXUI8jAkBfQTtgx8WPx02U2HB/XbAz3GSUJpeJOKJQtNvaAIDs6sug==}
+  /@prisma/client@5.9.0(prisma@5.6.0):
+    resolution: {integrity: sha512-dHvFZgCT0BpRS+gRhk3S+50DstXMmVowxbrPeUJaK7sjNq5OhzfpT/OGE1kq9z5Q8WmOwIXJXyxP8O2CmP+nSg==}
     engines: {node: '>=16.13'}
     requiresBuild: true
     peerDependencies:
@@ -1759,12 +1759,7 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee
       prisma: 5.6.0
-    dev: false
-
-  /@prisma/engines-version@5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee:
-    resolution: {integrity: sha512-UoFgbV1awGL/3wXuUK3GDaX2SolqczeeJ5b4FVec9tzeGbSWJboPSbT0psSrmgYAKiKnkOPFSLlH6+b+IyOwAw==}
     dev: false
 
   /@prisma/engines@5.6.0:
